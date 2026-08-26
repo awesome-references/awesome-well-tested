@@ -185,6 +185,29 @@ class PatternsThatNameThingsNotWords(unittest.TestCase):
         self.assertFalse(self.matched("coverage.py", "[tool.coverage]\nbranch = true"))
 
 
+class MutationInvocations(unittest.TestCase):
+    def test_every_mutation_tool_can_be_recognised_when_ci_runs_it(self):
+        # Without an entry the CI-enforced check falls back to the dict key,
+        # and keys like "stryker-net" never appear in a workflow.
+        missing = [k for k in vr.MUTATION_TOOLS if k not in vr.MUTATION_INVOCATIONS]
+        self.assertEqual(missing, [])
+
+    def test_mutant_does_not_match_the_immutant_gem(self):
+        self.assertEqual(
+            vr.search_file_for_patterns(
+                "gem 'immutant'", vr.MUTATION_TOOLS["mutant"]["patterns"]
+            ),
+            [],
+        )
+
+    def test_mutant_matches_its_own_gems(self):
+        for text in ("gem 'mutant-rspec'", "gem 'mutant-minitest'", "gem 'mutant'"):
+            self.assertTrue(
+                vr.search_file_for_patterns(text, vr.MUTATION_TOOLS["mutant"]["patterns"]),
+                text,
+            )
+
+
 class CoverageBadges(unittest.TestCase):
     """A badge only counts when it is a coverage badge."""
 

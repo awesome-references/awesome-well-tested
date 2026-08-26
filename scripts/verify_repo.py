@@ -46,13 +46,29 @@ STRYKER_DASHBOARD_API = "https://dashboard.stryker-mutator.io/api/reports/github
 # merely declaring it as a dependency.
 MUTATION_INVOCATIONS = {
     "pit": r"pitest|pitestReport|mutationCoverage",
-    "stryker": r"stryker\s+run|npx\s+stryker|dotnet\s+stryker",
+    "descartes": r"pitest.*descartes|mutationEngine",
+    "stryker": r"stryker\s+run|npx\s+stryker",
+    "stryker4s": r"stryker4s|sbt.*stryker",
+    "stryker-net": r"dotnet[-\s]stryker",
     "infection": r"infection(?:\.phar)?\s|--min-msi",
+    "pest-mutate": r"pest[^\n]{0,40}--mutate",
     "mutmut": r"mutmut\s+run",
     "cosmic-ray": r"cosmic-ray\s+(?:init|exec)",
+    "mutatest": r"mutatest\s",
+    "mutpy": r"mut\.py\s",
     "mutant": r"mutant\s+run|bundle\s+exec\s+mutant",
+    "mutest": r"mutest\s+run",
     "cargo-mutants": r"cargo\s+mutants",
+    "mutagen": r"cargo\s+mutagen",
     "go-mutesting": r"go-mutesting",
+    "gremlins": r"gremlins\s+unleash",
+    "ooze": r"\booze\b",
+    "muter": r"muter\s+run",
+    "mutation-test": r"dart\s+run\s+mutation_test",
+    "muzak": r"mix\s+muzak",
+    "mucheck": r"mucheck",
+    "mull": r"mull-runner|mull-cxx",
+    "dextool-mutate": r"dextool\s+mutate",
 }
 
 # A threshold the build fails below. The number is a floor somebody else's
@@ -387,8 +403,10 @@ MUTATION_TOOLS = {
         "language": "Go",
     },
     "mutant": {
-        "files": ["Gemfile"],
-        "patterns": [r"mutant", r"mutant-rspec"],
+        # A Gemfile-only list missed projects that only invoke mutant from CI.
+        "files": ["Gemfile", "mutant.yml", ".github/workflows"],
+        "patterns": [r"\bmutant\b", r"mutant[/-]rspec", r"mutant[/-]minitest",
+                     r"mutant-license"],
         "language": "Ruby",
     },
     "infection": {

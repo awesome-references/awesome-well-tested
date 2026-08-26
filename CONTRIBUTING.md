@@ -94,8 +94,13 @@ from 60 to 1000 requests per hour.
 - Refreshed reports come back as a pull request, so nothing is written to the
   default branch without review.
 
-The workflow also runs weekly and fails when a listed entry no longer holds its
-tier, which is how the list stays honest.
+The workflow also runs weekly with no input. That run rewrites the list from
+what it verified rather than reporting on it: figures are refreshed, an entry
+that moved between tiers is rewritten to the tier it now holds, and an entry
+that no longer clears the bar is dropped. It fails only when the verification
+itself could not be carried out, and it refuses to touch the list at all if it
+could not verify at least four fifths of the entries - a coverage service
+answering 429 is not a repository that stopped qualifying.
 
 Discovering new candidates uses `scripts/discover_candidates.py` and the
 `discover` workflow. GitHub's code search endpoint is stricter than the rest of
