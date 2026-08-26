@@ -1,6 +1,6 @@
 # Verification reports are provenance for listed entries and stay tracked.
 # Candidate dumps from discover_candidates.py are throwaway.
-reports/candidates_*.json
+reports/candidates/
 
 # Python
 __pycache__/

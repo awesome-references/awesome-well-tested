@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T10:13:46.959541+00:00",
+  "verified_at": "2026-08-26T10:54:59.580207+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,11 @@
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
   "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/silly-collection",

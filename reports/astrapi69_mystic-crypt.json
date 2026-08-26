@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-08-26T10:43:51.475463+00:00",
+  "verified_at": "2026-08-26T10:54:24.557154+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.91% and mutation score 99.0%",
   "coverage": {
@@ -9,6 +9,16 @@
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
   "mutation_score": 99.0,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 49
+      }
+    ],
+    "detected": true,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/mystic-crypt",
@@ -19,7 +29,7 @@
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:36:05Z",
+    "last_push": "2026-08-26T10:45:16Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },

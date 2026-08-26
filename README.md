@@ -27,57 +27,57 @@
 
 ## Java
 
-| Repository                                                        | Tier                         | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ----------------------------------------------------------------- | ---------------------------- | -------- | -------------- | ------------- | ------------- |
-| [crypt-data](https://github.com/astrapi69/crypt-data)             | ![Gold](badges/gold.svg)     | 100%     | 100%           | JaCoCo        | PIT           |
-| [crypt-api](https://github.com/astrapi69/crypt-api)               | ![Gold](badges/gold.svg)     | 99.4%    | 100%           | JaCoCo        | PIT           |
-| [mystic-crypt](https://github.com/astrapi69/mystic-crypt)         | ![Gold](badges/gold.svg)     | 99.9%    | 99%            | JaCoCo        | PIT           |
-| [gen-tree](https://github.com/astrapi69/gen-tree)                 | ![Gold](badges/gold.svg)     | 98.0%    | 98%            | JaCoCo        | PIT           |
-| [silly-collection](https://github.com/astrapi69/silly-collection) | ![Bronze](badges/bronze.svg) | 98.1%    | n/a            | JaCoCo        | n/a           |
-| [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.4%    | n/a            | JaCoCo        | n/a           |
-| [randomizer](https://github.com/astrapi69/randomizer)             | ![Bronze](badges/bronze.svg) | 88.4%    | n/a            | JaCoCo        | n/a           |
+| Repository                                                        | Tier                         | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ----------------------------------------------------------------- | ---------------------------- | -------- | -------------- | ------------ | ------------- | ------------- |
+| [crypt-data](https://github.com/astrapi69/crypt-data)             | ![Gold](badges/gold.svg)     | 100%     | 100%           | JUnit 5      | JaCoCo        | PIT           |
+| [crypt-api](https://github.com/astrapi69/crypt-api)               | ![Gold](badges/gold.svg)     | 99.4%    | 100%           | JUnit 5      | JaCoCo        | PIT           |
+| [mystic-crypt](https://github.com/astrapi69/mystic-crypt)         | ![Gold](badges/gold.svg)     | 99.9%    | 99%            | JUnit 5      | JaCoCo        | PIT           |
+| [gen-tree](https://github.com/astrapi69/gen-tree)                 | ![Gold](badges/gold.svg)     | 98.0%    | 98%            | no           | JaCoCo        | PIT           |
+| [silly-collection](https://github.com/astrapi69/silly-collection) | ![Bronze](badges/bronze.svg) | 98.1%    | n/a            | no           | JaCoCo        | n/a           |
+| [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.4%    | n/a            | no           | JaCoCo        | n/a           |
+| [randomizer](https://github.com/astrapi69/randomizer)             | ![Bronze](badges/bronze.svg) | 88.4%    | n/a            | no           | JaCoCo        | n/a           |
 
 ## Python
 
-| Repository               | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |      |          |                |               |               |
+| Repository               | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |      |          |                |              |               |               |
 
 ## JavaScript / TypeScript
 
-| Repository               | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |      |          |                |               |               |
+| Repository               | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |      |          |                |              |               |               |
 
 ## Go
 
-| Repository               | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |      |          |                |               |               |
+| Repository               | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |      |          |                |              |               |               |
 
 ## Rust
 
-| Repository               | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |      |          |                |               |               |
+| Repository               | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |      |          |                |              |               |               |
 
 ## C# / .NET
 
-| Repository               | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |      |          |                |               |               |
+| Repository               | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |      |          |                |              |               |               |
 
 ## Ruby
 
-| Repository               | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |      |          |                |               |               |
+| Repository               | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |      |          |                |              |               |               |
 
 ## Other Languages
 
-| Repository               | Language | Tier | Coverage | Mutation Score | Coverage Tool | Mutation Tool |
-| ------------------------ | -------- | ---- | -------- | -------------- | ------------- | ------------- |
-| <!-- entries go here --> |          |      |          |                |               |               |
+| Repository               | Language | Tier | Coverage | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------ | -------- | ---- | -------- | -------------- | ------------ | ------------- | ------------- |
+| <!-- entries go here --> |          |      |          |                |              |               |               |
 
 ## How We Verify
 

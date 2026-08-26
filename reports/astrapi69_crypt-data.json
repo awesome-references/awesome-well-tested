@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-08-26T10:43:30.843238+00:00",
+  "verified_at": "2026-08-26T10:53:47.905780+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%",
   "coverage": {
@@ -9,6 +9,16 @@
     "source": "https://codecov.io/gh/astrapi69/crypt-data"
   },
   "mutation_score": 100.0,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 78
+      }
+    ],
+    "detected": true,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/crypt-data",
