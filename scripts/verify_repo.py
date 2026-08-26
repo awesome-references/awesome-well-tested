@@ -1238,23 +1238,33 @@ def fetch_dashboard_mutation_score(
         if not isinstance(report, dict) or "files" not in report:
             continue
 
-        detected = total = 0
+        counts = {}
         for entry in report["files"].values():
             for mutant in entry.get("mutants", []):
                 status = mutant.get("status")
-                # NoCoverage counts against the score; Ignored and CompileError
-                # are excluded, which is how the format defines it.
-                if status in ("Killed", "Survived", "Timeout", "NoCoverage"):
-                    total += 1
-                if status in ("Killed", "Timeout"):
-                    detected += 1
+                if status:
+                    counts[status] = counts.get(status, 0) + 1
+
+        # NoCoverage counts against the score; Ignored, CompileError and
+        # RuntimeError are excluded, which is how the format defines it.
+        killed = counts.get("Killed", 0) + counts.get("Timeout", 0)
+        survived = counts.get("Survived", 0)
+        no_coverage = counts.get("NoCoverage", 0)
+        total = killed + survived + no_coverage
         if not total:
             continue
 
         return {
-            "score": round(100 * detected / total, 2),
+            "score": round(100 * killed / total, 2),
             "branch": branch,
             "mutants": total,
+            "killed": killed,
+            # Survived means the line ran and no assertion noticed the change:
+            # exactly the failure mode this list opens by naming, and the only
+            # direct measurement of it available anywhere in the pipeline.
+            "survived": survived,
+            "not_covered": no_coverage,
+            "statuses": counts,
             "source": f"https://dashboard.stryker-mutator.io/reports/github.com/{owner}/{repo}/{branch}",
         }
     return None

@@ -4,6 +4,16 @@
 
 **Why this list?** High test coverage alone is meaningless. A test suite that never fails never protects. This list recognizes repositories that go beyond line coverage and invest in *real* test quality, including mutation testing, to prove their tests actually catch bugs.
 
+**What the tiers claim.** Bronze is a floor, not a verdict: it says a coverage
+figure exists, is above 80%, and was read from a service rather than taken on
+trust. It makes no claim that the tests assert anything, which is the point the
+list opens with. Silver says the project runs mutation testing, which is the
+only widely available way to find out. Gold says a mutation score is high *and*
+comes from somewhere the repository does not control.
+
+A Bronze entry is worth listing because a published figure is checkable and most
+projects publish none. It is not worth mistaking for a Gold one.
+
 ## Contents
 
 - [Tiers](#tiers)
@@ -20,11 +30,11 @@
 
 ## Tiers
 
-| Tier   | Badge                        | Criteria                                                                          |
-| ------ | ---------------------------- | --------------------------------------------------------------------------------- |
-| Gold   | ![Gold](badges/gold.svg)     | Line/Branch Coverage >= 80% + Mutation Testing configured + Mutation Score >= 70% |
-| Silver | ![Silver](badges/silver.svg) | Line/Branch Coverage >= 80% + Mutation Testing configured (any score)             |
-| Bronze | ![Bronze](badges/bronze.svg) | Line/Branch Coverage >= 80% + CI with coverage reporting                          |
+| Tier   | Badge                        | Criteria                                                                             |
+| ------ | ---------------------------- | ------------------------------------------------------------------------------------ |
+| Gold   | ![Gold](badges/gold.svg)     | Coverage >= 80% + a mutation score >= 70% that the repository cannot have made up    |
+| Silver | ![Silver](badges/silver.svg) | Coverage >= 80% + mutation testing configured (any score, however sourced)           |
+| Bronze | ![Bronze](badges/bronze.svg) | A published, independently readable coverage figure >= 80%, and nothing more claimed |
 
 ## Java
 
@@ -43,12 +53,13 @@
 
 ## Python
 
-| Repository                                     | Tier                         | Coverage              | Mutation Score | Param. Tests       | Coverage Tool | Mutation Tool      |
-| ---------------------------------------------- | ---------------------------- | --------------------- | -------------- | ------------------ | ------------- | ------------------ |
-| [btclib](https://github.com/btclib-org/btclib) | ![Silver](badges/silver.svg) | 99.93% (dev)          | n/a            | pytest, Hypothesis | pytest-cov    | cosmic-ray, mutant |
-| [vera](https://github.com/aallan/vera)         | ![Silver](badges/silver.svg) | 94.78%                | n/a            | pytest, Hypothesis | pytest-cov    | mutmut             |
-| [mutmut](https://github.com/boxed/mutmut)      | ![Silver](badges/silver.svg) | 81.44% (master, 2024) | n/a            | pytest             | Codecov       | mutmut             |
-| [iommi](https://github.com/iommirocks/iommi)   | ![Silver](badges/silver.svg) | 97.76%                | n/a            | pytest             | pytest-cov    | mutmut             |
+| Repository                                                                       | Tier                         | Coverage                 | Mutation Score | Param. Tests       | Coverage Tool | Mutation Tool      |
+| -------------------------------------------------------------------------------- | ---------------------------- | ------------------------ | -------------- | ------------------ | ------------- | ------------------ |
+| [btclib](https://github.com/btclib-org/btclib)                                   | ![Silver](badges/silver.svg) | 99.93% (dev)             | n/a            | pytest, Hypothesis | pytest-cov    | cosmic-ray, mutant |
+| [vera](https://github.com/aallan/vera)                                           | ![Silver](badges/silver.svg) | 94.78%                   | n/a            | pytest, Hypothesis | pytest-cov    | mutmut             |
+| [mutmut](https://github.com/boxed/mutmut)                                        | ![Silver](badges/silver.svg) | 81.44% (master, 2024)    | n/a            | pytest             | Codecov       | mutmut             |
+| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.76%                   | n/a            | pytest             | pytest-cov    | mutmut             |
+| [awesome-well-tested](https://github.com/awesome-references/awesome-well-tested) | ![Silver](badges/silver.svg) | 93.53% (audit-round-two) | n/a            | no                 | coverage.py   | mutmut             |
 
 ## JavaScript / TypeScript
 
@@ -129,6 +140,32 @@ Every repository on this list is verified before inclusion:
 | Provenance          | Each entry ships with a JSON report under `reports/` recording the tier, the numbers and where they came from. A PR without one does not get merged.                                                                                                |
 
 Entries are re-verified weekly. An entry that no longer clears the bar is removed quietly: the list records that it qualified, never that it stopped. An entry that moves between tiers is rewritten to the tier it holds now, with no note of what it held before. This list exists to point at software that is well tested, not to publish a verdict on software that is not.
+
+This list is listed. It appears under Python at whatever tier its own script
+awards it, which is currently Silver: it publishes a coverage figure and runs
+mutation testing, and holds no mutation score it can prove to anyone else.
+Exempting it would be the double standard the criteria exist to prevent, and
+Gold is not something it can grant itself.
+
+### What mutation data shows that coverage cannot
+
+Where a project publishes a mutation report, every mutant in it carries a
+status, and the reports record all of them rather than only the percentage. A
+*survived* mutant is a line that ran while no assertion noticed it had changed -
+the failure mode this list opens by naming, measured directly instead of argued
+about.
+
+The numbers are not academic. castkodi is listed at 100% line coverage, and its
+mutation report holds 70 mutants in code no test reaches at all: line coverage
+and mutation coverage count different things, and only one of them notices a
+test that asserts nothing. CalendR, at the other end, kills all 261 of its
+mutants, with none surviving and none uncovered.
+
+No assertion-density heuristic is attempted for the entries that have no
+mutation data. Counting assertions per test function is cheap and would look
+like a measurement, but a table-driven test with one assertion inside a loop and
+a test with twenty trivial ones would come out backwards. A number that is wrong
+in a legible way is worse than no number.
 
 ### Recognized Tools
 

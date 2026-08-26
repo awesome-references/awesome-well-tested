@@ -1,0 +1,69 @@
+{
+  "repository": "awesome-references/awesome-well-tested",
+  "verified_at": "2026-08-26T15:02:03.107284+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 93.53,
+    "branch": "audit-round-two",
+    "is_default_branch": false,
+    "measured_at": "2026-08-26T14:54:34Z",
+    "age_days": 0,
+    "source": "https://coveralls.io/github/awesome-references/awesome-well-tested"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Python",
+    "terms_tried": 4,
+    "terms_available": 4,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "awesome-references/awesome-well-tested",
+    "description": "A curated list of open-source repositories with outstanding test quality, verified by coverage metrics and mutation testing.",
+    "language": "Python",
+    "license": "CC0-1.0",
+    "stars": 0,
+    "forks": 0,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T14:53:03Z",
+    "days_since_push": 0,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "discover.yml",
+      "lint.yml",
+      "verify.yml"
+    ]
+  },
+  "coverage_tools": {
+    "coverage.py": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "\\[tool\\.coverage\\."
+      ]
+    }
+  },
+  "primary_coverage_tool": "coverage.py",
+  "mutation_tools": {
+    "mutmut": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "mutmut",
+        "\\[tool\\.mutmut\\]"
+      ]
+    }
+  },
+  "badges": null
+}
