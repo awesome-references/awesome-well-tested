@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-08-26T10:13:31.512039+00:00",
+  "verified_at": "2026-08-26T10:43:51.475463+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.91% and mutation score 99.0%",
   "coverage": {
@@ -12,14 +12,14 @@
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/mystic-crypt",
-    "description": "Cpyptograhic library in java",
+    "description": "Modern Java cryptography library: encryption, password hashing, digital signatures, key agreement and post-quantum algorithms (ML-KEM, ML-DSA, SLH-DSA)",
     "language": "Java",
     "license": "MIT",
     "stars": 11,
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:09:00Z",
+    "last_push": "2026-08-26T10:36:05Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },

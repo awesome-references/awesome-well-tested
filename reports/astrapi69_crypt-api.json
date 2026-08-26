@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-26T10:13:22.646286+00:00",
+  "verified_at": "2026-08-26T10:43:41.385280+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.39% and mutation score 100.0%",
   "coverage": {
@@ -12,14 +12,14 @@
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/crypt-api",
-    "description": "Provides interfaces for encrypting and decrypting bytes, text, and files",
+    "description": "Interfaces, enums and constants that define the cryptographic contracts shared by crypt-data and mystic-crypt",
     "language": "Java",
     "license": "MIT",
     "stars": 3,
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:05:42Z",
+    "last_push": "2026-08-26T10:14:30Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
