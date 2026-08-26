@@ -338,7 +338,7 @@ def main():
             "Pass --token or set GITHUB_TOKEN.",
             file=sys.stderr,
         )
-        sys.exit(1)
+        return 1
 
     queries = SEARCH_QUERIES.get(args.language, [])
 
@@ -358,7 +358,7 @@ def main():
 
     if not queries:
         print(f"No search queries for {args.language}", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
     all_candidates = {}
 
@@ -427,6 +427,8 @@ def main():
             )
             time.sleep(1)
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)
