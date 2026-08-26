@@ -1,0 +1,56 @@
+{
+  "repository": "Instagram/IGListKit",
+  "verified_at": "2026-08-26T14:51:45.994351+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 98.75% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 98.75,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-08-19T23:57:31Z",
+    "age_days": 6,
+    "source": "https://coveralls.io/github/Instagram/IGListKit"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": null,
+  "issues": null,
+  "metadata": {
+    "full_name": "Instagram/IGListKit",
+    "description": "A data-driven UICollectionView framework for building fast and flexible lists.",
+    "language": "Objective-C",
+    "license": "MIT",
+    "stars": 13068,
+    "forks": 1539,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-19T23:51:03Z",
+    "days_since_push": 6,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "CI.yml"
+    ]
+  },
+  "coverage_tools": {
+    "slather": {
+      "file": ".github/workflows/CI.yml",
+      "language": "Swift",
+      "matched_patterns": [
+        "\\bslather\\b"
+      ]
+    }
+  },
+  "primary_coverage_tool": "slather",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/github/Instagram/IGListKit?branch=main\"><img"
+    }
+  ]
+}

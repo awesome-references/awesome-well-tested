@@ -1,6 +1,6 @@
 {
   "repository": "yohang/CalendR",
-  "verified_at": "2026-08-26T13:06:59.470573+00:00",
+  "verified_at": "2026-08-26T14:51:17.118252+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%, backed by an independently hosted report",
   "coverage": {
@@ -31,7 +31,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": [
     "No coverage tool configuration found"
@@ -61,8 +62,8 @@
       "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection",
-        "infection/infection"
+        "infection/infection",
+        "infection/extension-installer"
       ]
     }
   },

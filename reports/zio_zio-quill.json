@@ -1,0 +1,62 @@
+{
+  "repository": "zio/zio-quill",
+  "verified_at": "2026-08-26T14:52:25.009245+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 83.6% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 83.6,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2026-08-19T01:16:24.483559Z",
+    "age_days": 7,
+    "source": "https://codecov.io/gh/zio/zio-quill"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Scala",
+    "terms_tried": 2,
+    "terms_available": 2,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "zio/zio-quill",
+    "description": "Compile-time Language Integrated Queries for Scala",
+    "language": "Scala",
+    "license": "Apache-2.0",
+    "stars": 2166,
+    "forks": 352,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T00:12:25Z",
+    "days_since_push": 0,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "release-drafter.yml",
+      "scala-steward.yml",
+      "site.yml"
+    ]
+  },
+  "coverage_tools": {
+    "scoverage": {
+      "file": "project/plugins.sbt",
+      "language": "Scala",
+      "matched_patterns": [
+        "scoverage",
+        "sbt-scoverage"
+      ]
+    }
+  },
+  "primary_coverage_tool": "scoverage",
+  "mutation_tools": null,
+  "badges": null
+}

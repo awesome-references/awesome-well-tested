@@ -14,7 +14,12 @@ import re
 from pathlib import Path
 
 SEPARATOR = re.compile(r"^\|[\s:|-]+\|$")
-REPO_LINK = re.compile(r"\[[^\]]+\]\(https://github\.com/([^/)]+)/([^/)#]+?)/?\)")
+# A link may be written with a trailing slash, a .git suffix or an anchor. All
+# three name the same repository, and treating them as different ones would let
+# the weekly run fail to find a row it had just decided to remove.
+REPO_LINK = re.compile(
+    r"\[[^\]]+\]\(https://github\.com/([^/)#\s]+)/([^/)#\s]+?)(?:\.git)?/?(?:#[^)]*)?\)"
+)
 TIER_BADGE = re.compile(r"!\[(Gold|Silver|Bronze)\]\(badges/", re.IGNORECASE)
 
 # How a report's raw keys are spelled in the list.

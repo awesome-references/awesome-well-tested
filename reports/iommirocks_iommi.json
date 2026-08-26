@@ -1,0 +1,85 @@
+{
+  "repository": "iommirocks/iommi",
+  "verified_at": "2026-08-26T14:50:30.339982+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 97.76,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2026-08-17T07:17:05.692114Z",
+    "age_days": 9,
+    "source": "https://codecov.io/gh/iommirocks/iommi"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "pytest.mark.parametrize",
+        "matches": 14
+      }
+    ],
+    "detected": true,
+    "language": "Python",
+    "terms_tried": 4,
+    "terms_available": 4,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "iommirocks/iommi",
+    "description": "Your first pick for a django power cord",
+    "language": "Python",
+    "license": "BSD-3-Clause",
+    "stars": 1085,
+    "forks": 67,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-17T07:16:10Z",
+    "days_since_push": 9,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "codecov.yml",
+      "static.yml",
+      "tests.yml"
+    ]
+  },
+  "coverage_tools": {
+    "pytest-cov": {
+      "file": ".github/workflows/codecov.yml",
+      "language": "Python",
+      "matched_patterns": [
+        "--cov\\b"
+      ]
+    },
+    "coverage.py": {
+      "file": ".coveragerc",
+      "language": "Python",
+      "matched_patterns": [
+        "file exists"
+      ]
+    }
+  },
+  "primary_coverage_tool": "pytest-cov",
+  "mutation_tools": {
+    "mutmut": {
+      "file": "setup.cfg",
+      "language": "Python",
+      "matched_patterns": [
+        "mutmut"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/iommirocks/iommi"
+    }
+  ]
+}

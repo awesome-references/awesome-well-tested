@@ -79,31 +79,82 @@ class Verifying(unittest.TestCase):
         self.assertEqual(report["mutation_score"], 94.0)
         self.assertEqual(report["mutation_score_source"], "dashboard")
 
-    def test_a_green_build_behind_a_threshold_reaches_gold(self):
-        api = self.api(
+    def enforced(self, *, conclusion="success", jobs=None, created_at=None, **kw):
+        from datetime import datetime, timedelta, timezone
+
+        if created_at is None:
+            created_at = (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
+        return self.api(
             tree=[".github/workflows/mutation.yml", "build.gradle"],
             workflows={"mutation.yml": WORKFLOW_PIT},
             files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
             coverage={"codecov": codecov(91.0)},
-            runs={"workflow_runs": [{"conclusion": "success"}]},
+            runs={"workflow_runs": [
+                {"id": 7, "conclusion": conclusion, "created_at": created_at}
+            ]},
+            jobs={"jobs": jobs if jobs is not None
+                  else [{"name": "pit", "conclusion": "success"}]},
+            **kw,
         )
-        report = self.verify(api)
+
+    def test_a_green_build_behind_a_threshold_reaches_gold(self):
+        report = self.verify(self.enforced())
         self.assertEqual(report["tier"], "gold")
         self.assertEqual(report["mutation_score"], 85.0)
         self.assertEqual(report["mutation_score_source"], "ci-threshold")
 
     def test_a_failing_build_behind_a_threshold_proves_nothing(self):
+        report = self.verify(self.enforced(conclusion="failure"))
+        self.assertEqual(report["tier"], "silver")
+        self.assertIsNone(report["mutation_score"])
+        self.assertFalse(report["mutation_ci_enforced"]["passing"])
+
+    def test_a_skipped_mutation_job_in_a_green_run_proves_nothing(self):
+        # A run concludes success when the job that matters was skipped by an
+        # `if:`, excluded from a matrix, or failed under continue-on-error.
+        report = self.verify(self.enforced(
+            jobs=[{"name": "test", "conclusion": "success"},
+                  {"name": "pit", "conclusion": "skipped"}]))
+        self.assertEqual(report["tier"], "silver")
+        self.assertFalse(report["mutation_ci_enforced"]["passing"])
+        self.assertIn("pit", report["mutation_ci_enforced"]["run"]["why"])
+
+    def test_jobs_that_cannot_be_read_prove_nothing(self):
+        report = self.verify(self.enforced(jobs=[]))
+        self.assertEqual(report["tier"], "silver")
+
+    def test_a_run_from_years_ago_proves_nothing_about_the_threshold_now(self):
+        report = self.verify(self.enforced(created_at="2019-01-01T00:00:00Z"))
+        self.assertEqual(report["tier"], "silver")
+        self.assertIn("days old", report["mutation_ci_enforced"]["run"]["why"])
+
+    def test_the_run_is_requested_for_pushes_only(self):
+        # "branch" matches a run's head branch, so a fork's pull_request run on
+        # a branch also called main would otherwise count as a run of this
+        # repository's default branch.
+        api = self.enforced()
+        self.verify(api)
+        runs_urls = [u for u in api.asked if "/actions/workflows/" in u]
+        self.assertTrue(runs_urls)
+        self.assertIn("event=push", runs_urls[0])
+
+    def test_the_report_records_where_the_threshold_came_from(self):
+        report = self.verify(self.enforced())
+        self.assertEqual(report["mutation_ci_enforced"]["threshold_from"], "build.gradle")
+
+    def test_a_threshold_in_a_comment_is_not_enforced(self):
         api = self.api(
             tree=[".github/workflows/mutation.yml", "build.gradle"],
             workflows={"mutation.yml": WORKFLOW_PIT},
-            files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
+            files={"build.gradle": BUILD_JACOCO
+                   + "// pitest { mutationThreshold = 85 }\n"},
             coverage={"codecov": codecov(91.0)},
-            runs={"workflow_runs": [{"conclusion": "failure"}]},
+            runs={"workflow_runs": [{"id": 7, "conclusion": "success"}]},
+            jobs={"jobs": [{"name": "pit", "conclusion": "success"}]},
         )
         report = self.verify(api)
         self.assertEqual(report["tier"], "silver")
         self.assertIsNone(report["mutation_score"])
-        self.assertFalse(report["mutation_ci_enforced"]["passing"])
 
     def test_a_readme_badge_stops_at_silver(self):
         api = self.api(
@@ -227,6 +278,33 @@ class Verifying(unittest.TestCase):
         )
         self.assertIsNone(self.verify(api)["parameterized_tests"])
 
+    def test_a_rate_limited_search_does_not_cost_the_entry(self):
+        # The column is informational. Letting the search endpoint's limit
+        # propagate would make it decide whether the entry gets verified at all.
+        api = self.api(
+            tree=[".github/workflows/ci.yml", "build.gradle"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"build.gradle": BUILD_JACOCO},
+            coverage={"codecov": codecov(91.0)},
+            raise_on=[("/search/code", vr.VerificationIncomplete("HTTP 403"))],
+        )
+        report = self.verify(api)
+        self.assertEqual(report["tier"], "bronze")
+        self.assertIsNone(report["parameterized_tests"])
+
+    def test_a_search_that_stopped_early_says_so(self):
+        api = self.api(
+            tree=[".github/workflows/ci.yml", "build.gradle"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"build.gradle": BUILD_JACOCO},
+            coverage={"codecov": codecov(91.0)},
+            searches={"ParameterizedTest": 12},
+            raise_on=[("RunWith", vr.VerificationIncomplete("HTTP 403"))],
+        )
+        result = self.verify(api)["parameterized_tests"]
+        self.assertFalse(result["complete"])
+        self.assertEqual(len(result["frameworks"]), 1)
+
     def test_a_language_with_no_markers_is_skipped(self):
         api = self.api(
             metadata=repo_metadata(language="Erlang"),
@@ -235,6 +313,41 @@ class Verifying(unittest.TestCase):
             coverage={"codecov": codecov(91.0)},
         )
         self.assertIsNone(self.verify(api)["parameterized_tests"])
+
+    # -- config files that are their own evidence ---------------------------
+
+    def test_a_bare_coveragerc_counts_as_a_coverage_tool(self):
+        # Its sections are "[run]" and "[report]", so no pattern written for
+        # pyproject.toml's "[tool.coverage." spelling can ever match it.
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml", ".coveragerc"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={".coveragerc": "[run]\nbranch = True\n\n[report]\nfail_under = 92\n"},
+            coverage={"codecov": codecov(91.0)},
+        )
+        report = self.verify(api)
+        self.assertIn("coverage.py", report["coverage_tools"])
+        self.assertEqual(report["coverage_tools"]["coverage.py"]["file"], ".coveragerc")
+
+    def test_a_bare_nycrc_counts_as_a_coverage_tool(self):
+        api = self.api(
+            metadata=repo_metadata(language="TypeScript"),
+            tree=[".github/workflows/ci.yml", ".nycrc"],
+            files={".nycrc": '{"all": true, "check-coverage": true, "lines": 95}'},
+            workflows={"ci.yml": WORKFLOW_CI},
+            coverage={"codecov": codecov(91.0)},
+        )
+        self.assertIn("istanbul", self.verify(api)["coverage_tools"])
+
+    def test_an_absent_config_file_is_not_evidence(self):
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            coverage={"codecov": codecov(91.0)},
+        )
+        self.assertEqual(self.verify(api)["coverage_tools"], None)
 
     # -- request economy -----------------------------------------------------
 
@@ -258,6 +371,52 @@ class Verifying(unittest.TestCase):
             coverage={"codecov": codecov(91.0)},
         )
         self.assertEqual(self.verify(api)["tier"], "bronze")
+
+
+class RealServiceShapes(unittest.TestCase):
+    """The shapes the live services actually return, which the fake used to be
+    unable to produce - so the code handling them was never executed."""
+
+    def api(self, coverage):
+        return FakeAPI(metadata=repo_metadata(), coverage=coverage)
+
+    def test_a_repository_codecov_knows_but_has_no_report_for(self):
+        # 200 with totals: null, not a 404.
+        from _support.fakes import codecov_without_a_report
+
+        api = self.api({"codecov": codecov_without_a_report()})
+        self.assertIsNone(vr.fetch_coverage_percent(api, "acme", "widget", "main"))
+
+    def test_it_falls_through_to_coveralls(self):
+        from _support.fakes import codecov_without_a_report
+
+        api = self.api({"codecov": codecov_without_a_report(),
+                        "coveralls": coveralls(88.0)})
+        result = vr.fetch_coverage_percent(api, "acme", "widget", "main")
+        self.assertEqual(result["service"], "Coveralls")
+
+    def test_a_timestamp_without_a_timezone_still_yields_an_age(self):
+        # Codecov's updatestamp is naive; subtracting it from an aware "now"
+        # raises unless it is normalised first.
+        from _support.fakes import codecov_naive_timestamp
+
+        api = self.api({"codecov": codecov_naive_timestamp()})
+        result = vr.fetch_coverage_percent(api, "acme", "widget", "main")
+        self.assertIsInstance(result["age_days"], int)
+        self.assertGreater(result["age_days"], 0)
+
+    def test_coveralls_without_branch_or_date_still_yields_a_figure(self):
+        from _support.fakes import coveralls_sparse
+
+        api = self.api({"coveralls": coveralls_sparse(91.0)})
+        result = vr.fetch_coverage_percent(api, "acme", "widget", "main")
+        self.assertEqual(result["coverage"], 91.0)
+        self.assertIsNone(result["branch"])
+        self.assertIsNone(result["is_default_branch"])
+        self.assertIsNone(result["age_days"])
+
+    def test_neither_service_knowing_the_repository_is_not_an_error(self):
+        self.assertIsNone(vr.fetch_coverage_percent(self.api({}), "acme", "widget", "main"))
 
 
 class CommandLine(unittest.TestCase):

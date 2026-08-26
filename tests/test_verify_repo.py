@@ -452,6 +452,55 @@ class PrimaryCoverageTool(unittest.TestCase):
         self.assertIsNone(vr.primary_coverage_tool({}, "PHP"))
 
 
+class StripVolatileDerivedFields(unittest.TestCase):
+    """Everything computed from "now" has to be stripped, or nothing compares
+    equal and the weekly noise pull request comes back."""
+
+    def base(self):
+        return {
+            "repository": "acme/x",
+            "verified_at": "2026-01-01T00:00:00+00:00",
+            "tier": "gold",
+            "coverage": {"service": "Codecov", "coverage": 95.0, "age_days": 30,
+                         "measured_at": "2026-01-01T00:00:00Z"},
+            "parameterized_tests": {"frameworks": [{"framework": "JUnit 5", "matches": 40}]},
+            "issues": ["No activity for 400 days"],
+            "metadata": {"stars": 1, "forks": 0, "last_push": "a", "days_since_push": 1},
+        }
+
+    def test_a_growing_coverage_age_does_not_count_as_a_change(self):
+        import copy
+        from _support import prune_unchanged_reports as prune
+
+        a, b = self.base(), copy.deepcopy(self.base())
+        b["coverage"]["age_days"] = 37
+        self.assertEqual(prune.strip_volatile(a), prune.strip_volatile(b))
+
+    def test_a_growing_search_count_does_not_count_as_a_change(self):
+        import copy
+        from _support import prune_unchanged_reports as prune
+
+        a, b = self.base(), copy.deepcopy(self.base())
+        b["parameterized_tests"]["frameworks"][0]["matches"] = 91
+        self.assertEqual(prune.strip_volatile(a), prune.strip_volatile(b))
+
+    def test_a_growing_day_count_inside_an_issue_does_not_count_as_a_change(self):
+        import copy
+        from _support import prune_unchanged_reports as prune
+
+        a, b = self.base(), copy.deepcopy(self.base())
+        b["issues"] = ["No activity for 407 days"]
+        self.assertEqual(prune.strip_volatile(a), prune.strip_volatile(b))
+
+    def test_a_coverage_figure_moving_still_counts(self):
+        import copy
+        from _support import prune_unchanged_reports as prune
+
+        a, b = self.base(), copy.deepcopy(self.base())
+        b["coverage"]["coverage"] = 81.0
+        self.assertNotEqual(prune.strip_volatile(a), prune.strip_volatile(b))
+
+
 class StripVolatile(unittest.TestCase):
     def base(self):
         return {

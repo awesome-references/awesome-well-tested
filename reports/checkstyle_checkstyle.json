@@ -1,0 +1,161 @@
+{
+  "repository": "checkstyle/checkstyle",
+  "verified_at": "2026-08-26T14:50:05.354133+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 99.42% and mutation score 99.0%, backed by a threshold the build enforces",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 99.42,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2024-01-29T18:16:38.731575Z",
+    "age_days": 939,
+    "source": "https://codecov.io/gh/checkstyle/checkstyle"
+  },
+  "mutation_score": 99.0,
+  "mutation_score_source": "ci-threshold",
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": {
+    "tool": "pit",
+    "threshold": 99.0,
+    "threshold_from": "pom.xml",
+    "workflow": ".github/workflows/pitest.yml",
+    "run": {
+      "run_id": 30974394101,
+      "head_sha": "1eef40c6826e3f07aa9ad67f4e5de60bffa066f9",
+      "created_at": "2026-08-05T04:10:51Z",
+      "conclusion": "success",
+      "event": "push",
+      "passing": true,
+      "jobs": {
+        "test (blocks)": "success",
+        "test (api)": "success",
+        "test (coding-1)": "success",
+        "test (indentation)": "success",
+        "test (common-2)": "success",
+        "test (imports)": "success",
+        "test (packagenamesloader)": "success",
+        "test (javadoc)": "success",
+        "test (design)": "success",
+        "test (modifier)": "success",
+        "test (ant)": "success",
+        "test (filters)": "success",
+        "test (header)": "success",
+        "test (whitespace)": "success",
+        "test (main)": "success",
+        "test (common)": "success",
+        "test (annotation)": "success",
+        "test (java-ast-visitor)": "success",
+        "test (xpath)": "success",
+        "test (coding-2)": "success",
+        "test (metrics)": "success",
+        "test (regexp)": "success",
+        "test (coding-require-this-check)": "success",
+        "test (misc)": "success",
+        "test (naming)": "success",
+        "test (utils)": "success",
+        "test (tree-walker)": "success",
+        "test (sizes)": "success"
+      }
+    },
+    "passing": true
+  },
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 6
+      }
+    ],
+    "detected": true,
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "checkstyle/checkstyle",
+    "description": "Checkstyle is a development tool to help programmers write Java code that adheres to a coding standard. By default it supports the Google Java Style Guide and Sun Code Conventions, but is highly configurable. It can be invoked with an ANT task and a command line program.",
+    "language": "Java",
+    "license": "LGPL-2.1",
+    "stars": 9001,
+    "forks": 4177,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T12:52:47Z",
+    "days_since_push": 0,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "README.md",
+      "actionlint.yml",
+      "antlr-report.yml",
+      "bump-license-year.yml",
+      "bump-version-and-update-milestone.yml",
+      "check-performance-regression.yml",
+      "check-pr-description.yml",
+      "checker-framework.yml",
+      "codeql-analysis.yml",
+      "diff-report.yml",
+      "error-prone.yml",
+      "google-java-format.yml",
+      "linkcheck-on-comment.yml",
+      "no-error-workflow.yml",
+      "no-exception-workflow.yml",
+      "no-old-refs.yml",
+      "pitest.yml",
+      "qodana.yml",
+      "regression-report.yml",
+      "release-copy-github-io-to-sourceforge.yml",
+      "release-maven-perform.yml",
+      "release-maven-prepare.yml",
+      "release-new-milestone-and-issues-in-other-repos.yml",
+      "release-publish-releasenotes-twitter.yml",
+      "release-update-github-io.yml",
+      "release-update-github-page.yml",
+      "release-update-xdoc-with-releasenotes.yml",
+      "release-upload-all-jar.yml",
+      "release.yml",
+      "releasenotes-gen.yml",
+      "remainder-bot.yml",
+      "run-checkstyle-ast-print.yml",
+      "run-checkstyle.yml",
+      "run-link-check.yml",
+      "set-milestone-on-referenced-issue.yml",
+      "shellcheck.yml",
+      "site-latest.yml",
+      "site.yml",
+      "verify-no-exception-configs.yml"
+    ],
+    "circle_ci": true
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "pom.xml",
+      "language": "Java/Kotlin/Scala/Groovy",
+      "matched_patterns": [
+        "jacoco",
+        "org\\.jacoco"
+      ]
+    }
+  },
+  "primary_coverage_tool": "jacoco",
+  "mutation_tools": {
+    "pit": {
+      "file": "pom.xml",
+      "language": "Java/Kotlin/Scala/Groovy",
+      "matched_patterns": [
+        "pitest",
+        "org\\.pitest"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/github/checkstyle/checkstyle?branch=master"
+    }
+  ]
+}

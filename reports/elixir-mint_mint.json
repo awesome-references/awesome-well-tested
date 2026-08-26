@@ -1,0 +1,69 @@
+{
+  "repository": "elixir-mint/mint",
+  "verified_at": "2026-08-26T14:52:01.356706+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 88.16% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 88.16,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-08-18T15:31:57Z",
+    "age_days": 7,
+    "source": "https://coveralls.io/github/elixir-mint/mint"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "StreamData property testing",
+        "matches": 4
+      }
+    ],
+    "detected": true,
+    "language": "Elixir",
+    "terms_tried": 3,
+    "terms_available": 3,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "elixir-mint/mint",
+    "description": "Functional HTTP client for Elixir with support for HTTP/1 and HTTP/2 \ud83c\udf31",
+    "language": "Elixir",
+    "license": "Apache-2.0",
+    "stars": 1418,
+    "forks": 125,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-18T15:30:45Z",
+    "days_since_push": 7,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "main.yml"
+    ]
+  },
+  "coverage_tools": {
+    "excoveralls": {
+      "file": "mix.exs",
+      "language": "Elixir",
+      "matched_patterns": [
+        "excoveralls",
+        "tool:\\s*ExCoveralls"
+      ]
+    }
+  },
+  "primary_coverage_tool": "excoveralls",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/elixir-mint/mint"
+    }
+  ]
+}

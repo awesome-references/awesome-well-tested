@@ -37,7 +37,9 @@ jobs:
         # The built-in token lifts the API limit from 60 to 1000 requests per
         # hour, which is what makes verifying the whole list in one run possible.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # check_parameterized_tests uses code search, which is stricter than
+          # the rest of the API. discover.yml already carries this fallback.
+          GITHUB_TOKEN: ${{ secrets.AWESOME_LIST_TOKEN || secrets.GITHUB_TOKEN }}
           REPOS: ${{ inputs.repos }}
         run: |
           set -o pipefail
@@ -67,12 +69,20 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Fail if verification itself failed
+        # Ahead of the pull request step on purpose. A run that refused to
+        # rewrite the list must not deliver its results as though it had.
+        if: steps.verify.outputs.status != '0'
+        run: |
+          echo 'The verification run did not complete or refused to apply its results.' >&2
+          echo 'See the job summary. Nothing was changed.' >&2
+          exit 1
+
       - name: Discard report changes that are only timestamps
-        if: always()
         run: python scripts/prune_unchanged_reports.py
 
       - name: Open a pull request with the refreshed reports
-        if: always() && (github.event_name == 'schedule' || inputs.open_pr)
+        if: steps.verify.outputs.status == '0' && (github.event_name == 'schedule' || inputs.open_pr)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -93,8 +103,4 @@ jobs:
             --base "${{ github.event.repository.default_branch }}" \
             --head "$branch"
 
-      - name: Fail if verification itself failed
-        if: always() && steps.verify.outputs.status != '0'
-        run: |
-          echo 'The verification run did not complete. See the job summary.' >&2
-          exit 1
+

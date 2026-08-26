@@ -1,6 +1,6 @@
 {
   "repository": "paragonie/easydb",
-  "verified_at": "2026-08-26T13:07:38.246746+00:00",
+  "verified_at": "2026-08-26T14:51:20.774114+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -26,7 +26,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -62,10 +63,11 @@
   "primary_coverage_tool": "phpunit",
   "mutation_tools": {
     "infection": {
-      "file": "infection.json.dist",
+      "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection"
+        "infection/infection",
+        "infection/extension-installer"
       ]
     }
   },

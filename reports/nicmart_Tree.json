@@ -1,6 +1,6 @@
 {
   "repository": "nicmart/Tree",
-  "verified_at": "2026-08-26T13:06:48.053930+00:00",
+  "verified_at": "2026-08-26T14:51:13.898216+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -18,8 +18,29 @@
   "mutation_ci_enforced": {
     "tool": "infection",
     "threshold": 100.0,
+    "threshold_from": "infection.json",
     "workflow": ".github/workflows/integrate.yaml",
-    "last_run": "success",
+    "run": {
+      "run_id": 24399171143,
+      "head_sha": "f265b88b3956f0e49087fc3ebc7bebb7e0e0e839",
+      "created_at": "2026-04-14T12:34:40Z",
+      "conclusion": "success",
+      "event": "push",
+      "passing": true,
+      "jobs": {
+        "Static Code Analysis (8.0, locked)": "success",
+        "Coding Standards (8.0, locked)": "success",
+        "Code Coverage (8.0, locked)": "success",
+        "Dependency Analysis (8.0, locked)": "success",
+        "Mutation Tests (8.0, locked)": "success",
+        "Tests (8.0, locked)": "success",
+        "Tests (8.3, locked)": "success",
+        "Tests (8.1, locked)": "success",
+        "Tests (8.2, locked)": "success",
+        "Tests (8.5, locked)": "success",
+        "Tests (8.4, locked)": "success"
+      }
+    },
     "passing": true
   },
   "parameterized_tests": {
@@ -27,7 +48,8 @@
     "detected": false,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -65,7 +87,6 @@
       "file": "infection.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection",
         "infection/infection"
       ]
     }

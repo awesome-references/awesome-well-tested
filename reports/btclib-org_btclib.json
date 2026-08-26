@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-08-26T13:02:54.955802+00:00",
+  "verified_at": "2026-08-26T14:50:19.092300+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -30,7 +30,8 @@
     "detected": true,
     "language": "Python",
     "terms_tried": 2,
-    "terms_available": 4
+    "terms_available": 4,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -42,7 +43,7 @@
     "forks": 47,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T12:57:42Z",
+    "last_push": "2026-08-26T14:46:36Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -92,7 +93,14 @@
       "file": "pyproject.toml",
       "language": "Python",
       "matched_patterns": [
-        "cosmic.ray"
+        "[\\\"']cosmic[-_]ray[\\\"']"
+      ]
+    },
+    "mutant": {
+      "file": ".github/workflows/mutation.yml",
+      "language": "Ruby",
+      "matched_patterns": [
+        "\\bmutant\\b"
       ]
     }
   },

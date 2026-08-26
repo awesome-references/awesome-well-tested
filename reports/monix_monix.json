@@ -1,0 +1,67 @@
+{
+  "repository": "monix/monix",
+  "verified_at": "2026-08-26T14:52:15.549016+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 85.0% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 85.0,
+    "branch": "master",
+    "is_default_branch": false,
+    "measured_at": "2024-01-25T00:48:07.722286Z",
+    "age_days": 944,
+    "source": "https://codecov.io/gh/monix/monix"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "ScalaCheck (property-based)",
+        "matches": 24
+      }
+    ],
+    "detected": true,
+    "language": "Scala",
+    "terms_tried": 2,
+    "terms_available": 2,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "monix/monix",
+    "description": "Asynchronous, Reactive Programming for Scala and Scala.js.",
+    "language": "Scala",
+    "license": "Apache-2.0",
+    "stars": 1928,
+    "forks": 243,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-25T06:14:09Z",
+    "days_since_push": 1,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "build.yml",
+      "manual-publish.yml",
+      "opencode.yml",
+      "renovate.yaml"
+    ]
+  },
+  "coverage_tools": {
+    "scoverage": {
+      "file": "project/plugins.sbt",
+      "language": "Scala",
+      "matched_patterns": [
+        "scoverage",
+        "sbt-scoverage"
+      ]
+    }
+  },
+  "primary_coverage_tool": "scoverage",
+  "mutation_tools": null,
+  "badges": null
+}

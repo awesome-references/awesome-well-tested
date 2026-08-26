@@ -1,0 +1,72 @@
+{
+  "repository": "auth0/Auth0.swift",
+  "verified_at": "2026-08-26T14:51:53.480490+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 94.59% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 94.59,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2026-08-24T17:04:26.872482Z",
+    "age_days": 1,
+    "source": "https://codecov.io/gh/auth0/Auth0.swift"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Swift",
+    "terms_tried": 2,
+    "terms_available": 2,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "auth0/Auth0.swift",
+    "description": "Auth0 SDK for Apple platforms",
+    "language": "Swift",
+    "license": "MIT",
+    "stars": 460,
+    "forks": 267,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-19T12:28:44Z",
+    "days_since_push": 7,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "claude-code-review.yml",
+      "docs.yml",
+      "main.yml",
+      "release.yml",
+      "rl-scanner.yml",
+      "sca_scan.yml"
+    ]
+  },
+  "coverage_tools": {
+    "slather": {
+      "file": ".github/workflows/main.yml",
+      "language": "Swift",
+      "matched_patterns": [
+        "\\bslather\\b"
+      ]
+    }
+  },
+  "primary_coverage_tool": "slather",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/github/auth0/Auth0.swift"
+    },
+    {
+      "service": "Shields.io (service badge)",
+      "match": "img.shields.io/codecov/"
+    }
+  ]
+}

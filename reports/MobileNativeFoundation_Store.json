@@ -1,0 +1,66 @@
+{
+  "repository": "MobileNativeFoundation/Store",
+  "verified_at": "2026-08-26T14:51:49.183802+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 80.89% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 80.89,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-08-24T08:54:59.490275Z",
+    "age_days": 2,
+    "source": "https://codecov.io/gh/MobileNativeFoundation/Store"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Kotlin",
+    "terms_tried": 3,
+    "terms_available": 3,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "MobileNativeFoundation/Store",
+    "description": "A library for reading and writing data that lives in network, disk, and memory.",
+    "language": "Kotlin",
+    "license": "Apache-2.0",
+    "stars": 3416,
+    "forks": 215,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-24T08:48:43Z",
+    "days_since_push": 2,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "KMMBridge-Release.yml",
+      "add_issue_to_project.yml",
+      "ci.yml",
+      "create_swift_package.yml"
+    ]
+  },
+  "coverage_tools": {
+    "kover": {
+      "file": ".github/workflows/ci.yml",
+      "language": "Kotlin",
+      "matched_patterns": [
+        "\\bkover"
+      ]
+    }
+  },
+  "primary_coverage_tool": "kover",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/MobileNativeFoundation/Store"
+    }
+  ]
+}

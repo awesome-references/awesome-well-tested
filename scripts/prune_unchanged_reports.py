@@ -23,6 +23,7 @@ Usage:
 import argparse
 import copy
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -30,6 +31,15 @@ from pathlib import Path
 # Fields that change on their own without saying anything about test quality.
 VOLATILE_TOP_LEVEL = ["verified_at"]
 VOLATILE_METADATA = ["stars", "forks", "last_push", "days_since_push"]
+# age_days is computed from "now" at verification time, so it grows by seven
+# every week for an entry whose coverage figure has not moved. Leaving it in the
+# comparison meant nothing was ever equal and every weekly run opened the noise
+# pull request this script exists to suppress.
+VOLATILE_COVERAGE = ["age_days"]
+# A code-search total_count drifts as the repository grows.
+VOLATILE_PARAMETERIZED = ["matches"]
+# The activity issue embeds a day count whose own source field is stripped.
+DAY_COUNT_IN_TEXT = re.compile(r"No activity for \d+ days")
 
 
 def strip_volatile(report: dict) -> dict:
@@ -37,10 +47,35 @@ def strip_volatile(report: dict) -> dict:
     stripped = copy.deepcopy(report)
     for key in VOLATILE_TOP_LEVEL:
         stripped.pop(key, None)
+
     metadata = stripped.get("metadata")
     if isinstance(metadata, dict):
         for key in VOLATILE_METADATA:
             metadata.pop(key, None)
+
+    coverage = stripped.get("coverage")
+    if isinstance(coverage, dict):
+        for key in VOLATILE_COVERAGE:
+            coverage.pop(key, None)
+
+    parameterized = stripped.get("parameterized_tests")
+    if isinstance(parameterized, dict):
+        # These describe the run that looked, not the repository it looked at.
+        for key in ("terms_tried", "terms_available", "complete"):
+            parameterized.pop(key, None)
+        for framework in parameterized.get("frameworks") or []:
+            if isinstance(framework, dict):
+                for key in VOLATILE_PARAMETERIZED:
+                    framework.pop(key, None)
+
+    issues = stripped.get("issues")
+    if isinstance(issues, list):
+        stripped["issues"] = [
+            DAY_COUNT_IN_TEXT.sub("No activity for over a year", issue)
+            if isinstance(issue, str) else issue
+            for issue in issues
+        ]
+
     return stripped
 
 

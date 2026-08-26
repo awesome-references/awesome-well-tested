@@ -77,6 +77,11 @@ MUTATION_INVOCATIONS = {
 # Keyed by tool: a repository can carry configuration for more than one, and
 # reading Stryker's "break" as if it were PIT's mutationThreshold would award a
 # tier on a number belonging to something else.
+STRYKER_THRESHOLDS = [
+    r"[\"']break[\"']\s*:\s*(\d+(?:\.\d+)?)",
+    r"--break-at[= ](\d+(?:\.\d+)?)",
+]
+
 MUTATION_THRESHOLDS = {
     "pit": [
         r"mutationThreshold\s*[=:]\s*(\d+(?:\.\d+)?)",
@@ -86,16 +91,20 @@ MUTATION_THRESHOLDS = {
         r"--min-msi[= ](\d+(?:\.\d+)?)",
         r"[\"']minMsi[\"']\s*:\s*(\d+(?:\.\d+)?)",
     ],
-    "stryker": [
-        r"[\"']break[\"']\s*:\s*(\d+(?:\.\d+)?)",
-        r"--break-at[= ](\d+(?:\.\d+)?)",
-    ],
+    # Stryker.NET and Stryker4s use the same syntax under different keys, so an
+    # enforced threshold there could never be seen.
+    "stryker": STRYKER_THRESHOLDS,
+    "stryker-net": STRYKER_THRESHOLDS,
+    "stryker4s": STRYKER_THRESHOLDS,
 }
 
 # Bounds on the parameterized-test check: enough evidence, or enough spent
 # looking. Code search costs one request per term and is tightly rate limited.
 MAX_PARAMETERIZED_HITS = 2
 MAX_PARAMETERIZED_QUERIES = 4
+
+# How stale a green run may be and still stand as evidence for a threshold.
+MAX_ENFORCING_RUN_AGE_DAYS = 180
 
 # Minimum line/branch coverage required for any tier
 MIN_COVERAGE = 80.0
@@ -384,7 +393,10 @@ MUTATION_TOOLS = {
     },
     "cosmic-ray": {
         "files": ["pyproject.toml", "setup.cfg", ".cosmic-ray.toml"],
-        "patterns": [r"cosmic.ray", r"cosmic_ray"],
+        # "cosmic.ray" used "." as a wildcard and matched the phrase "cosmic ray"
+        # in any description field.
+        "patterns": [r"\[tool\.cosmic-ray", r"cosmic-ray\s+(?:init|exec|baseline)",
+                     r"[\"']cosmic[-_]ray[\"']"],
         "language": "Python",
     },
     "stryker": {
@@ -411,7 +423,10 @@ MUTATION_TOOLS = {
     },
     "infection": {
         "files": ["composer.json", "infection.json", "infection.json.dist"],
-        "patterns": [r"infection", r"infection/infection"],
+        # Not the bare word: "Infection spread simulation" is a package
+        # description, not a PHP mutation testing setup.
+        "patterns": [r"infection/infection", r"vendor/bin/infection", r"--min-msi",
+                     r"infection\.json5?", r"infection/extension-installer"],
         "language": "PHP",
     },
     "descartes": {
@@ -912,6 +927,30 @@ def fetch_workflow_contents(
     return contents
 
 
+# Files that exist only to configure one tool. Their presence is the evidence;
+# requiring a content pattern as well meant a canonical .coveragerc, whose
+# sections are bare "[run]" and "[report]", could never match the patterns that
+# look for pyproject.toml's "[tool.coverage." spelling.
+EVIDENCE_FILES = {
+    "coverage.py": [".coveragerc"],
+    "istanbul": [".nycrc", ".nycrc.json", ".nycrc.yml"],
+    "c8": [".c8rc", ".c8rc.json"],
+    "octocov": [".octocov.yml"],
+    "go-test-coverage": [".testcoverage.yml"],
+    "slather": [".slather.yml"],
+    "simplecov": [".simplecov"],
+    "gremlins": [".gremlins.yaml", ".gremlins.yml"],
+    "muter": [".muter.conf.yml"],
+    "mutant": ["mutant.yml"],
+    "stryker-net": ["stryker-config.json"],
+    "stryker": ["stryker.conf.js", "stryker.conf.mjs", "stryker.conf.cjs",
+                "stryker.conf.json", "stryker.config.mjs"],
+    "stryker4s": ["stryker4s.conf"],
+    "cosmic-ray": [".cosmic-ray.toml"],
+    "infection": ["infection.json", "infection.json5", "infection.json.dist"],
+}
+
+
 def check_tools(
     api: GitHubAPI,
     owner: str,
@@ -934,6 +973,15 @@ def check_tools(
     workflow_contents = workflow_contents or {}
 
     for tool_name, tool_info in tool_definitions.items():
+        for evidence in EVIDENCE_FILES.get(tool_name, []):
+            if tree is not None and evidence in tree:
+                found[tool_name] = {
+                    "file": evidence,
+                    "language": tool_info["language"],
+                    "matched_patterns": ["file exists"],
+                }
+                break
+
         for filename in tool_info["files"]:
             # ".github/workflows" is a directory marker: scan every workflow file instead
             if filename == ".github/workflows":
@@ -1036,6 +1084,7 @@ def check_parameterized_tests(
 
     frameworks = []
     queries = 0
+    complete = True
     for term, label in markers:
         # Code search is rate limited to about 30 requests a minute and each
         # query needs its own, so this is bounded twice: enough evidence, or
@@ -1043,7 +1092,15 @@ def check_parameterized_tests(
         if len(frameworks) >= MAX_PARAMETERIZED_HITS or queries >= MAX_PARAMETERIZED_QUERIES:
             break
         query = urllib.parse.quote(f"repo:{owner}/{repo} {term}")
-        data = api.get(f"{API_BASE}/search/code?q={query}&per_page=1")
+        try:
+            data = api.get(f"{API_BASE}/search/code?q={query}&per_page=1")
+        except VerificationIncomplete:
+            # This check decides nothing: it fills a column. Letting the search
+            # endpoint's rate limit propagate would make an informational
+            # lookup cost the entry its whole verification, and under --apply
+            # a skipped entry is one the list can never refresh.
+            complete = False
+            break
         queries += 1
         if isinstance(data, dict) and data.get("total_count", 0) > 0:
             label_names = {f["framework"] for f in frameworks}
@@ -1051,12 +1108,17 @@ def check_parameterized_tests(
                 frameworks.append({"framework": label, "matches": data["total_count"]})
         time.sleep(throttle)
 
+    if not complete and not frameworks:
+        # Nothing was learned, and "none found" would be a lie.
+        return None
+
     return {
         "frameworks": frameworks,
         "detected": bool(frameworks),
         "language": language,
         "terms_tried": queries,
         "terms_available": len(markers),
+        "complete": complete,
     }
 
 
@@ -1198,6 +1260,110 @@ def fetch_dashboard_mutation_score(
     return None
 
 
+COMMENT_PATTERNS = [
+    re.compile(r"<!--.*?-->", re.DOTALL),      # XML, HTML
+    re.compile(r"/\*.*?\*/", re.DOTALL),       # C-family, JSON5
+    re.compile(r"^\s*#.*$", re.MULTILINE),     # YAML, TOML, shell
+    re.compile(r"^\s*//.*$", re.MULTILINE),    # JSON5, JS
+]
+
+
+def strip_comments(text: str) -> str:
+    """Remove the commonest comment forms before looking for a live setting.
+
+    A threshold inside a commented-out block is not a threshold anyone enforces,
+    and the patterns that look for one have no notion of syntax.
+    """
+    for pattern in COMMENT_PATTERNS:
+        text = pattern.sub("", text)
+    return text
+
+
+def last_change_to(api: GitHubAPI, owner: str, repo: str, path: str, branch: str) -> str | None:
+    """When the file the threshold was read from was last touched."""
+    commits = api.get(
+        f"{API_BASE}/repos/{owner}/{repo}/commits"
+        f"?path={urllib.parse.quote(path)}&sha={urllib.parse.quote(branch)}&per_page=1"
+    )
+    if isinstance(commits, list) and commits:
+        commit = commits[0].get("commit") or {}
+        return (commit.get("committer") or {}).get("date")
+    return None
+
+
+def workflow_run_is_wholly_green(
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    workflow_file: str,
+    branch: str,
+    threshold_path: str | None = None,
+) -> dict | None:
+    """The latest completed run of one workflow, and whether every job in it ran.
+
+    A run concludes "success" when the job that matters was skipped by an `if:`,
+    excluded from a matrix, or failed under continue-on-error. "The build is
+    green, therefore the score is at least the threshold" only follows if the
+    work actually happened, so every job in the run has to have concluded
+    success - conservative, and wrong in the direction that withholds a tier
+    rather than granting one that was not earned.
+    """
+    # event=push matters: "branch" matches a run's HEAD branch, so a
+    # pull_request run from a fork whose branch is also called main would
+    # otherwise be read as a run of this repository's default branch - having
+    # executed the fork's code and the fork's threshold.
+    runs = api.get(
+        f"{API_BASE}/repos/{owner}/{repo}/actions/workflows/"
+        f"{urllib.parse.quote(workflow_file)}/runs"
+        f"?branch={urllib.parse.quote(branch)}&event=push&per_page=1&status=completed"
+    )
+    if not isinstance(runs, dict) or not runs.get("workflow_runs"):
+        return None
+
+    run = runs["workflow_runs"][0]
+    detail = {
+        "run_id": run.get("id"),
+        "head_sha": run.get("head_sha"),
+        "created_at": run.get("created_at"),
+        "conclusion": run.get("conclusion"),
+        "event": run.get("event"),
+    }
+    if run.get("conclusion") != "success":
+        return {**detail, "passing": False, "why": f"run concluded {run.get('conclusion')}"}
+
+    # The threshold is read from the file as it stands now, so a run from years
+    # ago proves nothing about it. Two stricter rules were tried and both
+    # produced false negatives on healthy projects: requiring the run to sit at
+    # the branch tip punishes anything that pushes faster than its mutation
+    # workflow runs, and requiring it to postdate the last change to the
+    # threshold's file punishes a threshold that lives in pom.xml, which changes
+    # for version bumps that have nothing to do with it. What is left is a
+    # recency bound, which misses only the case where a threshold was lowered
+    # and no push has happened since.
+    age = _age_in_days(run.get("created_at"))
+    if age is not None and age > MAX_ENFORCING_RUN_AGE_DAYS:
+        return {
+            **detail,
+            "passing": False,
+            "why": f"the newest run is {age} days old",
+        }
+
+    jobs = api.get(f"{API_BASE}/repos/{owner}/{repo}/actions/runs/{run.get('id')}/jobs?per_page=100")
+    if not isinstance(jobs, dict) or not jobs.get("jobs"):
+        return {**detail, "passing": False, "why": "the run's jobs could not be read"}
+
+    conclusions = {j.get("name"): j.get("conclusion") for j in jobs["jobs"]}
+    not_run = sorted(n for n, c in conclusions.items() if c != "success")
+    if not_run:
+        return {
+            **detail,
+            "passing": False,
+            "why": f"these jobs did not run to success: {', '.join(not_run)}",
+            "jobs": conclusions,
+        }
+    return {**detail, "passing": True, "jobs": conclusions}
+
+
 def check_ci_enforced_mutation(
     api: GitHubAPI,
     owner: str,
@@ -1210,65 +1376,78 @@ def check_ci_enforced_mutation(
     """Detect a mutation run that CI performs and that fails below a threshold.
 
     A threshold the build enforces is a lower bound somebody else's machine has
-    already checked: if the workflow is green, the score is at least that. That
-    makes it evidence in a way a number typed into a README is not.
+    already checked: if every job in the workflow ran and the workflow is green,
+    the score is at least that. That makes it evidence in a way a number typed
+    into a README is not.
+
+    The threshold is read only from the invoking workflow and from the detected
+    tool's own configuration files, with comments removed. Searching every file
+    the run happened to fetch would let a number nobody enforces - in a comment,
+    in an inactive Maven profile, in an unrelated tool's config - stand in for
+    one that is enforced.
     """
     if not mutation_tools:
         return None
 
-    invoking = None
+    invocations = []
     for path, text in workflow_contents.items():
+        body = strip_comments(text)
         for tool in mutation_tools:
-            if re.search(MUTATION_INVOCATIONS.get(tool, tool), text, re.IGNORECASE):
-                invoking = (path, tool)
-                break
-        if invoking:
-            break
-    if not invoking:
-        return None
+            if re.search(MUTATION_INVOCATIONS.get(tool, tool), body, re.IGNORECASE):
+                invocations.append((path, tool))
 
-    workflow_path, tool = invoking
-
-    patterns = MUTATION_THRESHOLDS.get(tool)
-    if not patterns:
-        return None
-
-    threshold = None
-    for text in list(file_cache.values()) + list(workflow_contents.values()):
-        if not text:
+    rejected = None
+    for workflow_path, tool in invocations:
+        patterns = MUTATION_THRESHOLDS.get(tool)
+        if not patterns:
             continue
-        for pattern in patterns:
-            match = re.search(pattern, text, re.IGNORECASE)
-            if match:
-                try:
-                    candidate = float(match.group(1))
-                except (TypeError, ValueError):
-                    continue
-                if 0 < candidate <= 100:
-                    threshold = candidate
-                    break
-        if threshold is not None:
-            break
-    if threshold is None:
-        return None
 
-    workflow_file = workflow_path.rsplit("/", 1)[-1]
-    runs = api.get(
-        f"{API_BASE}/repos/{owner}/{repo}/actions/workflows/"
-        f"{urllib.parse.quote(workflow_file)}/runs"
-        f"?branch={urllib.parse.quote(branch)}&per_page=1&status=completed"
-    )
-    conclusion = None
-    if isinstance(runs, dict) and runs.get("workflow_runs"):
-        conclusion = runs["workflow_runs"][0].get("conclusion")
+        # Only this tool's own files, plus the workflow that invokes it.
+        candidates = [(workflow_path, workflow_contents.get(workflow_path, ""))]
+        for filename in MUTATION_TOOLS[tool]["files"]:
+            if filename == ".github/workflows":
+                continue
+            candidates.append((filename, file_cache.get(filename) or ""))
 
-    return {
-        "tool": tool,
-        "threshold": threshold,
-        "workflow": workflow_path,
-        "last_run": conclusion,
-        "passing": conclusion == "success",
-    }
+        threshold = None
+        threshold_path = None
+        for path, text in candidates:
+            if not text:
+                continue
+            for pattern in patterns:
+                match = re.search(pattern, strip_comments(text), re.IGNORECASE)
+                if match:
+                    try:
+                        candidate = float(match.group(1))
+                    except (TypeError, ValueError):
+                        continue
+                    if 0 < candidate <= 100:
+                        threshold, threshold_path = candidate, path
+                        break
+            if threshold is not None:
+                break
+        if threshold is None:
+            continue
+
+        workflow_file = workflow_path.rsplit("/", 1)[-1]
+        run = workflow_run_is_wholly_green(
+            api, owner, repo, workflow_file, branch, threshold_path
+        )
+        result = {
+            "tool": tool,
+            "threshold": threshold,
+            "threshold_from": threshold_path,
+            "workflow": workflow_path,
+            "run": run,
+            "passing": bool(run and run.get("passing")),
+        }
+        if result["passing"]:
+            return result
+        rejected = rejected or result
+
+    return rejected
+
+
 
 
 # A mutation score only earns Gold when something other than the repository's
@@ -1501,6 +1680,7 @@ def verify_repository(
     coverage_override: float | None = None,
     mutation_score_override: float | None = None,
     verbose: bool = True,
+    parameterized_override: dict | None = None,
 ) -> dict:
     """Run every check against one repository and return the report.
 
@@ -1565,10 +1745,18 @@ def verify_repository(
             mutation_score_source = "readme-badge"
             say(f"  Mutation score {mutation_score}% read from README badge (self-reported).")
 
-    say("  Checking for parameterized tests...")
-    parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
-    if parameterized is None:
-        say("  Skipped: needs a token and a language with known markers.")
+    if parameterized_override is not None:
+        # A weekly recheck of the whole list would spend four code-search
+        # requests per entry re-establishing a column that changes about as
+        # often as a project changes test framework. The previous answer is
+        # carried forward unless it was incomplete.
+        parameterized = parameterized_override
+        say("  Parameterized tests: carried forward from the last verification.")
+    else:
+        say("  Checking for parameterized tests...")
+        parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
+        if parameterized is None:
+            say("  Skipped: needs a token, a language with known markers, and search quota.")
 
     say("  Fetching coverage percentage...")
     if coverage_override is not None:

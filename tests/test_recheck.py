@@ -25,7 +25,12 @@ README = """# Awesome Well-Tested
 | [alpha](https://github.com/acme/alpha) | ![Gold](badges/gold.svg) | 100% | 90% | JUnit 5 | JaCoCo | PIT |
 | [beta](https://github.com/acme/beta) | ![Silver](badges/silver.svg) | 91% | n/a | no | JaCoCo | PIT |
 | [gamma](https://github.com/acme/gamma) | ![Bronze](badges/bronze.svg) | 84% | n/a | no | JaCoCo | n/a |
+| [delta](https://github.com/acme/delta) | ![Silver](badges/silver.svg) | 88% | n/a | no | JaCoCo | PIT |
+| [epsilon](https://github.com/acme/epsilon) | ![Bronze](badges/bronze.svg) | 82% | n/a | no | JaCoCo | n/a |
+| [zeta](https://github.com/acme/zeta) | ![Bronze](badges/bronze.svg) | 81% | n/a | no | JaCoCo | n/a |
 """
+
+ALL = ["acme/alpha", "acme/beta", "acme/gamma", "acme/delta", "acme/epsilon", "acme/zeta"]
 
 
 def report(full_name, tier="silver", coverage=95.0, **kw):
@@ -56,8 +61,8 @@ class Recheck(unittest.TestCase):
         self.readme.write_text(README)
         self.reports = self.root / "reports"
         self.reports.mkdir()
-        for name in ("acme_alpha", "acme_beta", "acme_gamma"):
-            (self.reports / f"{name}.json").write_text("{}")
+        for name in ALL:
+            (self.reports / f"{name.replace('/', '_')}.json").write_text("{}")
         self.patch(rl.sys, "stderr", io.StringIO())
         self.patch(rl.sys, "stdout", io.StringIO())
 
@@ -84,17 +89,18 @@ class Recheck(unittest.TestCase):
     # -- the ordinary path ---------------------------------------------------
 
     def test_a_run_that_changes_nothing_leaves_the_list_alone(self):
-        tiers = {"acme/alpha": "gold", "acme/beta": "silver", "acme/gamma": "bronze"}
+        tiers = {"acme/alpha": "gold", "acme/beta": "silver", "acme/gamma": "bronze",
+                 "acme/delta": "silver", "acme/epsilon": "bronze", "acme/zeta": "bronze"}
         code = self.run_with(lambda name, **kw: report(name, tier=tiers[name]), "--apply")
         self.assertEqual(code, 0)
-        self.assertEqual(self.names(), ["acme/alpha", "acme/beta", "acme/gamma"])
+        self.assertEqual(self.names(), ALL)
 
     def test_an_entry_that_stops_qualifying_is_dropped_with_its_report(self):
         def behaviour(name, **kw):
             return report(name, tier=None if name == "acme/beta" else "bronze")
 
         self.run_with(behaviour, "--apply")
-        self.assertEqual(self.names(), ["acme/alpha", "acme/gamma"])
+        self.assertNotIn("acme/beta", self.names())
         self.assertFalse((self.reports / "acme_beta.json").exists())
 
     def test_a_deleted_repository_is_dropped(self):
@@ -104,7 +110,7 @@ class Recheck(unittest.TestCase):
             return report(name, tier="bronze")
 
         self.run_with(behaviour, "--apply")
-        self.assertEqual(self.names(), ["acme/alpha", "acme/beta"])
+        self.assertNotIn("acme/gamma", self.names())
 
     def test_a_tier_change_is_written_in_place(self):
         def behaviour(name, **kw):
@@ -118,14 +124,32 @@ class Recheck(unittest.TestCase):
     # -- the failure path ----------------------------------------------------
 
     def test_an_unverifiable_entry_is_left_exactly_as_it_was(self):
+        # With six entries one failure stays inside the four-fifths guard, so
+        # this reaches apply_changes. With three it did not, and the assertions
+        # passed only because nothing at all had been written.
+        before = self.readme.read_text()
+        # Cells, not the raw line: re-rendering re-pads every column, so the
+        # line changes width when its neighbours do while saying the same thing.
+        beta_cells = rt.split_row(next(l for l in before.split("\n") if "[beta]" in l))
+        beta_report = (self.reports / "acme_beta.json").read_text()
+
         def behaviour(name, **kw):
             if name == "acme/beta":
                 raise vr.VerificationIncomplete("codecov said 429")
             return report(name, tier="bronze")
 
-        self.run_with(behaviour, "--apply")
-        self.assertIn("acme/beta", self.names())
-        self.assertTrue((self.reports / "acme_beta.json").exists())
+        code = self.run_with(behaviour, "--apply")
+        self.assertEqual(code, 0)
+
+        after = self.readme.read_text()
+        self.assertEqual(
+            rt.split_row(next(l for l in after.split("\n") if "[beta]" in l)), beta_cells,
+            "the entry that could not be verified was rewritten anyway",
+        )
+        self.assertEqual((self.reports / "acme_beta.json").read_text(), beta_report)
+        # and the rest of the list really was refreshed, so the run did apply
+        alpha = next(e for e in rt.parse_entries(after) if e["full_name"] == "acme/alpha")
+        self.assertEqual(alpha["claimed_tier"], "bronze")
 
     def test_a_mostly_failed_run_refuses_to_touch_the_list(self):
         def behaviour(name, **kw):
@@ -133,7 +157,7 @@ class Recheck(unittest.TestCase):
 
         code = self.run_with(behaviour, "--apply")
         self.assertEqual(code, 1)
-        self.assertEqual(self.names(), ["acme/alpha", "acme/beta", "acme/gamma"])
+        self.assertEqual(self.names(), ALL)
 
     def test_apply_without_a_token_is_refused(self):
         self.patch(rl, "GitHubAPI", lambda **kw: object())
@@ -142,7 +166,52 @@ class Recheck(unittest.TestCase):
                                     "--output-dir", str(self.reports)])
         self.patch(rl.os, "environ", {})
         self.assertEqual(rl.main(), 1)
-        self.assertEqual(self.names(), ["acme/alpha", "acme/beta", "acme/gamma"])
+        self.assertEqual(self.names(), ALL)
+
+    # -- bounds on destruction ----------------------------------------------
+
+    def test_a_run_where_everything_stopped_qualifying_is_refused(self):
+        # One systemic cause - a coverage service answering 403 to the runner
+        # for a whole run - makes every entry look like it stopped qualifying,
+        # and no exception is raised anywhere. Nothing legitimate removes a
+        # whole curated list in one week.
+        code = self.run_with(lambda name, **kw: report(name, tier=None), "--apply")
+        self.assertEqual(code, 1)
+        self.assertEqual(self.names(), ALL)
+        for name in ALL:
+            self.assertTrue((self.reports / f"{name.replace('/', '_')}.json").exists())
+
+    def test_removing_one_entry_is_still_allowed(self):
+        def behaviour(name, **kw):
+            return report(name, tier=None if name == "acme/beta" else "bronze")
+
+        self.assertEqual(self.run_with(behaviour, "--apply"), 0)
+        self.assertNotIn("acme/beta", self.names())
+        self.assertEqual(len(self.names()), len(ALL) - 1)
+
+    def test_a_refused_run_writes_no_reports_at_all(self):
+        # save_report used to run inside the loop, so a run that then refused to
+        # apply still left refreshed reports for the workflow to commit.
+        before = {p.name: p.read_text() for p in self.reports.glob("*.json")}
+        self.run_with(lambda name, **kw: report(name, tier=None), "--apply")
+        after = {p.name: p.read_text() for p in self.reports.glob("*.json")}
+        self.assertEqual(before, after)
+
+    def test_a_row_that_could_not_be_removed_keeps_its_report(self):
+        # The entries are found by one parser and rewritten by another. A
+        # malformed table makes them disagree, and deleting the evidence for a
+        # row the list still shows is the worst outcome available.
+        self.readme.write_text(README.replace(
+            "| [beta](https://github.com/acme/beta)",
+            "\n| [beta](https://github.com/acme/beta)",
+        ))
+
+        def behaviour(name, **kw):
+            return report(name, tier=None if name == "acme/beta" else "bronze")
+
+        code = self.run_with(behaviour, "--apply")
+        self.assertEqual(code, 1)
+        self.assertTrue((self.reports / "acme_beta.json").exists())
 
     # -- reporting -----------------------------------------------------------
 
@@ -220,8 +289,43 @@ class Recheck(unittest.TestCase):
     def test_an_unreadable_previous_report_carries_nothing_over(self):
         (self.reports / "acme_beta.json").write_text("{not json")
         self.assertEqual(
-            rl.carried_over_figures(self.reports, "acme", "beta"), (None, None)
+            rl.carried_over_figures(self.reports, "acme", "beta"), (None, None, None)
         )
+
+    def test_an_absent_previous_report_carries_nothing_over(self):
+        self.assertEqual(
+            rl.carried_over_figures(self.reports, "acme", "never-seen"), (None, None, None)
+        )
+
+    def test_a_complete_parameterized_answer_is_carried_forward(self):
+        # Four code-search requests per entry, for a column that changes about
+        # as often as a project changes test framework.
+        (self.reports / "acme_alpha.json").write_text(json.dumps({
+            "parameterized_tests": {"frameworks": [{"framework": "JUnit 5"}], "complete": True},
+        }))
+        _, _, carried = rl.carried_over_figures(self.reports, "acme", "alpha")
+        self.assertEqual(carried["frameworks"][0]["framework"], "JUnit 5")
+
+    def test_an_incomplete_parameterized_answer_is_not_carried_forward(self):
+        (self.reports / "acme_alpha.json").write_text(json.dumps({
+            "parameterized_tests": {"frameworks": [], "complete": False},
+        }))
+        _, _, carried = rl.carried_over_figures(self.reports, "acme", "alpha")
+        self.assertIsNone(carried)
+
+    def test_refresh_parameterized_ignores_what_was_carried(self):
+        (self.reports / "acme_alpha.json").write_text(json.dumps({
+            "parameterized_tests": {"frameworks": [{"framework": "JUnit 5"}], "complete": True},
+        }))
+        passed = {}
+
+        def behaviour(name, **kw):
+            if name == "acme/alpha":
+                passed.update(kw)
+            return report(name, tier="gold")
+
+        self.run_with(behaviour, "--refresh-parameterized")
+        self.assertIsNone(passed.get("parameterized_override"))
 
 
 if __name__ == "__main__":

@@ -41,22 +41,49 @@ from verify_repo import (  # noqa: E402
 
 TIER_ORDER = {"bronze": 1, "silver": 2, "gold": 3}
 
+# A run that verified less than this share of the list does not get to rewrite it.
+MIN_VERIFIED_FRACTION = 0.8
+# ... and however much it verified, this is all it may remove at once.
+MAX_REMOVALS_FRACTION = 0.2
+MAX_REMOVALS_FLOOR = 2
+
+
+def report_path(output_dir: Path, owner: str, repo: str) -> Path | None:
+    """The report for one repository, matching however its name was spelled.
+
+    github.com serves ScriptFUSION/Porter and scriptfusion/porter identically,
+    but the filesystem does not. A case difference between the README link and
+    the report on disk used to lose the hand-supplied figures the report holds -
+    and then remove the entry for want of them.
+    """
+    exact = output_dir / f"{owner}_{repo}.json"
+    if exact.exists():
+        return exact
+    wanted = f"{owner}_{repo}.json".casefold()
+    for candidate in output_dir.glob("*.json"):
+        if candidate.name.casefold() == wanted:
+            return candidate
+    return None
+
 
 def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
-    """Figures a maintainer supplied by hand, which no recheck can rediscover.
+    """Values from the previous report worth reusing: (coverage, score, parameterized).
+
+    The first two are figures a maintainer supplied by hand, which no recheck
+    can rediscover.
 
     An entry admitted with --coverage or --mutation-score would otherwise lose
     those numbers on the next run: coverage would come back None and the entry
     would be dropped, or the mutation score would vanish and Gold would fall to
     Silver. Provenance is recorded in the report so it survives.
     """
-    path = output_dir / f"{owner}_{repo}.json"
-    if not path.exists():
-        return None, None
+    path = report_path(output_dir, owner, repo)
+    if path is None:
+        return None, None, None
     try:
         previous = json.loads(path.read_text())
     except (json.JSONDecodeError, OSError):
-        return None, None
+        return None, None, None
 
     coverage = previous.get("coverage") or {}
     coverage_override = (
@@ -67,7 +94,12 @@ def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
         if previous.get("mutation_score_source") == "manual"
         else None
     )
-    return coverage_override, mutation_override
+    # Costly to establish, and it changes about as often as a project changes
+    # test framework. An incomplete answer is not carried forward.
+    parameterized = previous.get("parameterized_tests")
+    if not (isinstance(parameterized, dict) and parameterized.get("complete")):
+        parameterized = None
+    return coverage_override, mutation_override, parameterized
 
 
 def classify(claimed: str, actual: str | None) -> str:
@@ -85,14 +117,22 @@ def apply_changes(
     reports: dict,
     drop: set,
     output_dir: Path,
-) -> None:
-    """Rewrite the README rows and delete the reports of dropped entries."""
+) -> set:
+    """Rewrite the README rows and delete the reports of dropped entries.
+
+    Returns the names actually removed from the tables. The entries are found by
+    one parser and rewritten by another, and a malformed table can make the two
+    disagree - so the caller checks that every name it meant to drop really
+    left, rather than deleting the evidence for a row the list still shows.
+    """
+    removed = set()
 
     def transform(section, header, body):
         kept = []
         for row in body:
             name = rt.row_full_name(row)
             if name in drop:
+                removed.add(name)
                 continue
             report = reports.get(name)
             if report is not None:
@@ -103,11 +143,12 @@ def apply_changes(
     text = rt.transform_tables(rt.read_readme(readme_path), transform)
     rt.write_readme(readme_path, text)
 
-    for name in drop:
+    for name in removed:
         owner, repo = name.split("/", 1)
-        path = output_dir / f"{owner}_{repo}.json"
-        if path.exists():
+        path = report_path(output_dir, owner, repo)
+        if path is not None:
             path.unlink()
+    return removed
 
 
 def main():
@@ -127,6 +168,11 @@ def main():
     )
     parser.add_argument("--readme", default=None, help="README to read entries from")
     parser.add_argument("--output-dir", default=None, help="Where reports are written")
+    parser.add_argument(
+        "--refresh-parameterized",
+        action="store_true",
+        help="Look up parameterized tests again instead of carrying the last answer forward",
+    )
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -198,9 +244,11 @@ def main():
         else:
             print(f"\nRechecking {name} (listed as {entry['claimed_tier']})...")
 
-        coverage_override, mutation_override = carried_over_figures(
+        coverage_override, mutation_override, parameterized = carried_over_figures(
             output_dir, entry["owner"], entry["repo"]
         )
+        if args.refresh_parameterized:
+            parameterized = None
         try:
             report = verify_repository(
                 api,
@@ -208,6 +256,7 @@ def main():
                 entry["repo"],
                 coverage_override=coverage_override,
                 mutation_score_override=mutation_override,
+                parameterized_override=parameterized,
             )
         except VerificationIncomplete as e:
             # A service that did not answer is not a repository that stopped
@@ -228,7 +277,6 @@ def main():
             drop.add(name)
         else:
             reports[name] = report
-            save_report(report, output_dir)
             if not args.redact:
                 print_summary(report)
 
@@ -238,7 +286,7 @@ def main():
     # A run that could not verify most of what it looked at has no business
     # rewriting the list from its results.
     verified = len(entries) - len(incomplete)
-    if args.apply and incomplete and verified < len(entries) * 0.8:
+    if args.apply and incomplete and verified < len(entries) * MIN_VERIFIED_FRACTION:
         print(
             f"\nOnly {verified} of {len(entries)} entries could be verified. "
             "Refusing to rewrite the list from a partial run.",
@@ -246,8 +294,37 @@ def main():
         )
         return 1
 
+    # That guard only catches entries that raised. A repository whose coverage
+    # service answers "no figure" is an answer, not a failure, and travels the
+    # other path straight to removal - so one systemic cause, a service-wide 403
+    # or a renamed field in its JSON, could empty the list in a single run
+    # without a single exception being raised. Nothing legitimate removes a
+    # large share of a curated list in one week.
+    allowed = max(MAX_REMOVALS_FLOOR, int(len(entries) * MAX_REMOVALS_FRACTION))
+    if args.apply and len(drop) > allowed:
+        print(
+            f"\n{len(drop)} of {len(entries)} entries came back not qualifying, which is "
+            f"more than the {allowed} a single run may remove. That is a systemic cause, "
+            "not that many projects degrading in a week. Nothing was changed.",
+            file=sys.stderr,
+        )
+        return 1
+
     if args.apply:
-        apply_changes(readme_path, reports, drop, output_dir)
+        for report in reports.values():
+            save_report(report, output_dir)
+        removed = apply_changes(readme_path, reports, drop, output_dir)
+        stranded = drop - removed
+        if stranded:
+            # The row could not be found where the entry was parsed from. The
+            # report must not be deleted for an entry the list still shows.
+            print(
+                f"\n{len(stranded)} entries were dropped from the reports but their rows "
+                "were not found in the README. Its tables are malformed; fix them and "
+                "re-run. Nothing was deleted for them.",
+                file=sys.stderr,
+            )
+            return 1
 
     lowered = [c for c in changes if c["outcome"] == "lowered"]
     raised = [c for c in changes if c["outcome"] == "raised"]

@@ -1,0 +1,66 @@
+{
+  "repository": "rrousselGit/riverpod",
+  "verified_at": "2026-08-26T14:52:18.585738+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 95.45% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 95.45,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2024-12-09T21:28:04.833393Z",
+    "age_days": 624,
+    "source": "https://codecov.io/gh/rrousselGit/riverpod"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Dart",
+    "terms_tried": 2,
+    "terms_available": 2,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "rrousselGit/riverpod",
+    "description": "A reactive caching and data-binding framework.   Riverpod makes working with asynchronous code a breeze.",
+    "language": "Dart",
+    "license": "MIT",
+    "stars": 7372,
+    "forks": 1111,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-24T21:54:31Z",
+    "days_since_push": 1,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "build.yml",
+      "changelog.yml",
+      "check_generation.yml",
+      "riverpod_lint.yml"
+    ]
+  },
+  "coverage_tools": {
+    "flutter-coverage": {
+      "file": ".github/workflows/build.yml",
+      "language": "Dart",
+      "matched_patterns": [
+        "flutter\\s+test[^\\n]*--coverage"
+      ]
+    }
+  },
+  "primary_coverage_tool": "flutter-coverage",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/rrousselgit/riverpod\"><img"
+    }
+  ]
+}

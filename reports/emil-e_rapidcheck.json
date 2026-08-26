@@ -1,0 +1,55 @@
+{
+  "repository": "emil-e/rapidcheck",
+  "verified_at": "2026-08-26T14:52:03.324992+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 89.79% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 89.79,
+    "branch": "dev",
+    "is_default_branch": false,
+    "measured_at": "2016-02-21T23:42:11Z",
+    "age_days": 3838,
+    "source": "https://coveralls.io/github/emil-e/rapidcheck"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "RapidCheck (property-based)",
+        "matches": 230
+      }
+    ],
+    "detected": true,
+    "language": "C++",
+    "terms_tried": 3,
+    "terms_available": 3,
+    "complete": true
+  },
+  "issues": [
+    "No coverage tool configuration found"
+  ],
+  "metadata": {
+    "full_name": "emil-e/rapidcheck",
+    "description": "QuickCheck clone for C++ with the goal of being simple to use with as little boilerplate as possible.",
+    "language": "C++",
+    "license": "BSD-2-Clause",
+    "stars": 1103,
+    "forks": 189,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-06T08:52:07Z",
+    "days_since_push": 20,
+    "default_branch": "master"
+  },
+  "ci": {
+    "travis": true
+  },
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
+  "mutation_tools": null,
+  "badges": null
+}
