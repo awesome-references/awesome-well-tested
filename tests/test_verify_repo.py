@@ -185,6 +185,48 @@ class PatternsThatNameThingsNotWords(unittest.TestCase):
         self.assertFalse(self.matched("coverage.py", "[tool.coverage]\nbranch = true"))
 
 
+class CoverageBadges(unittest.TestCase):
+    """A badge only counts when it is a coverage badge."""
+
+    def services(self, text):
+        return [b["service"] for b in vr.check_badges(text)]
+
+    def test_a_maintainability_badge_is_not_coverage(self):
+        self.assertEqual(
+            self.services("![c](https://api.codeclimate.com/v1/badges/abc/maintainability)"), []
+        )
+
+    def test_a_code_climate_coverage_badge_counts(self):
+        self.assertEqual(
+            self.services("![c](https://api.codeclimate.com/v1/badges/abc/test_coverage)"),
+            ["Code Climate"],
+        )
+
+    def test_a_sonar_quality_gate_is_not_coverage(self):
+        self.assertEqual(
+            self.services(
+                "![s](https://sonarcloud.io/api/project_badges/measure?project=x&metric=alert_status)"
+            ),
+            [],
+        )
+
+    def test_a_sonar_coverage_badge_counts(self):
+        self.assertEqual(
+            self.services(
+                "![s](https://sonarcloud.io/api/project_badges/measure?project=x&metric=coverage)"
+            ),
+            ["SonarCloud"],
+        )
+
+    def test_badge_urls_are_matched_whatever_their_casing(self):
+        self.assertEqual(
+            self.services("![cov](https://CODECOV.IO/GH/a/b/graph/badge.svg)"), ["Codecov"]
+        )
+
+    def test_a_missing_readme_yields_no_badges(self):
+        self.assertEqual(vr.check_badges(None), [])
+
+
 class DetermineTier(unittest.TestCase):
     CI = {"github_actions": ["ci.yml"]}
     TOOLS = {"jacoco": {}}

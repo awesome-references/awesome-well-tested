@@ -619,11 +619,17 @@ PARAMETERIZED_MARKERS = {
     ],
 }
 
+# Coverage badges only. A Code Climate badge is usually maintainability and a
+# SonarCloud one is usually quality gate, so both have to name the coverage
+# metric before they count. Matched case-insensitively: badge URLs are written
+# by hand and their casing varies.
 BADGE_PATTERNS = [
-    (r"codecov\.io/gh/([^/]+/[^/]+)", "Codecov"),
-    (r"coveralls\.io/repos/github/([^/]+/[^/]+)", "Coveralls"),
-    (r"codeclimate\.com/github/([^/]+/[^/]+)", "Code Climate"),
-    (r"sonarcloud\.io.*component=([^&\"]+)", "SonarCloud"),
+    (r"codecov\.io/(?:gh|github)/([^/\s)]+/[^/\s)]+)", "Codecov"),
+    (r"coveralls\.io/(?:repos/)?github/([^/\s)]+/[^/\s)]+)", "Coveralls"),
+    (r"codeclimate\.com/github/([^/\s)]+/[^/\s)]+)/badges/[^/\s)]*coverage", "Code Climate"),
+    (r"api\.codeclimate\.com/v1/badges/[^/\s)]+/test_coverage", "Code Climate"),
+    (r"sonarcloud\.io/api/project_badges/measure\?[^\s)\"']*metric=coverage", "SonarCloud"),
+    (r"img\.shields\.io/(?:codecov|coveralls)/", "Shields.io (service badge)"),
     (r"img\.shields\.io/badge/coverage", "Shields.io (manual badge)"),
 ]
 
@@ -952,7 +958,14 @@ def extract_mutation_score_from_readme(readme: str) -> float | None:
 
 def fetch_readme(api: GitHubAPI, owner: str, repo: str, branch: str) -> str | None:
     """Fetch the README, trying the common filename variants."""
-    for variant in ["README.md", "readme.md", "README.rst", "README.adoc"]:
+    # A repository whose README is spelled differently loses its badges and,
+    # with them, any self-reported mutation score.
+    variants = [
+        "README.md", "readme.md", "Readme.md", "README.MD",
+        "README.markdown", "README.rst", "readme.rst",
+        "README.adoc", "README.asciidoc", "README.txt", "README",
+    ]
+    for variant in variants:
         content = api.get_text(
             f"{API_BASE}/repos/{owner}/{repo}/contents/{variant}?ref={branch}"
         )
@@ -968,7 +981,7 @@ def check_badges(readme_content: str | None) -> list[dict]:
 
     found = []
     for pattern, service in BADGE_PATTERNS:
-        match = re.search(pattern, readme_content)
+        match = re.search(pattern, readme_content, re.IGNORECASE)
         if match:
             found.append({"service": service, "match": match.group(0)})
 

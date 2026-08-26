@@ -271,20 +271,38 @@ def search_code(token: str, query: str) -> list[dict]:
     return repos
 
 
-def get_repo_stars(token: str, full_name: str) -> int:
-    """Get star count for a repo."""
+def get_repo_stars(token: str, full_name: str) -> int | None:
+    """Star count for a repo, or None when the lookup itself failed.
+
+    Returning 0 for a failure silently reclassified a rate-limited lookup as
+    "too few stars", so a run against a busy API quietly discarded candidates
+    it had already paid to find.
+    """
     url = f"{API_BASE}/repos/{full_name}"
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"token {token}",
+        "User-Agent": "awesome-well-tested",
     }
-    req = urllib.request.Request(url, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
-            return data.get("stargazers_count", 0)
-    except (urllib.error.HTTPError, urllib.error.URLError):
-        return 0
+    for attempt in range(1, 4):
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return json.loads(resp.read().decode()).get("stargazers_count", 0)
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                return None
+            if e.code in (403, 429, 500, 502, 503, 504) and attempt < 3:
+                wait = int(e.headers.get("Retry-After") or 0) or 5 * attempt
+                time.sleep(min(wait, 60))
+                continue
+            return None
+        except urllib.error.URLError:
+            if attempt < 3:
+                time.sleep(5 * attempt)
+                continue
+            return None
+    return None
 
 
 def main():
@@ -352,7 +370,9 @@ def main():
             name = repo["full_name"]
             if name not in all_candidates:
                 stars = get_repo_stars(args.token, name)
-                if stars >= args.min_stars:
+                if stars is None:
+                    print(f"  Could not read stars for {name}, skipping", file=sys.stderr)
+                elif stars >= args.min_stars:
                     all_candidates[name] = {
                         "full_name": name,
                         "stars": stars,
