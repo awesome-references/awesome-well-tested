@@ -48,6 +48,24 @@ MAX_REMOVALS_FRACTION = 0.2
 MAX_REMOVALS_FLOOR = 2
 
 
+def report_path(output_dir: Path, owner: str, repo: str) -> Path | None:
+    """The report for one repository, matching however its name was spelled.
+
+    github.com serves ScriptFUSION/Porter and scriptfusion/porter identically,
+    but the filesystem does not. A case difference between the README link and
+    the report on disk used to lose the hand-supplied figures the report holds -
+    and then remove the entry for want of them.
+    """
+    exact = output_dir / f"{owner}_{repo}.json"
+    if exact.exists():
+        return exact
+    wanted = f"{owner}_{repo}.json".casefold()
+    for candidate in output_dir.glob("*.json"):
+        if candidate.name.casefold() == wanted:
+            return candidate
+    return None
+
+
 def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
     """Values from the previous report worth reusing: (coverage, score, parameterized).
 
@@ -59,8 +77,8 @@ def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
     would be dropped, or the mutation score would vanish and Gold would fall to
     Silver. Provenance is recorded in the report so it survives.
     """
-    path = output_dir / f"{owner}_{repo}.json"
-    if not path.exists():
+    path = report_path(output_dir, owner, repo)
+    if path is None:
         return None, None, None
     try:
         previous = json.loads(path.read_text())
@@ -127,8 +145,8 @@ def apply_changes(
 
     for name in removed:
         owner, repo = name.split("/", 1)
-        path = output_dir / f"{owner}_{repo}.json"
-        if path.exists():
+        path = report_path(output_dir, owner, repo)
+        if path is not None:
             path.unlink()
     return removed
 

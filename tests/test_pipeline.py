@@ -79,13 +79,19 @@ class Verifying(unittest.TestCase):
         self.assertEqual(report["mutation_score"], 94.0)
         self.assertEqual(report["mutation_score_source"], "dashboard")
 
-    def enforced(self, *, conclusion="success", jobs=None, **kw):
+    def enforced(self, *, conclusion="success", jobs=None, created_at=None, **kw):
+        from datetime import datetime, timedelta, timezone
+
+        if created_at is None:
+            created_at = (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
         return self.api(
             tree=[".github/workflows/mutation.yml", "build.gradle"],
             workflows={"mutation.yml": WORKFLOW_PIT},
             files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
             coverage={"codecov": codecov(91.0)},
-            runs={"workflow_runs": [{"id": 7, "conclusion": conclusion}]},
+            runs={"workflow_runs": [
+                {"id": 7, "conclusion": conclusion, "created_at": created_at}
+            ]},
             jobs={"jobs": jobs if jobs is not None
                   else [{"name": "pit", "conclusion": "success"}]},
             **kw,
@@ -116,6 +122,25 @@ class Verifying(unittest.TestCase):
     def test_jobs_that_cannot_be_read_prove_nothing(self):
         report = self.verify(self.enforced(jobs=[]))
         self.assertEqual(report["tier"], "silver")
+
+    def test_a_run_from_years_ago_proves_nothing_about_the_threshold_now(self):
+        report = self.verify(self.enforced(created_at="2019-01-01T00:00:00Z"))
+        self.assertEqual(report["tier"], "silver")
+        self.assertIn("days old", report["mutation_ci_enforced"]["run"]["why"])
+
+    def test_the_run_is_requested_for_pushes_only(self):
+        # "branch" matches a run's head branch, so a fork's pull_request run on
+        # a branch also called main would otherwise count as a run of this
+        # repository's default branch.
+        api = self.enforced()
+        self.verify(api)
+        runs_urls = [u for u in api.asked if "/actions/workflows/" in u]
+        self.assertTrue(runs_urls)
+        self.assertIn("event=push", runs_urls[0])
+
+    def test_the_report_records_where_the_threshold_came_from(self):
+        report = self.verify(self.enforced())
+        self.assertEqual(report["mutation_ci_enforced"]["threshold_from"], "build.gradle")
 
     def test_a_threshold_in_a_comment_is_not_enforced(self):
         api = self.api(
@@ -346,6 +371,52 @@ class Verifying(unittest.TestCase):
             coverage={"codecov": codecov(91.0)},
         )
         self.assertEqual(self.verify(api)["tier"], "bronze")
+
+
+class RealServiceShapes(unittest.TestCase):
+    """The shapes the live services actually return, which the fake used to be
+    unable to produce - so the code handling them was never executed."""
+
+    def api(self, coverage):
+        return FakeAPI(metadata=repo_metadata(), coverage=coverage)
+
+    def test_a_repository_codecov_knows_but_has_no_report_for(self):
+        # 200 with totals: null, not a 404.
+        from _support.fakes import codecov_without_a_report
+
+        api = self.api({"codecov": codecov_without_a_report()})
+        self.assertIsNone(vr.fetch_coverage_percent(api, "acme", "widget", "main"))
+
+    def test_it_falls_through_to_coveralls(self):
+        from _support.fakes import codecov_without_a_report
+
+        api = self.api({"codecov": codecov_without_a_report(),
+                        "coveralls": coveralls(88.0)})
+        result = vr.fetch_coverage_percent(api, "acme", "widget", "main")
+        self.assertEqual(result["service"], "Coveralls")
+
+    def test_a_timestamp_without_a_timezone_still_yields_an_age(self):
+        # Codecov's updatestamp is naive; subtracting it from an aware "now"
+        # raises unless it is normalised first.
+        from _support.fakes import codecov_naive_timestamp
+
+        api = self.api({"codecov": codecov_naive_timestamp()})
+        result = vr.fetch_coverage_percent(api, "acme", "widget", "main")
+        self.assertIsInstance(result["age_days"], int)
+        self.assertGreater(result["age_days"], 0)
+
+    def test_coveralls_without_branch_or_date_still_yields_a_figure(self):
+        from _support.fakes import coveralls_sparse
+
+        api = self.api({"coveralls": coveralls_sparse(91.0)})
+        result = vr.fetch_coverage_percent(api, "acme", "widget", "main")
+        self.assertEqual(result["coverage"], 91.0)
+        self.assertIsNone(result["branch"])
+        self.assertIsNone(result["is_default_branch"])
+        self.assertIsNone(result["age_days"])
+
+    def test_neither_service_knowing_the_repository_is_not_an_error(self):
+        self.assertIsNone(vr.fetch_coverage_percent(self.api({}), "acme", "widget", "main"))
 
 
 class CommandLine(unittest.TestCase):

@@ -137,8 +137,31 @@ def codecov(coverage=95.0, branch="main", updatestamp="2026-08-20T00:00:00Z"):
     return {"branch": branch, "updatestamp": updatestamp, "totals": {"coverage": coverage}}
 
 
+def codecov_without_a_report(branch="main"):
+    """What Codecov answers for a repository it knows but has no report for.
+
+    A 200 with totals: null, not a 404. Anything that assumes a dict here gets
+    an AttributeError against the live service.
+    """
+    return {"branch": branch, "updatestamp": "2024-03-11T14:22:11.123456", "totals": None}
+
+
+def codecov_naive_timestamp(coverage=95.0):
+    """Codecov's updatestamp carries no timezone, unlike Coveralls' created_at."""
+    return {
+        "branch": "main",
+        "updatestamp": "2024-03-11T14:22:11.123456",
+        "totals": {"coverage": coverage},
+    }
+
+
 def coveralls(coverage=95.0, branch="main", created_at="2026-08-20T00:00:00Z"):
     return {"branch": branch, "created_at": created_at, "covered_percent": coverage}
+
+
+def coveralls_sparse(coverage=95.0):
+    """Coveralls omits branch and created_at on some responses."""
+    return {"covered_percent": coverage}
 
 
 def elements_report(killed=90, survived=10, ignored=0, no_coverage=0):

@@ -103,6 +103,9 @@ MUTATION_THRESHOLDS = {
 MAX_PARAMETERIZED_HITS = 2
 MAX_PARAMETERIZED_QUERIES = 4
 
+# How stale a green run may be and still stand as evidence for a threshold.
+MAX_ENFORCING_RUN_AGE_DAYS = 180
+
 # Minimum line/branch coverage required for any tier
 MIN_COVERAGE = 80.0
 # Minimum mutation score required for Gold
@@ -1276,8 +1279,25 @@ def strip_comments(text: str) -> str:
     return text
 
 
+def last_change_to(api: GitHubAPI, owner: str, repo: str, path: str, branch: str) -> str | None:
+    """When the file the threshold was read from was last touched."""
+    commits = api.get(
+        f"{API_BASE}/repos/{owner}/{repo}/commits"
+        f"?path={urllib.parse.quote(path)}&sha={urllib.parse.quote(branch)}&per_page=1"
+    )
+    if isinstance(commits, list) and commits:
+        commit = commits[0].get("commit") or {}
+        return (commit.get("committer") or {}).get("date")
+    return None
+
+
 def workflow_run_is_wholly_green(
-    api: GitHubAPI, owner: str, repo: str, workflow_file: str, branch: str
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    workflow_file: str,
+    branch: str,
+    threshold_path: str | None = None,
 ) -> dict | None:
     """The latest completed run of one workflow, and whether every job in it ran.
 
@@ -1288,10 +1308,14 @@ def workflow_run_is_wholly_green(
     success - conservative, and wrong in the direction that withholds a tier
     rather than granting one that was not earned.
     """
+    # event=push matters: "branch" matches a run's HEAD branch, so a
+    # pull_request run from a fork whose branch is also called main would
+    # otherwise be read as a run of this repository's default branch - having
+    # executed the fork's code and the fork's threshold.
     runs = api.get(
         f"{API_BASE}/repos/{owner}/{repo}/actions/workflows/"
         f"{urllib.parse.quote(workflow_file)}/runs"
-        f"?branch={urllib.parse.quote(branch)}&per_page=1&status=completed"
+        f"?branch={urllib.parse.quote(branch)}&event=push&per_page=1&status=completed"
     )
     if not isinstance(runs, dict) or not runs.get("workflow_runs"):
         return None
@@ -1306,6 +1330,23 @@ def workflow_run_is_wholly_green(
     }
     if run.get("conclusion") != "success":
         return {**detail, "passing": False, "why": f"run concluded {run.get('conclusion')}"}
+
+    # The threshold is read from the file as it stands now, so a run from years
+    # ago proves nothing about it. Two stricter rules were tried and both
+    # produced false negatives on healthy projects: requiring the run to sit at
+    # the branch tip punishes anything that pushes faster than its mutation
+    # workflow runs, and requiring it to postdate the last change to the
+    # threshold's file punishes a threshold that lives in pom.xml, which changes
+    # for version bumps that have nothing to do with it. What is left is a
+    # recency bound, which misses only the case where a threshold was lowered
+    # and no push has happened since.
+    age = _age_in_days(run.get("created_at"))
+    if age is not None and age > MAX_ENFORCING_RUN_AGE_DAYS:
+        return {
+            **detail,
+            "passing": False,
+            "why": f"the newest run is {age} days old",
+        }
 
     jobs = api.get(f"{API_BASE}/repos/{owner}/{repo}/actions/runs/{run.get('id')}/jobs?per_page=100")
     if not isinstance(jobs, dict) or not jobs.get("jobs"):
@@ -1362,14 +1403,15 @@ def check_ci_enforced_mutation(
             continue
 
         # Only this tool's own files, plus the workflow that invokes it.
-        candidates = [workflow_contents.get(workflow_path, "")]
+        candidates = [(workflow_path, workflow_contents.get(workflow_path, ""))]
         for filename in MUTATION_TOOLS[tool]["files"]:
             if filename == ".github/workflows":
                 continue
-            candidates.append(file_cache.get(filename) or "")
+            candidates.append((filename, file_cache.get(filename) or ""))
 
         threshold = None
-        for text in candidates:
+        threshold_path = None
+        for path, text in candidates:
             if not text:
                 continue
             for pattern in patterns:
@@ -1380,7 +1422,7 @@ def check_ci_enforced_mutation(
                     except (TypeError, ValueError):
                         continue
                     if 0 < candidate <= 100:
-                        threshold = candidate
+                        threshold, threshold_path = candidate, path
                         break
             if threshold is not None:
                 break
@@ -1388,10 +1430,13 @@ def check_ci_enforced_mutation(
             continue
 
         workflow_file = workflow_path.rsplit("/", 1)[-1]
-        run = workflow_run_is_wholly_green(api, owner, repo, workflow_file, branch)
+        run = workflow_run_is_wholly_green(
+            api, owner, repo, workflow_file, branch, threshold_path
+        )
         result = {
             "tool": tool,
             "threshold": threshold,
+            "threshold_from": threshold_path,
             "workflow": workflow_path,
             "run": run,
             "passing": bool(run and run.get("passing")),
