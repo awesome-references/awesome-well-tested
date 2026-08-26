@@ -1,0 +1,57 @@
+{
+  "repository": "regseb/castkodi",
+  "verified_at": "2026-08-26T11:22:57.621973+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 100.0,
+    "source": "https://coveralls.io/github/regseb/castkodi"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "fast-check (property-based)",
+        "matches": 4
+      }
+    ],
+    "detected": true,
+    "language": "JavaScript"
+  },
+  "issues": [
+    "No coverage tool configuration found"
+  ],
+  "metadata": {
+    "full_name": "regseb/castkodi",
+    "description": "WebExtension to cast videos and music to Kodi.",
+    "language": "JavaScript",
+    "license": "MIT",
+    "stars": 132,
+    "forks": 29,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-10T23:17:35Z",
+    "days_since_push": 15,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "release.yml"
+    ]
+  },
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
+  "mutation_tools": {
+    "stryker": {
+      "file": "package.json",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "@stryker-mutator",
+        "stryker"
+      ]
+    }
+  },
+  "badges": null
+}

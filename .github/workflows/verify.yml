@@ -26,9 +26,9 @@ jobs:
     name: verify repositories
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -61,6 +61,10 @@ jobs:
             tail -n 60 verify.log 2>/dev/null || echo 'No output captured.'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Discard report changes that are only timestamps
+        if: always()
+        run: python scripts/prune_unchanged_reports.py
 
       - name: Open a pull request with the refreshed reports
         if: always() && (github.event_name == 'schedule' || inputs.open_pr)

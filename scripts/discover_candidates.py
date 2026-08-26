@@ -249,9 +249,11 @@ def main():
 
     # Save candidates
     repo_root = Path(__file__).resolve().parent.parent
-    output_dir = repo_root / "reports"
+    # Kept out of reports/ proper: candidate dumps are throwaway lists, while
+    # every file directly in reports/ is a verification report object.
+    output_dir = repo_root / "reports" / "candidates"
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"candidates_{args.language}.json"
+    output_path = output_dir / f"{args.language}.json"
     with open(output_path, "w") as f:
         json.dump(candidates, f, indent=2)
     print(f"\nCandidates saved to {output_path}")

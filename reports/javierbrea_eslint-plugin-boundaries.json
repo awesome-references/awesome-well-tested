@@ -1,0 +1,60 @@
+{
+  "repository": "javierbrea/eslint-plugin-boundaries",
+  "verified_at": "2026-08-26T11:22:41.253828+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 100.0,
+    "source": "https://coveralls.io/github/javierbrea/eslint-plugin-boundaries"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "TypeScript"
+  },
+  "issues": [
+    "No coverage tool configuration found"
+  ],
+  "metadata": {
+    "full_name": "javierbrea/eslint-plugin-boundaries",
+    "description": "Enforce architectural boundaries in your JavaScript and TypeScript projects",
+    "language": "TypeScript",
+    "license": "MIT",
+    "stars": 967,
+    "forks": 20,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-25T19:37:38Z",
+    "days_since_push": 0,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "build.yml",
+      "publish-to-github.yml",
+      "publish.yml",
+      "test-mutation.yml",
+      "web-search-index.yml"
+    ]
+  },
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
+  "mutation_tools": {
+    "stryker": {
+      "file": "package.json",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "@stryker-mutator",
+        "stryker"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/javierbrea/eslint-plugin-boundaries"
+    }
+  ]
+}

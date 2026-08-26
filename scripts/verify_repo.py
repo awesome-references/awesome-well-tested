@@ -30,8 +30,10 @@ import json
 import os
 import re
 import sys
-import urllib.request
+import time
 import urllib.error
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -78,7 +80,16 @@ COVERAGE_TOOLS = {
     },
     "istanbul": {
         "files": ["package.json", ".nycrc", ".nycrc.json", ".github/workflows"],
-        "patterns": [r"istanbul", r"\"nyc\"", r"c8"],
+        # Deliberately not "--coverage": that also matches phpunit
+        # --coverage-clover and go test --coverage in a CI workflow, which
+        # labelled PHP and Go repositories as using Istanbul.
+        "patterns": [
+            r"istanbul",
+            r"\"nyc\"",
+            r"\bc8\b",
+            r"collectCoverage",
+            r"@vitest/coverage",
+        ],
         "language": "JavaScript/TypeScript",
     },
     "go_cover": {
@@ -90,6 +101,16 @@ COVERAGE_TOOLS = {
         "files": ["Cargo.toml", ".github/workflows"],
         "patterns": [r"cargo-tarpaulin", r"tarpaulin"],
         "language": "Rust",
+    },
+    "phpunit": {
+        "files": [
+            "composer.json",
+            "phpunit.xml",
+            "phpunit.xml.dist",
+            ".github/workflows",
+        ],
+        "patterns": [r"coverage-clover", r"php-coveralls", r"phpunit", r"pcov", r"xdebug"],
+        "language": "PHP",
     },
     "simplecov": {
         "files": ["Gemfile", ".simplecov", ".github/workflows"],
@@ -149,6 +170,58 @@ MUTATION_BADGE_PATTERN = (
     r"[-_]{1,2}(\d{1,3})(?:\.\d+)?%25"
 )
 
+# Parameterized and property-based tests are a quality signal that coverage
+# cannot express: they exercise a function across many inputs instead of one.
+# Detected with repository-scoped code search, one query per marker, because
+# code search does not honour OR between terms.
+#
+# Keys are the language GitHub reports for the repository. Go is deliberately
+# absent: table-driven tests are idiomatic there but use no keyword of their
+# own, so any marker would be guesswork.
+PARAMETERIZED_MARKERS = {
+    "Java": [
+        ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
+        ("RunWith(Parameterized", "JUnit 4 @Parameterized"),
+        ("jqwik", "jqwik (property-based)"),
+    ],
+    "Kotlin": [
+        ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
+        ("checkAll", "Kotest property testing"),
+    ],
+    "Groovy": [
+        ("@Unroll", "Spock @Unroll"),
+    ],
+    "Python": [
+        ("parametrize", "pytest.mark.parametrize"),
+        ("hypothesis", "Hypothesis (property-based)"),
+    ],
+    "JavaScript": [
+        ("describe.each", "Jest/Vitest .each"),
+        ("fast-check", "fast-check (property-based)"),
+    ],
+    "TypeScript": [
+        ("describe.each", "Jest/Vitest .each"),
+        ("fast-check", "fast-check (property-based)"),
+    ],
+    "Rust": [
+        ("rstest", "rstest"),
+        ("proptest", "proptest (property-based)"),
+        ("quickcheck", "quickcheck (property-based)"),
+    ],
+    "Ruby": [
+        ("shared_examples", "RSpec shared examples"),
+        ("rantly", "Rantly (property-based)"),
+    ],
+    "C#": [
+        ("InlineData", "xUnit [Theory]/[InlineData]"),
+        ("TestCase", "NUnit [TestCase]"),
+        ("FsCheck", "FsCheck (property-based)"),
+    ],
+    "PHP": [
+        ("dataProvider", "PHPUnit @dataProvider"),
+    ],
+}
+
 BADGE_PATTERNS = [
     (r"codecov\.io/gh/([^/]+/[^/]+)", "Codecov"),
     (r"coveralls\.io/repos/github/([^/]+/[^/]+)", "Coveralls"),
@@ -163,6 +236,7 @@ class GitHubAPI:
 
     def __init__(self, token: str | None = None):
         self.headers = {"Accept": "application/vnd.github.v3+json"}
+        self.authenticated = bool(token)
         if token:
             self.headers["Authorization"] = f"token {token}"
 
@@ -287,8 +361,9 @@ def fetch_workflow_contents(api: GitHubAPI, owner: str, repo: str, branch: str) 
         name = entry.get("name", "")
         if not name.endswith((".yml", ".yaml")):
             continue
+        path = urllib.parse.quote(name)
         text = api.get_text(
-            f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows/{name}?ref={branch}"
+            f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows/{path}?ref={branch}"
         )
         if text:
             contents[f".github/workflows/{name}"] = text
@@ -378,6 +453,42 @@ def check_badges(readme_content: str | None) -> list[dict]:
     return found
 
 
+def check_parameterized_tests(
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    language: str | None,
+    throttle: float = 2.5,
+) -> dict | None:
+    """Detect parameterized or property-based tests in a repository.
+
+    Uses repository-scoped code search, which needs an authenticated token and
+    is rate limited far more tightly than the rest of the API, hence the
+    throttle between queries. Returns None when the check could not run, which
+    is not the same as finding nothing.
+    """
+    if not api.authenticated:
+        return None
+
+    markers = PARAMETERIZED_MARKERS.get(language or "")
+    if not markers:
+        return None
+
+    frameworks = []
+    for term, label in markers:
+        query = urllib.parse.quote(f"repo:{owner}/{repo} {term}")
+        data = api.get(f"{API_BASE}/search/code?q={query}&per_page=1")
+        if isinstance(data, dict) and data.get("total_count", 0) > 0:
+            frameworks.append({"framework": label, "matches": data["total_count"]})
+        time.sleep(throttle)
+
+    return {
+        "frameworks": frameworks,
+        "detected": bool(frameworks),
+        "language": language,
+    }
+
+
 def fetch_coverage_percent(api: GitHubAPI, owner: str, repo: str) -> dict | None:
     """Fetch the real coverage percentage from a public coverage service.
 
@@ -425,13 +536,22 @@ def determine_tier(
     """
     if not ci:
         return None, "No CI configuration found"
-    if not coverage_tools:
-        return None, "No coverage tool configuration found"
 
     if coverage is None:
         return None, (
             f"Coverage percentage could not be verified automatically; "
             f"supply it with --coverage once confirmed (>= {MIN_COVERAGE:.0f}% required)"
+        )
+
+    # A percentage published by Codecov or Coveralls is itself proof that CI
+    # reports coverage: somebody had to upload it. Demanding that a coverage
+    # tool also be recognisable in the build files on top of that rejected
+    # repositories with published, verified coverage merely because their
+    # tooling was not in the list - which is a gap in the list, not in them.
+    if coverage["service"] == "manual" and not coverage_tools:
+        return None, (
+            "Coverage was supplied by hand and no coverage tool could be found in "
+            "the repository, so there is nothing to corroborate the figure"
         )
 
     if coverage["coverage"] < MIN_COVERAGE:
@@ -461,6 +581,21 @@ def determine_tier(
     )
 
 
+def primary_coverage_tool(coverage_tools: dict, language: str | None) -> str | None:
+    """Pick the tool to name for a repository when several patterns matched.
+
+    Build and CI files borrow each other's vocabulary, so a repository can match
+    more than one tool. The one whose language matches the repository is the
+    honest answer.
+    """
+    if not coverage_tools:
+        return None
+    for name, info in coverage_tools.items():
+        if language and language in (info.get("language") or ""):
+            return name
+    return next(iter(coverage_tools))
+
+
 def generate_report(
     owner: str,
     repo: str,
@@ -471,6 +606,7 @@ def generate_report(
     badges: list[dict],
     coverage: dict | None,
     mutation_score: float | None,
+    parameterized: dict | None = None,
 ) -> dict:
     """Generate the full verification report."""
     tier, tier_reason = determine_tier(
@@ -500,10 +636,14 @@ def generate_report(
         "tier_reason": tier_reason,
         "coverage": coverage,
         "mutation_score": mutation_score,
+        "parameterized_tests": parameterized,
         "issues": issues if issues else None,
         "metadata": metadata,
         "ci": ci if ci else None,
         "coverage_tools": coverage_tools if coverage_tools else None,
+        "primary_coverage_tool": primary_coverage_tool(
+            coverage_tools, metadata.get("language")
+        ),
         "mutation_tools": mutation_tools if mutation_tools else None,
         "badges": badges if badges else None,
     }
@@ -538,6 +678,14 @@ def print_summary(report: dict) -> None:
 
     if report.get("mutation_score") is not None:
         print(f"  Mut. score:  {report['mutation_score']}%")
+
+    param = report.get("parameterized_tests")
+    if param is not None:
+        if param["frameworks"]:
+            names = ", ".join(f["framework"] for f in param["frameworks"])
+            print(f"  Param. tests: {names}")
+        else:
+            print(f"  Param. tests: none detected")
 
     if report.get("coverage_tools"):
         tools = ", ".join(report["coverage_tools"].keys())
@@ -601,6 +749,11 @@ def verify_repository(
         if mutation_score is not None:
             say(f"  Mutation score {mutation_score}% read from README badge.")
 
+    say("  Checking for parameterized tests...")
+    parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
+    if parameterized is None:
+        say("  Skipped: needs a token and a language with known markers.")
+
     say("  Fetching coverage percentage...")
     if coverage_override is not None:
         coverage = {
@@ -621,6 +774,7 @@ def verify_repository(
         badges,
         coverage,
         mutation_score,
+        parameterized,
     )
 
 

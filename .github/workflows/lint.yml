@@ -10,8 +10,8 @@ jobs:
     name: awesome-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '20'
       - name: Run awesome-lint
@@ -21,8 +21,8 @@ jobs:
     name: python scripts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
       - name: Byte-compile scripts
@@ -32,5 +32,6 @@ jobs:
           python scripts/verify_repo.py --help
           python scripts/discover_candidates.py --help
           python scripts/recheck_listed.py --help
+          python scripts/prune_unchanged_reports.py --help
       - name: Check that every listed entry parses
         run: python scripts/recheck_listed.py --dry-run

@@ -1,0 +1,67 @@
+{
+  "repository": "tiagoporto/gerador-validador-cpf",
+  "verified_at": "2026-08-26T11:23:14.788566+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 97.19,
+    "source": "https://codecov.io/gh/tiagoporto/gerador-validador-cpf"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "TypeScript"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "tiagoporto/gerador-validador-cpf",
+    "description": "JS lib to generate and validate CPF (Cadastro de Pessoas F\u00edsicas) of Brazil.",
+    "language": "TypeScript",
+    "license": "MIT",
+    "stars": 404,
+    "forks": 78,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-01T04:04:37Z",
+    "days_since_push": 25,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "check-docs.yml",
+      "checks.yml",
+      "deploy.yml",
+      "e2e-tests.yml",
+      "publish.yml",
+      "unit-tests.yml"
+    ]
+  },
+  "coverage_tools": {
+    "istanbul": {
+      "file": ".github/workflows/unit-tests.yml",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "collectCoverage"
+      ]
+    }
+  },
+  "primary_coverage_tool": "istanbul",
+  "mutation_tools": {
+    "stryker": {
+      "file": "package.json",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "@stryker-mutator",
+        "stryker"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/tiagoporto/gerador-validador-cpf"
+    }
+  ]
+}

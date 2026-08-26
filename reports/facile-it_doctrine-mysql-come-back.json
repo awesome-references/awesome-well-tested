@@ -1,0 +1,70 @@
+{
+  "repository": "facile-it/doctrine-mysql-come-back",
+  "verified_at": "2026-08-26T11:24:35.316375+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 100.0,
+    "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 9
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "facile-it/doctrine-mysql-come-back",
+    "description": "Doctrine DBAL able to try reconnect on MySQL has gone away exceptions",
+    "language": "PHP",
+    "license": "Apache-2.0",
+    "stars": 212,
+    "forks": 47,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-25T13:44:05Z",
+    "days_since_push": 0,
+    "default_branch": "3.x"
+  },
+  "ci": {
+    "github_actions": [
+      "continuous-integration.yml",
+      "zizmor.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/continuous-integration.yml",
+      "language": "PHP",
+      "matched_patterns": [
+        "coverage-clover",
+        "phpunit",
+        "pcov"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "infection.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/facile-it/doctrine-mysql-come-back"
+    }
+  ]
+}

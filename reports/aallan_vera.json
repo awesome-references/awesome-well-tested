@@ -1,0 +1,91 @@
+{
+  "repository": "aallan/vera",
+  "verified_at": "2026-08-26T11:22:07.706282+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 94.78,
+    "source": "https://codecov.io/gh/aallan/vera"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "pytest.mark.parametrize",
+        "matches": 77
+      },
+      {
+        "framework": "Hypothesis (property-based)",
+        "matches": 3
+      }
+    ],
+    "detected": true,
+    "language": "Python"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "aallan/vera",
+    "description": "Vera: a programming language designed for LLMs to write",
+    "language": "Python",
+    "license": "MIT",
+    "stars": 411,
+    "forks": 26,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-25T07:07:23Z",
+    "days_since_push": 1,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "codeql.yml",
+      "dependabot-uv-lock.yml",
+      "limitations-sync.yml",
+      "nightly-stress.yml",
+      "release.yml",
+      "vscode-extension.yml"
+    ]
+  },
+  "coverage_tools": {
+    "pytest-cov": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "pytest-cov"
+      ]
+    },
+    "istanbul": {
+      "file": ".github/workflows/ci.yml",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "\\bc8\\b"
+      ]
+    }
+  },
+  "primary_coverage_tool": "pytest-cov",
+  "mutation_tools": {
+    "mutmut": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "mutmut",
+        "\\[tool\\.mutmut\\]"
+      ]
+    },
+    "cosmic-ray": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "cosmic.ray"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/aallan/vera"
+    }
+  ]
+}

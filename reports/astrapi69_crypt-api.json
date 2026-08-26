@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-26T10:13:22.646286+00:00",
+  "verified_at": "2026-08-26T11:19:27.566491+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.39% and mutation score 100.0%",
   "coverage": {
@@ -9,17 +9,27 @@
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
   "mutation_score": 100.0,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 17
+      }
+    ],
+    "detected": true,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/crypt-api",
-    "description": "Provides interfaces for encrypting and decrypting bytes, text, and files",
+    "description": "Interfaces, enums and constants that define the cryptographic contracts shared by crypt-data and mystic-crypt",
     "language": "Java",
     "license": "MIT",
     "stars": 3,
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:05:42Z",
+    "last_push": "2026-08-26T10:14:30Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
@@ -38,6 +48,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",

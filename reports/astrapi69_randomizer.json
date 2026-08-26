@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-08-26T10:14:02.350597+00:00",
+  "verified_at": "2026-08-26T11:21:06.151309+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 88.44% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,16 @@
     "source": "https://codecov.io/gh/astrapi69/randomizer"
   },
   "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 1
+      }
+    ],
+    "detected": true,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/randomizer",
@@ -37,6 +47,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": null,
   "badges": [
     {

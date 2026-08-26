@@ -1,0 +1,70 @@
+{
+  "repository": "ScriptFUSION/Porter",
+  "verified_at": "2026-08-26T11:24:21.583324+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 100.0,
+    "source": "https://codecov.io/gh/ScriptFUSION/Porter"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 5
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "ScriptFUSION/Porter",
+    "description": ":lipstick: Durable and asynchronous data imports for consuming data at scale and publishing testable SDKs.",
+    "language": "PHP",
+    "license": "LGPL-3.0",
+    "stars": 611,
+    "forks": 24,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-03-10T18:24:41Z",
+    "days_since_push": 168,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "Quickstart Symfony.yaml",
+      "Quickstart.yaml",
+      "Tests.yaml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/Tests.yaml",
+      "language": "PHP",
+      "matched_patterns": [
+        "coverage-clover",
+        "pcov"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/ScriptFUSION/Porter\n  [Coverage image]: https:"
+    }
+  ]
+}

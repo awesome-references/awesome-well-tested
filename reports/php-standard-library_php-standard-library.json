@@ -1,0 +1,80 @@
+{
+  "repository": "php-standard-library/php-standard-library",
+  "verified_at": "2026-08-26T11:25:48.094709+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 96.56,
+    "source": "https://coveralls.io/github/php-standard-library/php-standard-library"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 331
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "php-standard-library/php-standard-library",
+    "description": "PHP Standard Library",
+    "language": "PHP",
+    "license": "MIT",
+    "stars": 1561,
+    "forks": 91,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T10:31:57Z",
+    "days_since_push": 0,
+    "default_branch": "next"
+  },
+  "ci": {
+    "github_actions": [
+      "audit-repos.yml",
+      "benchmarks.yml",
+      "code-coverage.yml",
+      "coding-standards.yml",
+      "documentation-deploy.yml",
+      "documentation-rebuild-all.yml",
+      "mutation-tests.yml",
+      "package-tests.yml",
+      "split-check.yml",
+      "split-sync.yml",
+      "split-tag.yml",
+      "static-analysis.yml",
+      "unit-tests.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "php-coveralls",
+        "phpunit"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/php-standard-library/php-standard-library"
+    }
+  ]
+}

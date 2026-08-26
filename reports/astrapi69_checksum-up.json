@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/checksum-up",
-  "verified_at": "2026-08-26T10:13:54.608770+00:00",
+  "verified_at": "2026-08-26T11:20:47.463917+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 96.42% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,11 @@
     "source": "https://codecov.io/gh/astrapi69/checksum-up"
   },
   "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/checksum-up",
@@ -20,7 +25,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-19T11:17:33Z",
-    "days_since_push": 6,
+    "days_since_push": 7,
     "default_branch": "develop"
   },
   "ci": {
@@ -37,6 +42,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": null,
   "badges": [
     {

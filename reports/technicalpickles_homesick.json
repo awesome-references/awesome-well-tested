@@ -1,0 +1,43 @@
+{
+  "repository": "technicalpickles/homesick",
+  "verified_at": "2026-08-26T11:24:07.317596+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 89.52% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 89.52,
+    "source": "https://coveralls.io/github/technicalpickles/homesick"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Ruby"
+  },
+  "issues": [
+    "No coverage tool configuration found"
+  ],
+  "metadata": {
+    "full_name": "technicalpickles/homesick",
+    "description": "Your home directory is your castle. Don't leave your dotfiles behind.",
+    "language": "Ruby",
+    "license": "MIT",
+    "stars": 2452,
+    "forks": 128,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-07-17T23:04:13Z",
+    "days_since_push": 39,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "release.yml"
+    ]
+  },
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
+  "mutation_tools": null,
+  "badges": null
+}

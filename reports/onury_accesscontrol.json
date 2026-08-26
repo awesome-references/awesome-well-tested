@@ -1,0 +1,63 @@
+{
+  "repository": "onury/accesscontrol",
+  "verified_at": "2026-08-26T11:23:31.501118+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 96.87,
+    "source": "https://coveralls.io/github/onury/accesscontrol"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "TypeScript"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "onury/accesscontrol",
+    "description": "Role and Attribute based Access Control for Node.js",
+    "language": "TypeScript",
+    "license": "MIT",
+    "stars": 2327,
+    "forks": 181,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-12T04:55:50Z",
+    "days_since_push": 14,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "docs.yml"
+    ]
+  },
+  "coverage_tools": {
+    "istanbul": {
+      "file": ".github/workflows/ci.yml",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "istanbul"
+      ]
+    }
+  },
+  "primary_coverage_tool": "istanbul",
+  "mutation_tools": {
+    "stryker": {
+      "file": "package.json",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "@stryker-mutator",
+        "stryker"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Shields.io (manual badge)",
+      "match": "img.shields.io/badge/coverage"
+    }
+  ]
+}

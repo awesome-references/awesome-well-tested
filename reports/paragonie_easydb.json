@@ -1,0 +1,64 @@
+{
+  "repository": "paragonie/easydb",
+  "verified_at": "2026-08-26T11:25:30.552799+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 97.42,
+    "source": "https://coveralls.io/github/paragonie/easydb"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 34
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "paragonie/easydb",
+    "description": "Easy-to-use PDO wrapper for PHP projects.",
+    "language": "PHP",
+    "license": "MIT",
+    "stars": 737,
+    "forks": 87,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-03-23T22:02:15Z",
+    "days_since_push": 155,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "integration.yml",
+      "mutation.yml",
+      "psalm.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/ci.yml",
+      "language": "PHP",
+      "matched_patterns": [
+        "phpunit"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "infection.json.dist",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection"
+      ]
+    }
+  },
+  "badges": null
+}

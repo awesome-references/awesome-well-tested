@@ -1,0 +1,75 @@
+{
+  "repository": "Automattic/stream-builder",
+  "verified_at": "2026-08-26T11:26:18.129011+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 80.27,
+    "source": "https://coveralls.io/github/Automattic/stream-builder"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 25
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "Automattic/stream-builder",
+    "description": "Tumblr's custom feed building, mixing, and ranking framework.",
+    "language": "PHP",
+    "license": "NOASSERTION",
+    "stars": 143,
+    "forks": 9,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-06-09T00:54:58Z",
+    "days_since_push": 78,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "ca.yml",
+      "cs.yml",
+      "example.yml",
+      "mt.yml",
+      "php.yml",
+      "release_ping.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/mt.yml",
+      "language": "PHP",
+      "matched_patterns": [
+        "coverage-clover",
+        "php-coveralls",
+        "phpunit",
+        "pcov"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "infection.json.dist",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/Automattic/stream-builder"
+    }
+  ]
+}

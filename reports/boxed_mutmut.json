@@ -1,0 +1,55 @@
+{
+  "repository": "boxed/mutmut",
+  "verified_at": "2026-08-26T11:22:24.525488+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 81.44,
+    "source": "https://codecov.io/gh/boxed/mutmut"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "pytest.mark.parametrize",
+        "matches": 2
+      }
+    ],
+    "detected": true,
+    "language": "Python"
+  },
+  "issues": [
+    "No coverage tool configuration found"
+  ],
+  "metadata": {
+    "full_name": "boxed/mutmut",
+    "description": "Mutation testing system",
+    "language": "Python",
+    "license": "BSD-3-Clause",
+    "stars": 1405,
+    "forks": 168,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-17T18:29:43Z",
+    "days_since_push": 8,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "tests.yml"
+    ]
+  },
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
+  "mutation_tools": {
+    "mutmut": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "mutmut"
+      ]
+    }
+  },
+  "badges": null
+}

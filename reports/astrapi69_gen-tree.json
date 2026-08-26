@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/gen-tree",
-  "verified_at": "2026-08-26T10:13:39.383982+00:00",
+  "verified_at": "2026-08-26T11:20:06.667022+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 98.01% and mutation score 98.0%",
   "coverage": {
@@ -9,6 +9,11 @@
     "source": "https://codecov.io/gh/astrapi69/gen-tree"
   },
   "mutation_score": 98.0,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Java"
+  },
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/gen-tree",
@@ -38,6 +43,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",
