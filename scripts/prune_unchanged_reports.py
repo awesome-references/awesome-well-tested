@@ -60,6 +60,9 @@ def strip_volatile(report: dict) -> dict:
 
     parameterized = stripped.get("parameterized_tests")
     if isinstance(parameterized, dict):
+        # These describe the run that looked, not the repository it looked at.
+        for key in ("terms_tried", "terms_available", "complete"):
+            parameterized.pop(key, None)
         for framework in parameterized.get("frameworks") or []:
             if isinstance(framework, dict):
                 for key in VOLATILE_PARAMETERIZED:

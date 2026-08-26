@@ -253,6 +253,33 @@ class Verifying(unittest.TestCase):
         )
         self.assertIsNone(self.verify(api)["parameterized_tests"])
 
+    def test_a_rate_limited_search_does_not_cost_the_entry(self):
+        # The column is informational. Letting the search endpoint's limit
+        # propagate would make it decide whether the entry gets verified at all.
+        api = self.api(
+            tree=[".github/workflows/ci.yml", "build.gradle"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"build.gradle": BUILD_JACOCO},
+            coverage={"codecov": codecov(91.0)},
+            raise_on=[("/search/code", vr.VerificationIncomplete("HTTP 403"))],
+        )
+        report = self.verify(api)
+        self.assertEqual(report["tier"], "bronze")
+        self.assertIsNone(report["parameterized_tests"])
+
+    def test_a_search_that_stopped_early_says_so(self):
+        api = self.api(
+            tree=[".github/workflows/ci.yml", "build.gradle"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"build.gradle": BUILD_JACOCO},
+            coverage={"codecov": codecov(91.0)},
+            searches={"ParameterizedTest": 12},
+            raise_on=[("RunWith", vr.VerificationIncomplete("HTTP 403"))],
+        )
+        result = self.verify(api)["parameterized_tests"]
+        self.assertFalse(result["complete"])
+        self.assertEqual(len(result["frameworks"]), 1)
+
     def test_a_language_with_no_markers_is_skipped(self):
         api = self.api(
             metadata=repo_metadata(language="Erlang"),

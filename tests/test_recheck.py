@@ -264,8 +264,43 @@ class Recheck(unittest.TestCase):
     def test_an_unreadable_previous_report_carries_nothing_over(self):
         (self.reports / "acme_beta.json").write_text("{not json")
         self.assertEqual(
-            rl.carried_over_figures(self.reports, "acme", "beta"), (None, None)
+            rl.carried_over_figures(self.reports, "acme", "beta"), (None, None, None)
         )
+
+    def test_an_absent_previous_report_carries_nothing_over(self):
+        self.assertEqual(
+            rl.carried_over_figures(self.reports, "acme", "never-seen"), (None, None, None)
+        )
+
+    def test_a_complete_parameterized_answer_is_carried_forward(self):
+        # Four code-search requests per entry, for a column that changes about
+        # as often as a project changes test framework.
+        (self.reports / "acme_alpha.json").write_text(json.dumps({
+            "parameterized_tests": {"frameworks": [{"framework": "JUnit 5"}], "complete": True},
+        }))
+        _, _, carried = rl.carried_over_figures(self.reports, "acme", "alpha")
+        self.assertEqual(carried["frameworks"][0]["framework"], "JUnit 5")
+
+    def test_an_incomplete_parameterized_answer_is_not_carried_forward(self):
+        (self.reports / "acme_alpha.json").write_text(json.dumps({
+            "parameterized_tests": {"frameworks": [], "complete": False},
+        }))
+        _, _, carried = rl.carried_over_figures(self.reports, "acme", "alpha")
+        self.assertIsNone(carried)
+
+    def test_refresh_parameterized_ignores_what_was_carried(self):
+        (self.reports / "acme_alpha.json").write_text(json.dumps({
+            "parameterized_tests": {"frameworks": [{"framework": "JUnit 5"}], "complete": True},
+        }))
+        passed = {}
+
+        def behaviour(name, **kw):
+            if name == "acme/alpha":
+                passed.update(kw)
+            return report(name, tier="gold")
+
+        self.run_with(behaviour, "--refresh-parameterized")
+        self.assertIsNone(passed.get("parameterized_override"))
 
 
 if __name__ == "__main__":

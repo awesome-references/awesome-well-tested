@@ -1081,6 +1081,7 @@ def check_parameterized_tests(
 
     frameworks = []
     queries = 0
+    complete = True
     for term, label in markers:
         # Code search is rate limited to about 30 requests a minute and each
         # query needs its own, so this is bounded twice: enough evidence, or
@@ -1088,7 +1089,15 @@ def check_parameterized_tests(
         if len(frameworks) >= MAX_PARAMETERIZED_HITS or queries >= MAX_PARAMETERIZED_QUERIES:
             break
         query = urllib.parse.quote(f"repo:{owner}/{repo} {term}")
-        data = api.get(f"{API_BASE}/search/code?q={query}&per_page=1")
+        try:
+            data = api.get(f"{API_BASE}/search/code?q={query}&per_page=1")
+        except VerificationIncomplete:
+            # This check decides nothing: it fills a column. Letting the search
+            # endpoint's rate limit propagate would make an informational
+            # lookup cost the entry its whole verification, and under --apply
+            # a skipped entry is one the list can never refresh.
+            complete = False
+            break
         queries += 1
         if isinstance(data, dict) and data.get("total_count", 0) > 0:
             label_names = {f["framework"] for f in frameworks}
@@ -1096,12 +1105,17 @@ def check_parameterized_tests(
                 frameworks.append({"framework": label, "matches": data["total_count"]})
         time.sleep(throttle)
 
+    if not complete and not frameworks:
+        # Nothing was learned, and "none found" would be a lie.
+        return None
+
     return {
         "frameworks": frameworks,
         "detected": bool(frameworks),
         "language": language,
         "terms_tried": queries,
         "terms_available": len(markers),
+        "complete": complete,
     }
 
 
@@ -1621,6 +1635,7 @@ def verify_repository(
     coverage_override: float | None = None,
     mutation_score_override: float | None = None,
     verbose: bool = True,
+    parameterized_override: dict | None = None,
 ) -> dict:
     """Run every check against one repository and return the report.
 
@@ -1685,10 +1700,18 @@ def verify_repository(
             mutation_score_source = "readme-badge"
             say(f"  Mutation score {mutation_score}% read from README badge (self-reported).")
 
-    say("  Checking for parameterized tests...")
-    parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
-    if parameterized is None:
-        say("  Skipped: needs a token and a language with known markers.")
+    if parameterized_override is not None:
+        # A weekly recheck of the whole list would spend four code-search
+        # requests per entry re-establishing a column that changes about as
+        # often as a project changes test framework. The previous answer is
+        # carried forward unless it was incomplete.
+        parameterized = parameterized_override
+        say("  Parameterized tests: carried forward from the last verification.")
+    else:
+        say("  Checking for parameterized tests...")
+        parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
+        if parameterized is None:
+            say("  Skipped: needs a token, a language with known markers, and search quota.")
 
     say("  Fetching coverage percentage...")
     if coverage_override is not None:

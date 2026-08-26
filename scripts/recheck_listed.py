@@ -49,7 +49,10 @@ MAX_REMOVALS_FLOOR = 2
 
 
 def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
-    """Figures a maintainer supplied by hand, which no recheck can rediscover.
+    """Values from the previous report worth reusing: (coverage, score, parameterized).
+
+    The first two are figures a maintainer supplied by hand, which no recheck
+    can rediscover.
 
     An entry admitted with --coverage or --mutation-score would otherwise lose
     those numbers on the next run: coverage would come back None and the entry
@@ -58,11 +61,11 @@ def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
     """
     path = output_dir / f"{owner}_{repo}.json"
     if not path.exists():
-        return None, None
+        return None, None, None
     try:
         previous = json.loads(path.read_text())
     except (json.JSONDecodeError, OSError):
-        return None, None
+        return None, None, None
 
     coverage = previous.get("coverage") or {}
     coverage_override = (
@@ -73,7 +76,12 @@ def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
         if previous.get("mutation_score_source") == "manual"
         else None
     )
-    return coverage_override, mutation_override
+    # Costly to establish, and it changes about as often as a project changes
+    # test framework. An incomplete answer is not carried forward.
+    parameterized = previous.get("parameterized_tests")
+    if not (isinstance(parameterized, dict) and parameterized.get("complete")):
+        parameterized = None
+    return coverage_override, mutation_override, parameterized
 
 
 def classify(claimed: str, actual: str | None) -> str:
@@ -142,6 +150,11 @@ def main():
     )
     parser.add_argument("--readme", default=None, help="README to read entries from")
     parser.add_argument("--output-dir", default=None, help="Where reports are written")
+    parser.add_argument(
+        "--refresh-parameterized",
+        action="store_true",
+        help="Look up parameterized tests again instead of carrying the last answer forward",
+    )
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -213,9 +226,11 @@ def main():
         else:
             print(f"\nRechecking {name} (listed as {entry['claimed_tier']})...")
 
-        coverage_override, mutation_override = carried_over_figures(
+        coverage_override, mutation_override, parameterized = carried_over_figures(
             output_dir, entry["owner"], entry["repo"]
         )
+        if args.refresh_parameterized:
+            parameterized = None
         try:
             report = verify_repository(
                 api,
@@ -223,6 +238,7 @@ def main():
                 entry["repo"],
                 coverage_override=coverage_override,
                 mutation_score_override=mutation_override,
+                parameterized_override=parameterized,
             )
         except VerificationIncomplete as e:
             # A service that did not answer is not a repository that stopped
