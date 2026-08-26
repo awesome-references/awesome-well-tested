@@ -35,3 +35,7 @@ jobs:
           python scripts/prune_unchanged_reports.py --help
       - name: Check that every listed entry parses
         run: python scripts/recheck_listed.py --dry-run
+
+      - name: Run the tests
+        working-directory: tests
+        run: python -m unittest discover -s . -p "test_*.py" -v
