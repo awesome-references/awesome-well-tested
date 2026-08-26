@@ -95,7 +95,7 @@ Repos are re-verified periodically. If a repo's test quality degrades significan
 ### Recognized Tools
 
 **Coverage:**
-JaCoCo, Istanbul/nyc, coverage.py, pytest-cov, go cover, cargo-tarpaulin, SimpleCov, dotCover, OpenCover, lcov
+JaCoCo, Kover, Istanbul/nyc, coverage.py, pytest-cov, go cover, cargo-tarpaulin, SimpleCov, dotCover, OpenCover, lcov
 
 **Mutation Testing:**
 PIT (Java), mutmut (Python), cosmic-ray (Python), Stryker (JS/TS/C#), cargo-mutants (Rust), go-mutesting (Go), mutant (Ruby), Infection (PHP)

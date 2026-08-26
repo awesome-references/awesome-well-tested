@@ -55,9 +55,16 @@ CI_PATTERNS = {
 
 COVERAGE_TOOLS = {
     "jacoco": {
-        "files": ["pom.xml", "build.gradle", "build.gradle.kts"],
+        # Multi-module builds often configure coverage in a convention plugin or
+        # only in CI, so the workflows are searched as well as the root build.
+        "files": ["pom.xml", "build.gradle", "build.gradle.kts", ".github/workflows"],
         "patterns": [r"jacoco", r"org\.jacoco"],
         "language": "Java",
+    },
+    "kover": {
+        "files": ["build.gradle", "build.gradle.kts", ".github/workflows"],
+        "patterns": [r"kotlinx\.kover", r"koverReport", r"koverXmlReport", r"\bkover\b"],
+        "language": "Kotlin",
     },
     "pytest-cov": {
         "files": ["pyproject.toml", "setup.cfg", "pytest.ini", "tox.ini"],
@@ -70,7 +77,7 @@ COVERAGE_TOOLS = {
         "language": "Python",
     },
     "istanbul": {
-        "files": ["package.json", ".nycrc", ".nycrc.json"],
+        "files": ["package.json", ".nycrc", ".nycrc.json", ".github/workflows"],
         "patterns": [r"istanbul", r"\"nyc\"", r"c8"],
         "language": "JavaScript/TypeScript",
     },
@@ -85,7 +92,7 @@ COVERAGE_TOOLS = {
         "language": "Rust",
     },
     "simplecov": {
-        "files": ["Gemfile", ".simplecov"],
+        "files": ["Gemfile", ".simplecov", ".github/workflows"],
         "patterns": [r"simplecov", r"SimpleCov"],
         "language": "Ruby",
     },
