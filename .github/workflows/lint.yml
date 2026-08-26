@@ -31,3 +31,6 @@ jobs:
         run: |
           python scripts/verify_repo.py --help
           python scripts/discover_candidates.py --help
+          python scripts/recheck_listed.py --help
+      - name: Check that every listed entry parses
+        run: python scripts/recheck_listed.py --dry-run

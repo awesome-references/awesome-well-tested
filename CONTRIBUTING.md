@@ -60,9 +60,31 @@ Add a row to the appropriate language table in `README.md`:
 - Include the verification report output
 - One repo per PR (unless submitting a batch of related repos)
 
+## Verifying through GitHub Actions
+
+You do not need a token of your own. The `verify` workflow runs the same script
+with the token GitHub Actions provides automatically, which lifts the API limit
+from 60 to 1000 requests per hour.
+
+- **Actions -> verify -> Run workflow**, then put the repositories in the
+  `repos` field, space separated (`owner/repo owner/other-repo`). Leave it empty
+  to recheck everything already on the list.
+- The run summary shows the tier and the reason for it.
+- Refreshed reports come back as a pull request, so nothing is written to the
+  default branch without review.
+
+The workflow also runs weekly and fails when a listed entry no longer holds its
+tier, which is how the list stays honest.
+
+Discovering new candidates uses `scripts/discover_candidates.py` and the
+`discover` workflow. GitHub's code search endpoint is stricter than the rest of
+the API and may reject the automatic token, so a maintainer can add a personal
+access token with the `public_repo` scope as the `AWESOME_LIST_TOKEN` secret.
+Nothing else needs one.
+
 ## Re-verification
 
-Repos are re-verified quarterly. If you notice a listed repo no longer meets its tier criteria, open an issue with details.
+The `verify` workflow rechecks every listed repo weekly. If you notice a listed repo no longer meets its tier criteria before the workflow catches it, open an issue with details.
 
 ## Self-Submissions
 

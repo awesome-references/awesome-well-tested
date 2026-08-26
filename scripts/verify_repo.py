@@ -553,6 +553,82 @@ def print_summary(report: dict) -> None:
     print()
 
 
+def verify_repository(
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    coverage_override: float | None = None,
+    mutation_score_override: float | None = None,
+    verbose: bool = True,
+) -> dict:
+    """Run every check against one repository and return the report.
+
+    Kept separate from main() so other scripts (and CI) can verify repositories
+    in-process instead of shelling out once per repository.
+    """
+
+    def say(message: str) -> None:
+        if verbose:
+            print(message)
+
+    metadata = check_repo_metadata(api, owner, repo)
+    branch = metadata["default_branch"]
+
+    say("  Checking CI configuration...")
+    ci = check_ci(api, owner, repo, branch)
+    workflow_contents = fetch_workflow_contents(api, owner, repo, branch)
+
+    say("  Checking coverage tools...")
+    coverage_tools = check_tools(api, owner, repo, branch, COVERAGE_TOOLS, workflow_contents)
+
+    say("  Checking mutation testing tools...")
+    mutation_tools = check_tools(api, owner, repo, branch, MUTATION_TOOLS, workflow_contents)
+
+    say("  Checking badges...")
+    readme = fetch_readme(api, owner, repo, branch)
+    badges = check_badges(readme)
+
+    mutation_score = mutation_score_override
+    if mutation_score is None and readme:
+        mutation_score = extract_mutation_score_from_readme(readme)
+        if mutation_score is not None:
+            say(f"  Mutation score {mutation_score}% read from README badge.")
+
+    say("  Fetching coverage percentage...")
+    if coverage_override is not None:
+        coverage = {
+            "service": "manual",
+            "coverage": round(coverage_override, 2),
+            "source": "supplied via --coverage",
+        }
+    else:
+        coverage = fetch_coverage_percent(api, owner, repo)
+
+    return generate_report(
+        owner,
+        repo,
+        metadata,
+        ci,
+        coverage_tools,
+        mutation_tools,
+        badges,
+        coverage,
+        mutation_score,
+    )
+
+
+def save_report(report: dict, output_dir: str | Path) -> Path:
+    """Write a report to <output_dir>/<owner>_<repo>.json and return the path."""
+    owner, repo = report["repository"].split("/", 1)
+    directory = Path(output_dir)
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{owner}_{repo}.json"
+    with open(path, "w") as f:
+        json.dump(report, f, indent=2)
+        f.write("\n")
+    return path
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Verify a GitHub repo for awesome-well-tested"
@@ -586,59 +662,11 @@ def main():
     api = GitHubAPI(token=args.token)
 
     print(f"Verifying {owner}/{repo}...")
-
-    metadata = check_repo_metadata(api, owner, repo)
-    branch = metadata["default_branch"]
-
-    print(f"  Checking CI configuration...")
-    ci = check_ci(api, owner, repo, branch)
-    workflow_contents = fetch_workflow_contents(api, owner, repo, branch)
-
-    print(f"  Checking coverage tools...")
-    coverage_tools = check_tools(api, owner, repo, branch, COVERAGE_TOOLS, workflow_contents)
-
-    print(f"  Checking mutation testing tools...")
-    mutation_tools = check_tools(api, owner, repo, branch, MUTATION_TOOLS, workflow_contents)
-
-    print(f"  Checking badges...")
-    readme = fetch_readme(api, owner, repo, branch)
-    badges = check_badges(readme)
-
-    mutation_score = args.mutation_score
-    if mutation_score is None and readme:
-        mutation_score = extract_mutation_score_from_readme(readme)
-        if mutation_score is not None:
-            print(f"  Mutation score {mutation_score}% read from README badge.")
-
-    print(f"  Fetching coverage percentage...")
-    if args.coverage is not None:
-        coverage = {
-            "service": "manual",
-            "coverage": round(args.coverage, 2),
-            "source": "supplied via --coverage",
-        }
-    else:
-        coverage = fetch_coverage_percent(api, owner, repo)
-
-    report = generate_report(
-        owner,
-        repo,
-        metadata,
-        ci,
-        coverage_tools,
-        mutation_tools,
-        badges,
-        coverage,
-        mutation_score,
+    report = verify_repository(
+        api, owner, repo, args.coverage, args.mutation_score
     )
 
-    # Save report
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    report_path = output_dir / f"{owner}_{repo}.json"
-    with open(report_path, "w") as f:
-        json.dump(report, f, indent=2)
-
+    report_path = save_report(report, args.output_dir)
     print_summary(report)
     print(f"Report saved to {report_path}")
 
