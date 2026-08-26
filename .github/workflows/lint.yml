@@ -1,0 +1,33 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  awesome-lint:
+    name: awesome-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run awesome-lint
+        run: npx awesome-lint
+
+  scripts:
+    name: python scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Byte-compile scripts
+        run: python -m compileall -q scripts
+      - name: Smoke-test the CLI help
+        run: |
+          python scripts/verify_repo.py --help
+          python scripts/discover_candidates.py --help
