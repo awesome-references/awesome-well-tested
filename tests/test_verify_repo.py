@@ -206,7 +206,33 @@ class DetermineTier(unittest.TestCase):
             self.assertTrue(reason.strip())
 
 
+class MutationBadgeNumbers(unittest.TestCase):
+    def test_a_fractional_score_keeps_its_fraction(self):
+        # Truncating 69.8 to 69 costs a repository its Gold tier.
+        self.assertEqual(
+            vr.extract_mutation_score_from_readme(
+                "![m](https://img.shields.io/badge/mutation%20coverage-69.8%25-yellow)"
+            ),
+            69.8,
+        )
+
+    def test_a_score_above_one_hundred_is_rejected(self):
+        self.assertIsNone(
+            vr.extract_mutation_score_from_readme(
+                "![m](https://img.shields.io/badge/mutation%20coverage-150%25-green)"
+            )
+        )
+
+
 class PrimaryCoverageTool(unittest.TestCase):
+    def test_java_is_not_credited_with_a_javascript_tool(self):
+        # "Java" is a substring of "JavaScript/TypeScript".
+        tools = {
+            "istanbul": {"language": "JavaScript/TypeScript"},
+            "jacoco": {"language": "Java/Kotlin"},
+        }
+        self.assertEqual(vr.primary_coverage_tool(tools, "Java"), "jacoco")
+
     def test_prefers_the_tool_matching_the_repository_language(self):
         tools = {
             "istanbul": {"language": "JavaScript/TypeScript"},

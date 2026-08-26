@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-26T11:19:27.566491+00:00",
+  "verified_at": "2026-08-26T12:15:52.650806+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.39% and mutation score 100.0%",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
   "mutation_score": 100.0,
+  "mutation_score_source": "readme-badge",
   "parameterized_tests": {
     "frameworks": [
       {

@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/checksum-up",
-  "verified_at": "2026-08-26T11:20:47.463917+00:00",
+  "verified_at": "2026-08-26T12:17:03.771411+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 96.42% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/astrapi69/checksum-up"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,

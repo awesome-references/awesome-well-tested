@@ -1,6 +1,6 @@
 {
   "repository": "nicmart/Tree",
-  "verified_at": "2026-08-26T12:11:59.956471+00:00",
+  "verified_at": "2026-08-26T12:20:18.859227+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/nicmart/Tree"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,

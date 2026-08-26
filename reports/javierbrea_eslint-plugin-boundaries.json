@@ -1,6 +1,6 @@
 {
   "repository": "javierbrea/eslint-plugin-boundaries",
-  "verified_at": "2026-08-26T11:22:41.253828+00:00",
+  "verified_at": "2026-08-26T12:18:52.025350+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://coveralls.io/github/javierbrea/eslint-plugin-boundaries"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,

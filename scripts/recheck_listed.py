@@ -22,6 +22,7 @@ The token defaults to $GITHUB_TOKEN, which GitHub Actions provides for free.
 """
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -39,6 +40,34 @@ from verify_repo import (  # noqa: E402
 )
 
 TIER_ORDER = {"bronze": 1, "silver": 2, "gold": 3}
+
+
+def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
+    """Figures a maintainer supplied by hand, which no recheck can rediscover.
+
+    An entry admitted with --coverage or --mutation-score would otherwise lose
+    those numbers on the next run: coverage would come back None and the entry
+    would be dropped, or the mutation score would vanish and Gold would fall to
+    Silver. Provenance is recorded in the report so it survives.
+    """
+    path = output_dir / f"{owner}_{repo}.json"
+    if not path.exists():
+        return None, None
+    try:
+        previous = json.loads(path.read_text())
+    except (json.JSONDecodeError, OSError):
+        return None, None
+
+    coverage = previous.get("coverage") or {}
+    coverage_override = (
+        coverage.get("coverage") if coverage.get("service") == "manual" else None
+    )
+    mutation_override = (
+        previous.get("mutation_score")
+        if previous.get("mutation_score_source") == "manual"
+        else None
+    )
+    return coverage_override, mutation_override
 
 
 def classify(claimed: str, actual: str | None) -> str:
@@ -169,8 +198,17 @@ def main():
         else:
             print(f"\nRechecking {name} (listed as {entry['claimed_tier']})...")
 
+        coverage_override, mutation_override = carried_over_figures(
+            output_dir, entry["owner"], entry["repo"]
+        )
         try:
-            report = verify_repository(api, entry["owner"], entry["repo"])
+            report = verify_repository(
+                api,
+                entry["owner"],
+                entry["repo"],
+                coverage_override=coverage_override,
+                mutation_score_override=mutation_override,
+            )
         except VerificationIncomplete as e:
             # A service that did not answer is not a repository that stopped
             # qualifying. Leaving the entry exactly as it is costs a week;

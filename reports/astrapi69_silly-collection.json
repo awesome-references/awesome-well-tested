@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T11:20:26.255760+00:00",
+  "verified_at": "2026-08-26T12:16:53.616635+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,

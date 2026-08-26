@@ -206,7 +206,9 @@ MUTATION_TOOLS = {
 MUTATION_BADGE_PATTERN = (
     r"img\.shields\.io/badge/"
     r"mutation(?:%20|[-_ ])?(?:coverage|score|testing)"
-    r"[-_]{1,2}(\d{1,3})(?:\.\d+)?%25"
+    # The fraction is part of the number: truncating 69.8 to 69 turns a Gold
+    # entry into a Silver one.
+    r"[-_]{1,2}(\d{1,3}(?:\.\d+)?)%25"
 )
 
 # Parameterized and property-based tests are a quality signal that coverage
@@ -754,9 +756,14 @@ def primary_coverage_tool(coverage_tools: dict, language: str | None) -> str | N
     """
     if not coverage_tools:
         return None
-    for name, info in coverage_tools.items():
-        if language and language in (info.get("language") or ""):
-            return name
+    if language:
+        # Split rather than substring-match: "Java" is a substring of
+        # "JavaScript/TypeScript", so a Java repository could be credited with a
+        # JavaScript coverage tool.
+        for name, info in coverage_tools.items():
+            languages = [part.strip() for part in (info.get("language") or "").split("/")]
+            if language in languages:
+                return name
     return next(iter(coverage_tools))
 
 
@@ -771,6 +778,7 @@ def generate_report(
     coverage: dict | None,
     mutation_score: float | None,
     parameterized: dict | None = None,
+    mutation_score_source: str | None = None,
 ) -> dict:
     """Generate the full verification report."""
     tier, tier_reason = determine_tier(
@@ -800,6 +808,7 @@ def generate_report(
         "tier_reason": tier_reason,
         "coverage": coverage,
         "mutation_score": mutation_score,
+        "mutation_score_source": mutation_score_source,
         "parameterized_tests": parameterized,
         "issues": issues if issues else None,
         "metadata": metadata,
@@ -916,9 +925,11 @@ def verify_repository(
     badges = check_badges(readme)
 
     mutation_score = mutation_score_override
+    mutation_score_source = "manual" if mutation_score is not None else None
     if mutation_score is None and readme:
         mutation_score = extract_mutation_score_from_readme(readme)
         if mutation_score is not None:
+            mutation_score_source = "readme-badge"
             say(f"  Mutation score {mutation_score}% read from README badge.")
 
     say("  Checking for parameterized tests...")
@@ -947,6 +958,7 @@ def verify_repository(
         coverage,
         mutation_score,
         parameterized,
+        mutation_score_source,
     )
 
 

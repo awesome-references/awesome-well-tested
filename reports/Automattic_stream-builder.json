@@ -1,6 +1,6 @@
 {
   "repository": "Automattic/stream-builder",
-  "verified_at": "2026-08-26T12:12:34.086831+00:00",
+  "verified_at": "2026-08-26T12:20:53.741520+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://coveralls.io/github/Automattic/stream-builder"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [
       {

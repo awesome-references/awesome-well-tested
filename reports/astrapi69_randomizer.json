@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-08-26T11:21:06.151309+00:00",
+  "verified_at": "2026-08-26T12:17:44.406773+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 88.44% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/astrapi69/randomizer"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [
       {

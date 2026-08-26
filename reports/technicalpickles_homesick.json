@@ -1,6 +1,6 @@
 {
   "repository": "technicalpickles/homesick",
-  "verified_at": "2026-08-26T11:24:07.317596+00:00",
+  "verified_at": "2026-08-26T12:19:55.940927+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 89.52% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://coveralls.io/github/technicalpickles/homesick"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,

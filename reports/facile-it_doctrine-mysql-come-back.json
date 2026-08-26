@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-26T12:11:48.182600+00:00",
+  "verified_at": "2026-08-26T12:20:06.957043+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [
       {

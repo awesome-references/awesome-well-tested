@@ -1,6 +1,6 @@
 {
   "repository": "regseb/castkodi",
-  "verified_at": "2026-08-26T11:22:57.621973+00:00",
+  "verified_at": "2026-08-26T12:18:59.803132+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://coveralls.io/github/regseb/castkodi"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [
       {

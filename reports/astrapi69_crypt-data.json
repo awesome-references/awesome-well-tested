@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-08-26T11:19:06.926403+00:00",
+  "verified_at": "2026-08-26T12:15:42.110655+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/astrapi69/crypt-data"
   },
   "mutation_score": 100.0,
+  "mutation_score_source": "readme-badge",
   "parameterized_tests": {
     "frameworks": [
       {

@@ -1,6 +1,6 @@
 {
   "repository": "WojciechZankowski/iextrading4j",
-  "verified_at": "2026-08-26T11:21:25.932856+00:00",
+  "verified_at": "2026-08-26T12:17:55.702117+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -9,6 +9,7 @@
     "source": "https://codecov.io/gh/WojciechZankowski/iextrading4j"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
   "parameterized_tests": {
     "frameworks": [
       {
