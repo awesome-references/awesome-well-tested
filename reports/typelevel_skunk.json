@@ -1,0 +1,70 @@
+{
+  "repository": "typelevel/skunk",
+  "verified_at": "2026-08-26T14:52:21.320401+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 82.83% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 82.83,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-07-13T13:34:09.810826Z",
+    "age_days": 44,
+    "source": "https://codecov.io/gh/typelevel/skunk"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "ScalaCheck (property-based)",
+        "matches": 4
+      }
+    ],
+    "detected": true,
+    "language": "Scala",
+    "terms_tried": 2,
+    "terms_available": 2,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "typelevel/skunk",
+    "description": "A data access library for Scala + Postgres.",
+    "language": "Scala",
+    "license": "MIT",
+    "stars": 1664,
+    "forks": 175,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-24T04:23:51Z",
+    "days_since_push": 2,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "clean.yml"
+    ]
+  },
+  "coverage_tools": {
+    "scoverage": {
+      "file": "project/plugins.sbt",
+      "language": "Scala",
+      "matched_patterns": [
+        "scoverage",
+        "sbt-scoverage"
+      ]
+    }
+  },
+  "primary_coverage_tool": "scoverage",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/tpolecat/skunk"
+    }
+  ]
+}

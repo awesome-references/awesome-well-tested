@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-26T13:06:05.781495+00:00",
+  "verified_at": "2026-08-26T14:51:04.873901+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 90.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": false,
     "measured_at": "2026-08-25T13:40:27.511371Z",
-    "age_days": 0,
+    "age_days": 1,
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
   "mutation_score": 90.0,
@@ -18,8 +18,28 @@
   "mutation_ci_enforced": {
     "tool": "infection",
     "threshold": 90.0,
+    "threshold_from": "infection.json",
     "workflow": ".github/workflows/continuous-integration.yml",
-    "last_run": "success",
+    "run": {
+      "run_id": 30925273143,
+      "head_sha": "60d138017bb5a7ef8997063a8b44b90481213671",
+      "created_at": "2026-08-04T15:39:41Z",
+      "conclusion": "success",
+      "event": "push",
+      "passing": true,
+      "jobs": {
+        "Code style": "success",
+        "Psalm": "success",
+        "Tests (PHP 8.1 / MySQL 8.0)": "success",
+        "Tests (PHP 8.3 / MySQL 8.0)": "success",
+        "Infection (PHP 8.5 / MySQL 8.2)": "success",
+        "(PHP 8.5 / MySQL 8.4)": "success",
+        "Tests (PHP 8.2 / MySQL 8.0)": "success",
+        "Rector": "success",
+        "Lowest deps (PHP 8.1 / MySQL 5.7)": "success",
+        "Tests (PHP 8.4 / MySQL 8.0)": "success"
+      }
+    },
     "passing": true
   },
   "parameterized_tests": {
@@ -32,7 +52,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -45,7 +66,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-25T13:44:05Z",
-    "days_since_push": 0,
+    "days_since_push": 1,
     "default_branch": "3.x"
   },
   "ci": {
@@ -69,7 +90,6 @@
       "file": "infection.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection",
         "infection/infection"
       ]
     }

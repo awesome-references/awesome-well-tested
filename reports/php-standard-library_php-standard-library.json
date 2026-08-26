@@ -1,6 +1,6 @@
 {
   "repository": "php-standard-library/php-standard-library",
-  "verified_at": "2026-08-26T13:07:58.681835+00:00",
+  "verified_at": "2026-08-26T14:51:33.137730+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 96.56% and mutation score 95.74%, backed by an independently hosted report",
   "coverage": {
@@ -31,7 +31,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -86,8 +87,8 @@
       "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection",
-        "infection/infection"
+        "infection/infection",
+        "infection/extension-installer"
       ]
     }
   },

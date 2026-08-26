@@ -1,0 +1,94 @@
+{
+  "repository": "yegor256/cactoos",
+  "verified_at": "2026-08-26T14:50:10.366480+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 89.75,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2026-08-22T03:25:20.151356Z",
+    "age_days": 4,
+    "source": "https://codecov.io/gh/yegor256/cactoos"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 2
+      }
+    ],
+    "detected": true,
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "yegor256/cactoos",
+    "description": "Object-Oriented Java primitives, as an alternative to Google Guava and Apache Commons",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 780,
+    "forks": 176,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T12:46:54Z",
+    "days_since_push": 0,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "actionlint.yml",
+      "codecov.yml",
+      "copyrights.yml",
+      "markdown-lint.yml",
+      "mvn.yml",
+      "ort.yml",
+      "pdd.yml",
+      "reuse.yml",
+      "simian.yml",
+      "typos.yml",
+      "up.yml",
+      "xcop.yml",
+      "yamllint.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": ".github/workflows/codecov.yml",
+      "language": "Java/Kotlin/Scala/Groovy",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "primary_coverage_tool": "jacoco",
+  "mutation_tools": {
+    "pit": {
+      "file": "pom.xml",
+      "language": "Java/Kotlin/Scala/Groovy",
+      "matched_patterns": [
+        "pitest",
+        "org\\.pitest",
+        "mutationCoverage"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/github/yegor256/cactoos?branch=master"
+    },
+    {
+      "service": "Shields.io (service badge)",
+      "match": "img.shields.io/codecov/"
+    }
+  ]
+}

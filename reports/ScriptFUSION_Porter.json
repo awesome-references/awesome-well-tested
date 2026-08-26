@@ -1,6 +1,6 @@
 {
   "repository": "ScriptFUSION/Porter",
-  "verified_at": "2026-08-26T13:05:53.026659+00:00",
+  "verified_at": "2026-08-26T14:50:59.890160+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 97.91%, backed by an independently hosted report",
   "coverage": {
@@ -23,8 +23,26 @@
   "mutation_ci_enforced": {
     "tool": "infection",
     "threshold": 97.0,
+    "threshold_from": ".github/workflows/Tests.yaml",
     "workflow": ".github/workflows/Tests.yaml",
-    "last_run": "success",
+    "run": {
+      "run_id": 22917831595,
+      "head_sha": "103018969a1c4fc9f10cf0878d8f6a61ea68f2d5",
+      "created_at": "2026-03-10T18:22:55Z",
+      "conclusion": "success",
+      "event": "push",
+      "passing": true,
+      "jobs": {
+        "Test (8.2, hi)": "success",
+        "Test (8.5, hi)": "success",
+        "Test (8.5, lo)": "success",
+        "Test (8.4, hi)": "success",
+        "Test (8.2, lo)": "success",
+        "Test (8.4, lo)": "success",
+        "Test (8.3, lo)": "success",
+        "Test (8.3, hi)": "success"
+      }
+    },
     "passing": true
   },
   "parameterized_tests": {
@@ -37,7 +55,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -76,15 +95,16 @@
       "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection",
-        "infection/infection"
+        "infection/infection",
+        "infection\\.json5?",
+        "infection/extension-installer"
       ]
     }
   },
   "badges": [
     {
       "service": "Codecov",
-      "match": "codecov.io/gh/ScriptFUSION/Porter\n  [Coverage image]: https:"
+      "match": "codecov.io/gh/ScriptFUSION/Porter"
     }
   ]
 }

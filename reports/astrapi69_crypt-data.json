@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-08-26T13:00:04.393361+00:00",
+  "verified_at": "2026-08-26T14:49:33.474167+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 100.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 100.0,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-08-26T10:07:54.321251Z",
+    "measured_at": "2026-08-26T13:52:16.839042Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/crypt-data"
   },
@@ -26,7 +26,8 @@
     "detected": true,
     "language": "Java",
     "terms_tried": 4,
-    "terms_available": 5
+    "terms_available": 5,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -38,7 +39,7 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:34:38Z",
+    "last_push": "2026-08-26T14:47:35Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },

@@ -1,0 +1,71 @@
+{
+  "repository": "fzyzcjy/flutter_rust_bridge",
+  "verified_at": "2026-08-26T14:52:08.099716+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 98.62% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 98.62,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2026-08-24T04:09:21.437541Z",
+    "age_days": 2,
+    "source": "https://codecov.io/gh/fzyzcjy/flutter_rust_bridge"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Dart",
+    "terms_tried": 2,
+    "terms_available": 2,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "fzyzcjy/flutter_rust_bridge",
+    "description": "Flutter/Dart <-> Rust binding generator, feature-rich, but seamless and simple.",
+    "language": "Dart",
+    "license": "MIT",
+    "stars": 5385,
+    "forks": 419,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T14:50:56Z",
+    "days_since_push": 0,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yaml",
+      "no_response.yml",
+      "post_release.yaml",
+      "precommit_autofix.yaml",
+      "precommit_autofix_comment.yaml",
+      "publish_dev_docker.yaml",
+      "release.yaml",
+      "remove_labels.yml",
+      "stale.yml"
+    ]
+  },
+  "coverage_tools": {
+    "cargo-llvm-cov": {
+      "file": ".github/workflows/ci.yaml",
+      "language": "Rust",
+      "matched_patterns": [
+        "cargo[-\\s]llvm-cov"
+      ]
+    }
+  },
+  "primary_coverage_tool": "cargo-llvm-cov",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/fzyzcjy/flutter_rust_bridge"
+    }
+  ]
+}

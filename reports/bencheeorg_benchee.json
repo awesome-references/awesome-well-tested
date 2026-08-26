@@ -1,0 +1,64 @@
+{
+  "repository": "bencheeorg/benchee",
+  "verified_at": "2026-08-26T14:51:56.401934+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 93.94% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 93.94,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-06-09T09:05:21Z",
+    "age_days": 78,
+    "source": "https://coveralls.io/github/bencheeorg/benchee"
+  },
+  "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Elixir",
+    "terms_tried": 3,
+    "terms_available": 3,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "bencheeorg/benchee",
+    "description": "Easy and extensible benchmarking in Elixir providing you with lots of statistics!",
+    "language": "Elixir",
+    "license": "MIT",
+    "stars": 1514,
+    "forks": 70,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-06-09T09:04:54Z",
+    "days_since_push": 78,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "main.yml"
+    ]
+  },
+  "coverage_tools": {
+    "excoveralls": {
+      "file": "mix.exs",
+      "language": "Elixir",
+      "matched_patterns": [
+        "excoveralls",
+        "tool:\\s*ExCoveralls"
+      ]
+    }
+  },
+  "primary_coverage_tool": "excoveralls",
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/bencheeorg/benchee"
+    }
+  ]
+}

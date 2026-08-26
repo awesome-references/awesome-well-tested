@@ -1,6 +1,6 @@
 {
   "repository": "markuspoerschke/iCal",
-  "verified_at": "2026-08-26T13:08:12.496023+00:00",
+  "verified_at": "2026-08-26T14:51:37.885203+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -26,7 +26,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -39,7 +40,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-11T14:40:33Z",
-    "days_since_push": 14,
+    "days_since_push": 15,
     "default_branch": "2.x"
   },
   "ci": {
@@ -65,10 +66,11 @@
   "primary_coverage_tool": "phpunit",
   "mutation_tools": {
     "infection": {
-      "file": "infection.json",
+      "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [
-        "infection"
+        "infection/infection",
+        "infection/extension-installer"
       ]
     }
   },

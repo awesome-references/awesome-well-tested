@@ -1,6 +1,6 @@
 {
   "repository": "Automattic/stream-builder",
-  "verified_at": "2026-08-26T13:08:39.615091+00:00",
+  "verified_at": "2026-08-26T14:51:42.808671+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -26,7 +26,8 @@
     "detected": true,
     "language": "PHP",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -76,7 +77,6 @@
       "file": "infection.json.dist",
       "language": "PHP",
       "matched_patterns": [
-        "infection",
         "infection/infection"
       ]
     }

@@ -1,6 +1,6 @@
 {
   "repository": "aallan/vera",
-  "verified_at": "2026-08-26T13:03:24.435976+00:00",
+  "verified_at": "2026-08-26T14:50:22.691687+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -30,7 +30,8 @@
     "detected": true,
     "language": "Python",
     "terms_tried": 2,
-    "terms_available": 4
+    "terms_available": 4,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -82,13 +83,6 @@
       "matched_patterns": [
         "mutmut",
         "\\[tool\\.mutmut\\]"
-      ]
-    },
-    "cosmic-ray": {
-      "file": "pyproject.toml",
-      "language": "Python",
-      "matched_patterns": [
-        "cosmic.ray"
       ]
     }
   },
