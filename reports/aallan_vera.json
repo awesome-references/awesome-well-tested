@@ -1,6 +1,6 @@
 {
   "repository": "aallan/vera",
-  "verified_at": "2026-08-26T12:38:43.834134+00:00",
+  "verified_at": "2026-08-26T13:03:24.435976+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -28,7 +28,9 @@
       }
     ],
     "detected": true,
-    "language": "Python"
+    "language": "Python",
+    "terms_tried": 2,
+    "terms_available": 4
   },
   "issues": null,
   "metadata": {
@@ -62,6 +64,13 @@
       "matched_patterns": [
         "--cov\\b",
         "--cov="
+      ]
+    },
+    "c8": {
+      "file": ".github/workflows/ci.yml",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "npx c8\\b"
       ]
     }
   },

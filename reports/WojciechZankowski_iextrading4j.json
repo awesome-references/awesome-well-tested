@@ -1,6 +1,6 @@
 {
   "repository": "WojciechZankowski/iextrading4j",
-  "verified_at": "2026-08-26T12:38:19.851407+00:00",
+  "verified_at": "2026-08-26T13:02:39.879146+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -24,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -49,7 +51,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": ".github/workflows/main.yml",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco",
         "org\\.jacoco"
@@ -60,7 +62,7 @@
   "mutation_tools": {
     "pit": {
       "file": "pom.xml",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "pitest",
         "org\\.pitest"

@@ -1,6 +1,6 @@
 {
   "repository": "boxed/mutmut",
-  "verified_at": "2026-08-26T12:38:52.652379+00:00",
+  "verified_at": "2026-08-26T13:03:38.353917+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -24,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "Python"
+    "language": "Python",
+    "terms_tried": 4,
+    "terms_available": 4
   },
   "issues": [
     "No coverage tool configuration found"

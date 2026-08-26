@@ -1,6 +1,6 @@
 {
   "repository": "ScriptFUSION/Porter",
-  "verified_at": "2026-08-26T12:40:26.492131+00:00",
+  "verified_at": "2026-08-26T13:05:53.026659+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 97.91%, backed by an independently hosted report",
   "coverage": {
@@ -35,7 +35,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {

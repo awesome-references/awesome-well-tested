@@ -76,6 +76,11 @@ MUTATION_THRESHOLDS = {
     ],
 }
 
+# Bounds on the parameterized-test check: enough evidence, or enough spent
+# looking. Code search costs one request per term and is tightly rate limited.
+MAX_PARAMETERIZED_HITS = 2
+MAX_PARAMETERIZED_QUERIES = 4
+
 # Minimum line/branch coverage required for any tier
 MIN_COVERAGE = 80.0
 # Minimum mutation score required for Gold
@@ -95,8 +100,13 @@ COVERAGE_TOOLS = {
         # Multi-module builds often configure coverage in a convention plugin or
         # only in CI, so the workflows are searched as well as the root build.
         "files": ["pom.xml", "build.gradle", "build.gradle.kts", ".github/workflows"],
-        "patterns": [r"jacoco", r"org\.jacoco"],
-        "language": "Java",
+        "patterns": [
+            r"jacoco",
+            r"org\.jacoco",
+            r"jacocoTestReport",
+            r"jacocoTestCoverageVerification",
+        ],
+        "language": "Java/Kotlin/Scala/Groovy",
     },
     "kover": {
         "files": ["build.gradle", "build.gradle.kts", ".github/workflows"],
@@ -191,13 +201,165 @@ COVERAGE_TOOLS = {
         "patterns": [r"simplecov", r"SimpleCov"],
         "language": "Ruby",
     },
+    "scoverage": {
+        "files": ["build.sbt", "project/plugins.sbt", "pom.xml", ".github/workflows"],
+        "patterns": [r"scoverage", r"sbt-scoverage", r"coverageMinimumStmtTotal"],
+        "language": "Scala",
+    },
+    "clover": {
+        # Never a bare "clover": clover.xml is the near-universal XML coverage
+        # report format, written by PHPUnit, Istanbul and Jest alike.
+        "files": ["pom.xml", "build.gradle", "build.xml", ".github/workflows"],
+        "patterns": [r"openclover", r"org\.openclover", r"com\.atlassian\.clover",
+                     r"clover-maven-plugin"],
+        "language": "Java/Groovy",
+    },
+    "cobertura": {
+        "files": ["pom.xml", "build.gradle", ".github/workflows"],
+        "patterns": [r"cobertura-maven-plugin", r"net\.sourceforge\.cobertura",
+                     r"net\.saliman\.cobertura"],
+        "language": "Java",
+    },
+    "c8": {
+        "files": ["package.json", ".c8rc", ".c8rc.json", ".github/workflows"],
+        "patterns": [r"[\"']c8[\"']\s*:", r"npx c8\b",
+                     r"\bc8\s+(?:--|node|npm|yarn|pnpm|npx|mocha|ava|tap|vitest|deno)"],
+        "language": "JavaScript/TypeScript",
+    },
+    "vitest-coverage": {
+        "files": ["package.json", "vitest.config.ts", "vitest.config.js", ".github/workflows"],
+        "patterns": [r"@vitest/coverage-v8", r"@vitest/coverage-istanbul"],
+        "language": "JavaScript/TypeScript",
+    },
+    "jest-coverage": {
+        "files": ["package.json", "jest.config.js", "jest.config.ts", ".github/workflows"],
+        "patterns": [r"coverageThreshold", r"coverageReporters", r"coveragePathIgnorePatterns"],
+        "language": "JavaScript/TypeScript",
+    },
+    "deno-coverage": {
+        "files": ["deno.json", "deno.jsonc", ".github/workflows"],
+        "patterns": [r"deno\s+coverage\b"],
+        "language": "TypeScript",
+    },
+    "php-coveralls": {
+        "files": ["composer.json", ".github/workflows"],
+        "patterns": [r"php-coveralls", r"coveralls\.phar"],
+        "language": "PHP",
+    },
+    "undercover": {
+        "files": ["Gemfile", ".github/workflows"],
+        "patterns": [r"[\"']undercover[\"']", r"undercover\s+--compare"],
+        "language": "Ruby",
+    },
+    "deep-cover": {
+        "files": ["Gemfile", ".github/workflows"],
+        "patterns": [r"deep[-_]cover", r"DeepCover"],
+        "language": "Ruby",
+    },
+    "cargo-llvm-cov": {
+        "files": ["Cargo.toml", "Makefile", ".github/workflows"],
+        "patterns": [r"cargo[-\s]llvm-cov"],
+        "language": "Rust",
+    },
+    "grcov": {
+        "files": ["Cargo.toml", "Makefile", ".github/workflows"],
+        "patterns": [r"\bgrcov\b"],
+        "language": "Rust",
+    },
+    "goveralls": {
+        "files": ["Makefile", ".github/workflows"],
+        "patterns": [r"\bgoveralls\b", r"mattn/goveralls"],
+        "language": "Go",
+    },
+    "gocov": {
+        "files": ["Makefile", ".github/workflows"],
+        "patterns": [r"axw/gocov", r"gocov-xml", r"gocovmerge"],
+        "language": "Go",
+    },
+    "octocov": {
+        "files": [".octocov.yml", "Makefile", ".github/workflows"],
+        "patterns": [r"k1LoW/octocov", r"\boctocov\b"],
+        "language": "Go",
+    },
+    "go-test-coverage": {
+        # Not "local-prefix": a Go import-path setting shared by several
+        # unrelated tools, naming none of them.
+        "files": [".testcoverage.yml", "Makefile", ".github/workflows"],
+        "patterns": [r"vladopajic/go-test-coverage", r"go-test-coverage@v"],
+        "language": "Go",
+    },
+    "coverlet": {
+        # Not "coverlet.collector": dotnet new xunit writes that PackageReference
+        # into every generated test project whether or not anyone collects
+        # anything. These are the things that only appear when someone does.
+        "files": ["Directory.Build.props", "Makefile", ".github/workflows"],
+        "patterns": [r"coverlet\.msbuild", r"coverlet\.console",
+                     r"CollectCoverage\s*=\s*true", r"CoverletOutputFormat",
+                     r"--collect[: ]+[\"']?XPlat Code Coverage"],
+        "language": "C#/F#/Visual Basic .NET",
+    },
+    "altcover": {
+        "files": ["Directory.Build.props", ".github/workflows"],
+        "patterns": [r"\baltcover\b", r"AltCover=true"],
+        "language": "C#/F#/Visual Basic .NET",
+    },
+    "dotcover": {
+        "files": ["Directory.Build.props", "Makefile", ".github/workflows"],
+        "patterns": [r"jetbrains\.dotcover", r"dotnet\s+dotcover",
+                     r"dotcover\s+(?:cover|analyse|report)", r"dotCover\.exe"],
+        "language": "C#/Visual Basic .NET",
+    },
+    "opencover": {
+        "files": ["Makefile", ".github/workflows"],
+        "patterns": [r"opencover\.console", r"opencover\.exe"],
+        "language": "C#/Visual Basic .NET",
+    },
+    "xccov": {
+        "files": ["Package.swift", "Makefile", ".github/workflows"],
+        "patterns": [r"xcrun\s+xccov", r"--enable-code-coverage", r"-enableCodeCoverage"],
+        "language": "Swift",
+    },
+    "slather": {
+        "files": ["Gemfile", ".slather.yml", ".github/workflows"],
+        "patterns": [r"\bslather\b"],
+        "language": "Swift",
+    },
+    "flutter-coverage": {
+        "files": ["pubspec.yaml", "Makefile", ".github/workflows"],
+        "patterns": [r"flutter\s+test[^\n]*--coverage", r"dart\s+test[^\n]*--coverage",
+                     r"format_coverage", r"\bcoverde\b"],
+        "language": "Dart",
+    },
+    "excoveralls": {
+        "files": ["mix.exs", ".github/workflows"],
+        "patterns": [r"excoveralls", r"tool:\s*ExCoveralls"],
+        "language": "Elixir",
+    },
+    "hpc": {
+        "files": ["stack.yaml", "Makefile", ".github/workflows"],
+        "patterns": [r"hpc-coveralls", r"-fhpc", r"hpc\s+(?:report|markup)"],
+        "language": "Haskell",
+    },
+    "gcov-lcov": {
+        "files": ["Makefile", "CMakeLists.txt", ".github/workflows"],
+        "patterns": [r"-fprofile-arcs", r"-ftest-coverage", r"-fprofile-instr-generate",
+                     r"-fcoverage-mapping", r"\bgcovr\b", r"\bgenhtml\b",
+                     r"llvm-cov\s+(?:show|export|gcov)"],
+        "language": "C/C++",
+    },
+    "opencppcoverage": {
+        "files": ["Makefile", "CMakeLists.txt", ".github/workflows"],
+        "patterns": [r"OpenCppCoverage"],
+        "language": "C++",
+    },
 }
 
 MUTATION_TOOLS = {
     "pit": {
         "files": ["pom.xml", "build.gradle", "build.gradle.kts"],
-        "patterns": [r"pitest", r"org\.pitest", r"pit-maven", r"info\.solidsoft\.pitest"],
-        "language": "Java",
+        "patterns": [r"pitest", r"org\.pitest", r"pit-maven", r"info\.solidsoft\.pitest",
+                     r"mutationCoverage", r"arcmutate"],
+        "language": "Java/Kotlin/Scala/Groovy",
     },
     "mutmut": {
         "files": ["pyproject.toml", "setup.cfg"],
@@ -234,6 +396,93 @@ MUTATION_TOOLS = {
         "patterns": [r"infection", r"infection/infection"],
         "language": "PHP",
     },
+    "descartes": {
+        "files": ["pom.xml", "build.gradle", "build.gradle.kts", ".github/workflows"],
+        "patterns": [r"pitest-descartes", r"eu\.stamp-project"],
+        "language": "Java/Kotlin/Scala/Groovy",
+    },
+    "stryker4s": {
+        "files": ["build.sbt", "project/plugins.sbt", "stryker4s.conf", ".github/workflows"],
+        "patterns": [r"stryker4s", r"sbt-stryker4s"],
+        "language": "Scala",
+    },
+    "mutatest": {
+        "files": ["pyproject.toml", "setup.cfg", ".github/workflows"],
+        "patterns": [r"\bmutatest"],
+        "language": "Python",
+    },
+    "mutpy": {
+        "files": ["pyproject.toml", "setup.cfg", ".github/workflows"],
+        "patterns": [r"\bmutpy\b", r"mut\.py\s+--target"],
+        "language": "Python",
+    },
+    "pest-mutate": {
+        # Not "--mutate": too short and too common to stand alone.
+        "files": ["composer.json", ".github/workflows"],
+        "patterns": [r"pestphp/pest-plugin-mutate"],
+        "language": "PHP",
+    },
+    "mutest": {
+        "files": ["Gemfile", ".github/workflows"],
+        "patterns": [r"\bmutest\b", r"mutest-rspec"],
+        "language": "Ruby",
+    },
+    "mutagen": {
+        "files": ["Cargo.toml", ".github/workflows"],
+        "patterns": [r"llogiq/mutagen", r"mutagen\s*=\s*[\"{]"],
+        "language": "Rust",
+    },
+    "gremlins": {
+        # Not "timeout-coefficient": a generic config key naming no tool.
+        "files": [".gremlins.yaml", "Makefile", ".github/workflows"],
+        "patterns": [r"go-gremlins/gremlins", r"gremlins-lang/gremlins",
+                     r"gremlins\s+unleash"],
+        "language": "Go",
+    },
+    "ooze": {
+        "files": ["go.mod", "Makefile", ".github/workflows"],
+        "patterns": [r"gtramontina/ooze"],
+        "language": "Go",
+    },
+    "stryker-net": {
+        "files": ["Directory.Build.props", "stryker-config.json", ".github/workflows"],
+        "patterns": [r"dotnet-stryker", r"dotnet\s+stryker", r"stryker-config",
+                     r"StrykerOutput"],
+        "language": "C#/F#/Visual Basic .NET",
+    },
+    "muter": {
+        # Not "\bmuter\b": five letters that occur inside ordinary identifiers.
+        "files": [".muter.conf.yml", "Makefile", ".github/workflows"],
+        "patterns": [r"muter-mutation-testing", r"muter\s+run"],
+        "language": "Swift",
+    },
+    "mutation-test": {
+        "files": ["pubspec.yaml", ".github/workflows"],
+        "patterns": [r"mutation_test\s*:\s*[\^0-9]", r"dart\s+run\s+mutation_test"],
+        "language": "Dart",
+    },
+    "muzak": {
+        "files": ["mix.exs", ".github/workflows"],
+        "patterns": [r"\{:muzak", r"mix\s+muzak"],
+        "language": "Elixir",
+    },
+    "mucheck": {
+        "files": ["stack.yaml", ".github/workflows"],
+        "patterns": [r"MuCheck", r"mucheck-"],
+        "language": "Haskell",
+    },
+    "mull": {
+        "files": ["Makefile", "CMakeLists.txt", ".github/workflows"],
+        "patterns": [r"mull-runner", r"mull-cxx", r"mull-ir-frontend"],
+        "language": "C/C++",
+    },
+    "dextool-mutate": {
+        # Not "\bdextool\b": its most-used subcommands generate test doubles,
+        # and a mutation-tool hit is what promotes a repository to Silver.
+        "files": ["Makefile", "CMakeLists.txt", ".github/workflows"],
+        "patterns": [r"dextool\s+mutate", r"dextool_mutate"],
+        "language": "C/C++",
+    },
 }
 
 # Shields.io badges are the common way to publish a mutation score, since no
@@ -258,43 +507,115 @@ PARAMETERIZED_MARKERS = {
     "Java": [
         ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
         ("RunWith(Parameterized", "JUnit 4 @Parameterized"),
+        ("dataProviderClass", "TestNG @DataProvider"),
         ("jqwik", "jqwik (property-based)"),
+        ("QuickTheories", "QuickTheories (property-based)"),
     ],
     "Kotlin": [
         ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
+        # Not "withData": it matches ordinary builder methods. The import has to
+        # be there for the data-driven DSL to exist at all.
+        ("io.kotest.datatest", "Kotest data-driven testing"),
         ("checkAll", "Kotest property testing"),
+    ],
+    "Scala": [
+        ("scalacheck", "ScalaCheck (property-based)"),
+        ("TableDrivenPropertyChecks", "ScalaTest table-driven checks"),
     ],
     "Groovy": [
         ("@Unroll", "Spock @Unroll"),
+        ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
     ],
     "Python": [
         ("parametrize", "pytest.mark.parametrize"),
         ("hypothesis", "Hypothesis (property-based)"),
+        ("parameterized.expand", "parameterized.expand"),
+        ("subTest", "unittest subTest"),
     ],
     "JavaScript": [
         ("describe.each", "Jest/Vitest .each"),
+        ("test.each", "Jest/Vitest .each"),
         ("fast-check", "fast-check (property-based)"),
     ],
     "TypeScript": [
         ("describe.each", "Jest/Vitest .each"),
+        ("test.each", "Jest/Vitest .each"),
         ("fast-check", "fast-check (property-based)"),
     ],
     "Rust": [
         ("rstest", "rstest"),
+        ("test-case", "test-case"),
         ("proptest", "proptest (property-based)"),
         ("quickcheck", "quickcheck (property-based)"),
     ],
+    "Go": [
+        # Table-driven tests still have no keyword and are still undetectable.
+        # These are the Go constructs that do announce themselves.
+        ("gopter", "gopter (property-based)"),
+        ("pgregory.net/rapid", "rapid (property-based)"),
+        ("DescribeTable", "Ginkgo DescribeTable"),
+        ("testing/quick", "testing/quick (property-based)"),
+    ],
     "Ruby": [
-        ("shared_examples", "RSpec shared examples"),
+        # Not "shared_examples" or "it_behaves_like": those share example code
+        # between contexts, which is reuse, not running one example over many
+        # inputs.
+        ("rspec-parameterized", "rspec-parameterized"),
         ("rantly", "Rantly (property-based)"),
+        ("prop_check", "PropCheck (property-based)"),
     ],
     "C#": [
+        # Not bare "TestCase": it is a substring of TestCaseSource and appears
+        # in ordinary prose and method names.
         ("InlineData", "xUnit [Theory]/[InlineData]"),
-        ("TestCase", "NUnit [TestCase]"),
+        ("MemberData", "xUnit [MemberData]"),
+        ("TestCaseSource", "NUnit [TestCaseSource]"),
+        ("DataTestMethod", "MSTest [DataTestMethod]"),
         ("FsCheck", "FsCheck (property-based)"),
     ],
+    "F#": [
+        ("FsCheck", "FsCheck (property-based)"),
+        ("testProperty", "Expecto testProperty"),
+        ("InlineData", "xUnit [Theory]/[InlineData]"),
+    ],
+    "Visual Basic .NET": [
+        ("InlineData", "xUnit [Theory]/[InlineData]"),
+        ("DataTestMethod", "MSTest [DataTestMethod]"),
+    ],
     "PHP": [
+        # Not "dataset": too common a word outside Pest.
         ("dataProvider", "PHPUnit @dataProvider"),
+        ("giorgiosironi/eris", "Eris (property-based)"),
+        ("innmind/black-box", "BlackBox (property-based)"),
+    ],
+    "Swift": [
+        # Not "itBehavesLike": Quick's shared examples are reuse, not
+        # parameterization, for the same reason as Ruby's.
+        ("SwiftCheck", "SwiftCheck (property-based)"),
+        ("Test(arguments", "Swift Testing arguments"),
+    ],
+    "Dart": [
+        ("glados", "glados (property-based)"),
+        ("parameterized_test", "parameterized_test"),
+    ],
+    "Elixir": [
+        ("ExUnitProperties", "StreamData property testing"),
+        ("PropCheck", "PropCheck (property-based)"),
+        ("param_test", "param_test"),
+    ],
+    "Haskell": [
+        ("QuickCheck", "QuickCheck (property-based)"),
+        ("SmallCheck", "SmallCheck (property-based)"),
+        ("hedgehog", "Hedgehog (property-based)"),
+    ],
+    "C++": [
+        ("INSTANTIATE_TEST_SUITE_P", "GoogleTest parameterized suite"),
+        ("TEMPLATE_TEST_CASE", "Catch2 template test case"),
+        ("rapidcheck", "RapidCheck (property-based)"),
+    ],
+    "C": [
+        ("cmocka_unit_test_prestate", "cmocka prestate tests"),
+        ("theft_run", "theft (property-based)"),
     ],
 }
 
@@ -676,17 +997,28 @@ def check_parameterized_tests(
         return None
 
     frameworks = []
+    queries = 0
     for term, label in markers:
+        # Code search is rate limited to about 30 requests a minute and each
+        # query needs its own, so this is bounded twice: enough evidence, or
+        # enough spent looking. The column shows two or three names at most.
+        if len(frameworks) >= MAX_PARAMETERIZED_HITS or queries >= MAX_PARAMETERIZED_QUERIES:
+            break
         query = urllib.parse.quote(f"repo:{owner}/{repo} {term}")
         data = api.get(f"{API_BASE}/search/code?q={query}&per_page=1")
+        queries += 1
         if isinstance(data, dict) and data.get("total_count", 0) > 0:
-            frameworks.append({"framework": label, "matches": data["total_count"]})
+            label_names = {f["framework"] for f in frameworks}
+            if label not in label_names:
+                frameworks.append({"framework": label, "matches": data["total_count"]})
         time.sleep(throttle)
 
     return {
         "frameworks": frameworks,
         "detected": bool(frameworks),
         "language": language,
+        "terms_tried": queries,
+        "terms_available": len(markers),
     }
 
 

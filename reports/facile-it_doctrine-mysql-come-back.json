@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-26T12:40:33.413696+00:00",
+  "verified_at": "2026-08-26T13:06:05.781495+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 90.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -30,7 +30,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {

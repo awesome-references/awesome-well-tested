@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T12:37:18.170029+00:00",
+  "verified_at": "2026-08-26T13:01:29.797596+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -19,7 +19,9 @@
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -43,7 +45,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco"
       ]

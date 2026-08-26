@@ -1,6 +1,6 @@
 {
   "repository": "technicalpickles/homesick",
-  "verified_at": "2026-08-26T12:40:20.101068+00:00",
+  "verified_at": "2026-08-26T13:05:41.323317+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 89.52% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -19,7 +19,9 @@
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "Ruby"
+    "language": "Ruby",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": [
     "No coverage tool configuration found"

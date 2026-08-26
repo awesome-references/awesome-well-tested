@@ -1,6 +1,6 @@
 {
   "repository": "paragonie/easydb",
-  "verified_at": "2026-08-26T12:40:58.872155+00:00",
+  "verified_at": "2026-08-26T13:07:38.246746+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -24,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {

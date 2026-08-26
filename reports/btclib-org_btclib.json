@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-08-26T12:38:34.351562+00:00",
+  "verified_at": "2026-08-26T13:02:54.955802+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -28,7 +28,9 @@
       }
     ],
     "detected": true,
-    "language": "Python"
+    "language": "Python",
+    "terms_tried": 2,
+    "terms_available": 4
   },
   "issues": null,
   "metadata": {
@@ -40,7 +42,7 @@
     "forks": 47,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T12:36:14Z",
+    "last_push": "2026-08-26T12:57:42Z",
     "days_since_push": 0,
     "default_branch": "main"
   },

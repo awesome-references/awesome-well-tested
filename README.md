@@ -118,15 +118,19 @@ Entries are re-verified weekly. An entry that no longer clears the bar is remove
 ### Recognized Tools
 
 **Coverage:**
-JaCoCo, Kover, Istanbul/nyc, coverage.py, pytest-cov, PHPUnit, go cover, cargo-tarpaulin, SimpleCov, dotCover, OpenCover, lcov
+JaCoCo, Kover, Scoverage, OpenClover, Cobertura, coverage.py, pytest-cov, Istanbul/nyc, c8, Vitest coverage, Jest coverage, Deno coverage, PHPUnit, php-coveralls, SimpleCov, undercover, DeepCover, cargo-tarpaulin, cargo-llvm-cov, grcov, go cover, goveralls, gocov, octocov, go-test-coverage, coverlet, AltCover, dotCover, OpenCover, xccov, slather, Flutter coverage, ExCoveralls, HPC, gcov/lcov, OpenCppCoverage
 
-**Mutation Testing:**
-PIT (Java), mutmut (Python), cosmic-ray (Python), Stryker (JS/TS/C#), cargo-mutants (Rust), go-mutesting (Go), mutant (Ruby), Infection (PHP)
+**Mutation testing:**
+PIT, Descartes, Stryker4s, mutmut, cosmic-ray, mutatest, MutPy, Stryker, Stryker.NET, Infection, Pest mutate, mutant, mutest, cargo-mutants, mutagen, go-mutesting, Gremlins, ooze, Muter, mutation_test, Muzak, MuCheck, Mull, Dextool mutate
 
 **Parameterized and property-based tests:**
-JUnit 5 `@ParameterizedTest`, JUnit 4 `@Parameterized`, jqwik, Kotest property testing, Spock `@Unroll`, `pytest.mark.parametrize`, Hypothesis, Jest/Vitest `.each`, fast-check, rstest, proptest, quickcheck, RSpec shared examples, Rantly, xUnit `[Theory]`, NUnit `[TestCase]`, FsCheck, PHPUnit `@dataProvider`
+JUnit 5 `@ParameterizedTest`, JUnit 4 `@Parameterized`, TestNG `@DataProvider`, jqwik, QuickTheories, Kotest data-driven testing and property testing, ScalaCheck, ScalaTest table-driven checks, Spock `@Unroll`, `pytest.mark.parametrize`, Hypothesis, `parameterized.expand`, `unittest.subTest`, Jest/Vitest `.each`, fast-check, rstest, test-case, proptest, quickcheck, gopter, rapid, Ginkgo `DescribeTable`, `testing/quick`, rspec-parameterized, Rantly, PropCheck, xUnit `[Theory]`, NUnit `[TestCaseSource]`, MSTest `[DataTestMethod]`, FsCheck, Expecto `testProperty`, PHPUnit `@dataProvider`, Eris, BlackBox, SwiftCheck, Swift Testing `arguments`, glados, StreamData, QuickCheck, SmallCheck, Hedgehog, GoogleTest parameterized suites, Catch2 template test cases, RapidCheck, cmocka, theft
 
-Go is missing from that list on purpose. Table-driven tests are idiomatic there but use no keyword of their own, so any marker would be guesswork. Go entries show `n/a` rather than a false negative.
+Two things are deliberately absent. Go's table-driven tests are idiomatic but
+use no keyword of their own, so the Go entry detects its property-testing and
+table-DSL libraries and never guesses at the idiom. RSpec's `shared_examples`
+and Quick's `itBehavesLike` are not counted either: sharing example code between
+contexts is reuse, not running one example across many inputs.
 
 ## Contributing
 

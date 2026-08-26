@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/gen-tree",
-  "verified_at": "2026-08-26T12:37:07.267688+00:00",
+  "verified_at": "2026-08-26T13:01:16.241389+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 98.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -19,7 +19,9 @@
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -44,7 +46,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco"
       ]
@@ -54,7 +56,7 @@
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "pitest"
       ]

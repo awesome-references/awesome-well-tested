@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-08-26T12:36:28.894830+00:00",
+  "verified_at": "2026-08-26T13:00:32.784124+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 99.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -24,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -36,7 +38,7 @@
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T12:05:44Z",
+    "last_push": "2026-08-26T12:58:20Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
@@ -51,7 +53,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco"
       ]
@@ -61,7 +63,7 @@
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "pitest"
       ]

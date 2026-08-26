@@ -1,6 +1,6 @@
 {
   "repository": "Automattic/stream-builder",
-  "verified_at": "2026-08-26T12:41:29.215390+00:00",
+  "verified_at": "2026-08-26T13:08:39.615091+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -24,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -58,6 +60,13 @@
         "coverage-clover",
         "php-coveralls",
         "coverage:\\s*(?:pcov|xdebug)"
+      ]
+    },
+    "php-coveralls": {
+      "file": ".github/workflows/mt.yml",
+      "language": "PHP",
+      "matched_patterns": [
+        "php-coveralls"
       ]
     }
   },

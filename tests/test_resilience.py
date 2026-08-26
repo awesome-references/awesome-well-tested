@@ -5,6 +5,7 @@ worse than one that never rechecks at all, because the damage is silent and
 permanent. Everything here guards that boundary.
 """
 
+import io
 import json
 import unittest
 import urllib.error
@@ -46,6 +47,8 @@ class Retrying(unittest.TestCase):
 
         self._patch(vr.urllib.request, "urlopen", fake_urlopen)
         self._patch(vr.time, "sleep", lambda _s: None)
+        # The retry notices are for a human watching a run, not for test output.
+        self._patch(vr.sys, "stderr", io.StringIO())
         return api
 
     def _patch(self, obj, name, value):
@@ -95,7 +98,9 @@ class Retrying(unittest.TestCase):
     def test_nothing_calls_sys_exit(self):
         # The 403 handler used to exit the process from four levels down, which
         # took the whole weekly run with it.
-        source = (vr.__file__ and open(vr.__file__).read()) or ""
+        from pathlib import Path
+
+        source = Path(vr.__file__).read_text()
         api_class = source[source.index("class GitHubAPI"):source.index("def parse_repo_arg")]
         self.assertNotIn("sys.exit", api_class)
 

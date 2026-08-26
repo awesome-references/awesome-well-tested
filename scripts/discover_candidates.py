@@ -26,42 +26,171 @@ from pathlib import Path
 
 API_BASE = "https://api.github.com"
 
-# Search queries per language to find well-tested repos
+# Queries that find candidate repositories by their build and config files.
+#
+# No query carries a "language:" qualifier. In code search that matches the
+# language of the FILE, and every query here pins a build or config file:
+# pom.xml is XML, pyproject.toml is TOML, package.json is JSON. Asking for a
+# Java pom.xml returns nothing at all.
 SEARCH_QUERIES = {
     "java": [
-        ("pitest filename:pom.xml", "PIT in Maven"),
-        ("pitest filename:build.gradle", "PIT in Gradle"),
-        ("jacoco filename:pom.xml", "JaCoCo in Maven"),
+        ('pitest filename:build.gradle.kts', 'PIT in a Gradle Kotlin DSL build (the existing java entries only cover'),
+        ('mutationThreshold filename:pom.xml', 'Repos that fail the build below a PIT mutation threshold - the stronge'),
+        ('pitest-descartes filename:pom.xml', 'Descartes extreme-mutation engine for PIT'),
+        ('jacoco filename:build.gradle', 'JaCoCo in Gradle Groovy DSL - Bronze candidates; the existing dict onl'),
+        ('openclover filename:pom.xml', 'OpenClover (the open-sourced Atlassian Clover) in Maven'),
+    ],
+    "kotlin": [
+        ('pitest filename:build.gradle.kts', 'New key'),
+        ('koverVerify filename:build.gradle.kts', 'New key'),
+        ('kover filename:build.gradle.kts', 'New key'),
+        ('kover filename:libs.versions.toml', 'New key'),
+    ],
+    "scala": [
+        ('stryker4s filename:plugins.sbt', 'New key'),
+        ('mutate filename:stryker4s.conf', 'New key'),
+        ('sbt-scoverage filename:plugins.sbt', 'New key'),
+        ('scoverage filename:build.sbt', 'New key'),
+    ],
+    "groovy": [
+        ('pitest filename:build.gradle', 'New key'),
+        ('spock-core filename:build.gradle', 'New key'),
     ],
     "python": [
-        ("mutmut filename:pyproject.toml", "mutmut config"),
-        ("cosmic-ray filename:pyproject.toml", "cosmic-ray config"),
-        ("pytest-cov filename:pyproject.toml", "pytest-cov config"),
+        ('mutmut filename:setup.cfg', 'mutmut config in setup'),
+        ('mutmut filename:pyproject.toml', 'mutmut config in pyproject'),
+        ('mutmut filename:noxfile.py', 'mutmut driven from nox'),
+        ('mutmut filename:tox.ini', 'mutmut driven from tox'),
+        ('mutmut filename:requirements-dev.txt', 'mutmut as a dev dependency'),
+        ('cosmic-ray filename:pyproject.toml', 'cosmic-ray config'),
+        ('cosmic-ray filename:Makefile', 'cosmic-ray run from a Makefile'),
+        ('mutatest filename:pyproject.toml', 'mutatest config'),
+        ('mutpy filename:tox.ini', 'MutPy invoked from tox (expect a thin yield: MutPy is effectively unma'),
+        ('pytest-cov filename:pyproject.toml', 'pytest-cov config'),
+        ('pytest-cov filename:tox.ini', 'pytest-cov in the tox test env'),
+        ('fail_under filename:.coveragerc', 'coverage'),
+        ('fail_under filename:pyproject.toml', 'coverage floor in [tool'),
     ],
     "javascript": [
-        ("@stryker-mutator filename:package.json", "Stryker in npm"),
-        ("nyc filename:package.json", "Istanbul/nyc in npm"),
+        ('@stryker-mutator/core filename:package.json', "Stryker core declared as a devDependency (tightens the existing '@stry"),
+        ('mutate filename:stryker.conf.json', "Stryker JSON config at the repo root; 'mutate' is the glob key present"),
+        ('mutate filename:stryker.conf.mjs', "Stryker ESM config variant (same 'mutate' key, module-format repos)"),
+        ('@stryker-mutator/jest-runner filename:package.json', 'Stryker driving a Jest suite - narrower than core, and the runner pack'),
+        ('coverageThreshold filename:jest.config.js', 'Jest repos that enforce a coverage floor rather than merely measuring '),
+        ('check-coverage filename:.nycrc', 'nyc with enforced thresholds; '),
+        ('@vitest/coverage-v8 filename:package.json', 'Modern Vitest coverage provider - finds the current generation of well'),
     ],
     "typescript": [
-        ("@stryker-mutator filename:package.json", "Stryker in npm"),
+        ('@stryker-mutator/typescript-checker filename:package.json', 'Stryker with the TS type checker enabled - a repo that bothers with th'),
+        ('mutate filename:stryker.config.mjs', "Newer 'stryker"),
+        ('@stryker-mutator/vitest-runner filename:package.json', 'Stryker driving a Vitest suite - the current default combination for n'),
+        ('@vitest/coverage-istanbul filename:package.json', 'Vitest with the Istanbul provider (branch coverage), coverage-only Bro'),
+        ('coverageThreshold filename:jest.config.ts', 'Jest coverage floor declared in a TypeScript config file'),
+        ('deno coverage filename:deno.json', 'Deno projects with a coverage task in deno'),
     ],
     "go": [
-        ("go-mutesting filename:Makefile", "go-mutesting"),
-        ("-coverprofile filename:Makefile", "go cover"),
+        ('gremlins filename:.gremlins.yaml', 'Gremlins mutation testing config at repo root'),
+        ('gremlins unleash filename:Makefile', "The Gremlins CLI command ('gremlins unleash "),
+        ('gtramontina/ooze filename:go.mod', 'Ooze is the one Go mutation tester that is a library rather than a CLI'),
+        ('go-mutesting filename:go.mod', 'go-mutesting pinned as a tool dependency in go'),
+        ('avito-tech/go-mutesting filename:Makefile', 'The maintained fork of go-mutesting, invoked from a Makefile'),
+        ('go-mutesting filename:Makefile', 'Existing query, keep unchanged - still the most common way go-mutestin'),
+        ('coverprofile filename:Makefile', "REPLACES the existing '-coverprofile filename:Makefile'"),
+        ('coverprofile filename:Taskfile.yml', 'Same signal in Taskfile (go-task), which a growing share of Go repos u'),
+        ('goveralls filename:Makefile', 'mattn/goveralls, the Go Coveralls uploader'),
+        ('octocov filename:.octocov.yml', 'octocov (k1LoW) config'),
+        ('threshold filename:.testcoverage.yml', 'vladopajic/go-test-coverage config'),
+        ('gopter filename:go.mod', 'Property-based testing dependency'),
+        ('pgregory.net/rapid filename:go.mod', 'The other real Go property-based library'),
     ],
     "rust": [
-        ("cargo-mutants filename:Cargo.toml", "cargo-mutants"),
-        ("tarpaulin filename:Cargo.toml", "cargo-tarpaulin"),
+        ('cargo-mutants path:.github/workflows', 'cargo-mutants run in GitHub Actions'),
+        ('exclude_globs filename:mutants.toml', 'cargo-mutants config file ('),
+        ('cargo-mutants filename:Cargo.toml', 'cargo-mutants referenced in Cargo'),
+        ('mutagen filename:Cargo.toml', 'mutagen mutation testing dependency'),
+        ('tarpaulin path:.github/workflows', 'cargo-tarpaulin in CI'),
+        ('cargo-llvm-cov path:.github/workflows', 'cargo-llvm-cov in CI'),
+        ('grcov path:.github/workflows', 'grcov in CI'),
+        ('tarpaulin filename:Cargo.toml', 'cargo-tarpaulin metadata in Cargo'),
     ],
     "ruby": [
-        ("mutant-rspec filename:Gemfile", "mutant for Ruby"),
-        ("simplecov filename:Gemfile", "SimpleCov"),
+        ('mutant-license filename:Gemfile', 'mutant license line in Gemfile (mutant requires a license gem/source l'),
+        ('integration filename:mutant.yml', 'mutant config file - the filename qualifier matches mutant'),
+        ('mutant-rspec filename:Gemfile', 'mutant with the RSpec integration (existing query, keep)'),
+        ('mutant-minitest filename:Gemfile', 'mutant with the Minitest integration - finds the minitest half of the '),
+        ('mutest filename:Gemfile', 'mutest, the maintained fork of mutant used in the dry-rb/rom-rb circle'),
+        ('minimum_coverage filename:.simplecov', 'SimpleCov with an enforced coverage floor - selects repos that fail th'),
+        ('simplecov-lcov filename:Gemfile', 'SimpleCov with the LCOV formatter - correlates with actually uploading'),
+        ('simplecov filename:Gemfile', 'SimpleCov (existing broad query, keep for volume)'),
+        ('undercover filename:Gemfile', 'undercover - gates coverage on changed lines; users are coverage-disci'),
     ],
     "php": [
-        ("infection/infection filename:composer.json", "Infection PHP"),
+        ('infection/infection filename:composer.json', 'Infection in composer require-dev (existing query, keep)'),
+        ('filename:infection.json5', 'Infection config file, the modern default name'),
+        ('filename:infection.json.dist', 'Infection config, distributed template variant'),
+        ('pest-plugin-mutate filename:composer.json', 'Pest mutation testing plugin (Pest v3+)'),
+        ('php-coveralls filename:composer.json', 'php-coveralls uploader, coverage-only Bronze candidates'),
+        ('min-covered-msi filename:composer.json', 'Infection MSI quality gate in a composer script'),
+        ('coverage-clover filename:composer.json', 'PHPUnit clover coverage script, Bronze candidates'),
     ],
     "csharp": [
-        ("Stryker.NET extension:csproj", "Stryker.NET"),
+        ('dotnet-stryker filename:dotnet-tools.json', 'Stryker'),
+        ('stryker-config filename:stryker-config.json', 'Stryker'),
+        ('dotnet-stryker path:.github/workflows', 'Stryker'),
+        ('badge-api.stryker-mutator.io filename:README.md', 'Published Stryker dashboard mutation-score badge - the Gold shortlist,'),
+        ('coverlet.msbuild extension:csproj', 'coverlet MSBuild integration (opt-in: implies /p:CollectCoverage runs '),
+        ('coverlet.collector filename:Directory.Build.props', 'coverlet centralised in the repo-wide build props - higher signal than'),
+        ('altcover extension:csproj', 'AltCover as a package reference'),
+        ('JetBrains.dotCover.GlobalTool filename:dotnet-tools.json', 'JetBrains dotCover CLI installed as a dotnet tool'),
+        ('OpenCover.Console filename:appveyor.yml', 'OpenCover driven from AppVeyor - the classic '),
+    ],
+    "fsharp": [
+        ('altcover extension:fsproj', 'AltCover in an F# project - AltCover is the coverage tool of choice in'),
+        ('coverlet.collector extension:fsproj', 'coverlet in an F# test project'),
+        ('FsCheck extension:fsproj', 'FsCheck property-based tests referenced from an F# project file'),
+    ],
+    "vbnet": [
+        ('coverlet.collector extension:vbproj', 'coverlet in a VB'),
+    ],
+    "swift": [
+        ('muter filename:muter.conf.yml', 'Muter mutation testing config (Swift)'),
+        ('muter filename:muter.conf.json', 'Muter legacy JSON config (Swift)'),
+        ('slather filename:.slather.yml', 'Slather coverage config (Xcode/Swift)'),
+        ('slather filename:Fastfile', 'Slather run from fastlane'),
+        ('slather filename:Gemfile', 'Slather gem pinned in a Gemfile (iOS/macOS projects)'),
+    ],
+    "dart": [
+        ('mutation_test filename:pubspec.yaml', 'mutation_test package as a dev_dependency (Dart)'),
+        ('coverde filename:pubspec.yaml', 'coverde lcov tooling / coverage threshold enforcement (Dart)'),
+        ('test_coverage filename:pubspec.yaml', 'test_coverage package (older Flutter coverage helper)'),
+        ('very_good filename:melos.yaml', 'very_good test --min-coverage in a Melos workspace script'),
+        ('dart filename:codecov.yml', 'Codecov config in a Dart/Flutter repo (finds repos that publish a fetc'),
+    ],
+    "elixir": [
+        ('excoveralls filename:mix.exs', 'ExCoveralls dependency in mix'),
+        ('minimum_coverage filename:coveralls.json', 'ExCoveralls with an enforced minimum coverage threshold (strong qualit'),
+        ('muzak filename:mix.exs', 'Muzak mutation testing (Elixir) - essentially the entire population'),
+        ('stream_data filename:mix.exs', 'StreamData property-based testing dependency'),
+    ],
+    "haskell": [
+        ('QuickCheck extension:cabal', 'QuickCheck in build-depends (property-based tests)'),
+        ('hedgehog extension:cabal', 'Hedgehog in build-depends (property-based tests)'),
+        ('hpc-coveralls filename:stack.yaml', 'hpc-coveralls upload (the only route from HPC to a hosted number)'),
+        ('MuCheck extension:cabal', 'MuCheck mutation testing - expected to be near-empty, kept so --mutati'),
+    ],
+    "c": [
+        ('"-fprofile-arcs" filename:Makefile.am', 'gcov instrumentation in an Autotools build (quoted: a bare leading hyp'),
+        ('"-ftest-coverage" filename:Makefile', 'gcov instrumentation in a plain Makefile (quoted for the same reason)'),
+        ('genhtml filename:Makefile', 'lcov HTML report step in a Makefile'),
+        ('mull-runner filename:Makefile', 'Mull mutation testing driven from a Makefile (C projects)'),
+    ],
+    "cpp": [
+        ('gcovr filename:CMakeLists.txt', 'gcovr coverage wired into CMake'),
+        ('CodeCoverage filename:CMakeLists.txt', 'include(CodeCoverage) from the common CodeCoverage'),
+        ('mull-runner filename:CMakeLists.txt', 'Mull mutation testing wired into CMake'),
+        ('mull filename:mull.yml', 'Mull config file (path term, since mull'),
+        ('dextool filename:.dextool_mutate.toml', 'Dextool mutate config'),
+        ('rapidcheck filename:CMakeLists.txt', 'RapidCheck property-based tests linked into a CMake build'),
     ],
 }
 
@@ -197,8 +326,11 @@ def main():
 
     if args.mutation_only:
         mutation_keywords = [
-            "pitest", "mutmut", "cosmic-ray", "stryker", "cargo-mutants",
-            "go-mutesting", "mutant", "infection",
+            "pitest", "descartes", "mutmut", "cosmic-ray", "mutatest", "mutpy",
+            "stryker", "stryker4s", "cargo-mutants", "mutagen", "go-mutesting",
+            "gremlins", "ooze", "mutant", "mutest", "infection", "pest-plugin-mutate",
+            "muter", "mutation_test", "muzak", "mucheck", "mull", "dextool",
+            "mutationthreshold", "min-msi", "minmsi",
         ]
         queries = [
             (q, desc)

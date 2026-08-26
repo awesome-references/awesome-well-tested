@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-08-26T12:38:08.640734+00:00",
+  "verified_at": "2026-08-26T13:02:26.178083+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 88.44% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -24,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -48,7 +50,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco"
       ]

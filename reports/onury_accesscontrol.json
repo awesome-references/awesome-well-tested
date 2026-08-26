@@ -1,6 +1,6 @@
 {
   "repository": "onury/accesscontrol",
-  "verified_at": "2026-08-26T12:39:42.327106+00:00",
+  "verified_at": "2026-08-26T13:04:52.162631+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -17,9 +17,16 @@
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
   "parameterized_tests": {
-    "frameworks": [],
-    "detected": false,
-    "language": "TypeScript"
+    "frameworks": [
+      {
+        "framework": "Jest/Vitest .each",
+        "matches": 1
+      }
+    ],
+    "detected": true,
+    "language": "TypeScript",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -47,6 +54,13 @@
       "language": "JavaScript/TypeScript",
       "matched_patterns": [
         "@vitest/coverage"
+      ]
+    },
+    "vitest-coverage": {
+      "file": "package.json",
+      "language": "JavaScript/TypeScript",
+      "matched_patterns": [
+        "@vitest/coverage-istanbul"
       ]
     }
   },

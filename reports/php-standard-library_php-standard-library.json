@@ -1,6 +1,6 @@
 {
   "repository": "php-standard-library/php-standard-library",
-  "verified_at": "2026-08-26T12:41:13.973444+00:00",
+  "verified_at": "2026-08-26T13:07:58.681835+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 96.56% and mutation score 95.74%, backed by an independently hosted report",
   "coverage": {
@@ -29,7 +29,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -64,6 +66,13 @@
   },
   "coverage_tools": {
     "phpunit": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "php-coveralls"
+      ]
+    },
+    "php-coveralls": {
       "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [

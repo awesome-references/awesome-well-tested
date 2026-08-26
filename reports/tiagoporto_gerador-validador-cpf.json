@@ -1,6 +1,6 @@
 {
   "repository": "tiagoporto/gerador-validador-cpf",
-  "verified_at": "2026-08-26T12:39:33.641121+00:00",
+  "verified_at": "2026-08-26T13:04:40.615794+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 97.19% and mutation score 88.76%, backed by an independently hosted report",
   "coverage": {
@@ -24,7 +24,9 @@
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {

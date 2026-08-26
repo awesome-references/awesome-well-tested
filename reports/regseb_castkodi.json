@@ -1,6 +1,6 @@
 {
   "repository": "regseb/castkodi",
-  "verified_at": "2026-08-26T12:39:24.618745+00:00",
+  "verified_at": "2026-08-26T13:04:28.788594+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 95.89%, backed by an independently hosted report",
   "coverage": {
@@ -29,7 +29,9 @@
       }
     ],
     "detected": true,
-    "language": "JavaScript"
+    "language": "JavaScript",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": [
     "No coverage tool configuration found"

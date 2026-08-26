@@ -1,6 +1,6 @@
 {
   "repository": "dkubb/memoizable",
-  "verified_at": "2026-08-26T12:39:51.650464+00:00",
+  "verified_at": "2026-08-26T13:05:29.442366+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -17,14 +17,11 @@
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
   "parameterized_tests": {
-    "frameworks": [
-      {
-        "framework": "RSpec shared examples",
-        "matches": 7
-      }
-    ],
-    "detected": true,
-    "language": "Ruby"
+    "frameworks": [],
+    "detected": false,
+    "language": "Ruby",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {

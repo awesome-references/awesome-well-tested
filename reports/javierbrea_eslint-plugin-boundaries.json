@@ -1,6 +1,6 @@
 {
   "repository": "javierbrea/eslint-plugin-boundaries",
-  "verified_at": "2026-08-26T12:39:15.505867+00:00",
+  "verified_at": "2026-08-26T13:03:53.231863+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 94.72%, backed by an independently hosted report",
   "coverage": {
@@ -24,7 +24,9 @@
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": [
     "No coverage tool configuration found"

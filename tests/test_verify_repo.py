@@ -66,15 +66,62 @@ class ParameterizedMarkers(unittest.TestCase):
         )
         self.assertEqual(matches, [])
 
-    def test_go_has_no_parameterized_markers(self):
-        # Table-driven tests have no keyword; a marker would be guesswork.
-        self.assertNotIn("Go", vr.PARAMETERIZED_MARKERS)
+    def test_go_markers_name_libraries_never_table_driven_tests(self):
+        # Table-driven tests still have no keyword of their own. What Go does
+        # announce is its property-testing and table-DSL libraries, so those are
+        # detected and the idiom is not guessed at.
+        terms = [term for term, _ in vr.PARAMETERIZED_MARKERS["Go"]]
+        self.assertIn("gopter", terms)
+        for guess in ("[]struct", "t.Run", "tests :=", "tt."):
+            self.assertNotIn(guess, terms)
 
     def test_every_marker_language_has_at_least_one_term(self):
         for language, markers in vr.PARAMETERIZED_MARKERS.items():
             self.assertTrue(markers, f"{language} has no markers")
             for term, label in markers:
                 self.assertNotIn(" OR ", term, "code search does not honour OR")
+                self.assertTrue(label.strip(), f"{term} has no label")
+
+    def test_shared_examples_are_not_treated_as_parameterization(self):
+        # Sharing example code between contexts is reuse. Running one example
+        # over many inputs is what this column claims.
+        for language in ("Ruby", "Swift"):
+            terms = [t for t, _ in vr.PARAMETERIZED_MARKERS[language]]
+            self.assertNotIn("shared_examples", terms)
+            self.assertNotIn("it_behaves_like", terms)
+            self.assertNotIn("itBehavesLike", terms)
+
+    def test_no_marker_is_a_substring_of_a_more_specific_one(self):
+        # "TestCase" matched TestCaseSource and ordinary method names alike.
+        for language, markers in vr.PARAMETERIZED_MARKERS.items():
+            terms = [t for t, _ in markers]
+            for term in terms:
+                others = [o for o in terms if o != term]
+                self.assertFalse(
+                    any(term in other for other in others),
+                    f"{language}: {term!r} is a substring of a sibling marker",
+                )
+
+    def test_every_pattern_in_the_tool_tables_compiles(self):
+        import re
+        for table in (vr.COVERAGE_TOOLS, vr.MUTATION_TOOLS):
+            for key, tool in table.items():
+                self.assertTrue(tool["files"], f"{key} checks no files")
+                self.assertTrue(tool["patterns"], f"{key} has no patterns")
+                for pattern in tool["patterns"]:
+                    re.compile(pattern)
+
+    def test_no_tool_pattern_is_a_bare_common_word(self):
+        # Each of these was, at some point, a pattern that misfired.
+        forbidden = {"coverage", "test", "phpunit", "istanbul", "clover", "dextool",
+                     "muter", "--coverage", "c8", "kover"}
+        for table in (vr.COVERAGE_TOOLS, vr.MUTATION_TOOLS):
+            for key, tool in table.items():
+                for pattern in tool["patterns"]:
+                    self.assertNotIn(
+                        pattern.strip().lower(), forbidden,
+                        f"{key} matches the bare word {pattern!r}",
+                    )
 
 
 class PatternsThatNameThingsNotWords(unittest.TestCase):
