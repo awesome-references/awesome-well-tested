@@ -31,6 +31,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import readme_table as rt  # noqa: E402
 from verify_repo import (  # noqa: E402
     GitHubAPI,
+    RepositoryMissing,
+    VerificationIncomplete,
     print_summary,
     save_report,
     verify_repository,
@@ -137,24 +139,51 @@ def main():
         print(f"\n{len(entries)} entries parsed from {readme_path}")
         return 0
 
+    if not args.token and args.apply:
+        # check_parameterized_tests needs code search, which needs a token, and
+        # returns None without one. cells_from_report writes that as "n/a" - the
+        # same string the README documents as "not applicable" - so an
+        # unauthenticated --apply would quietly erase the column.
+        print(
+            "--apply needs a token: without one the parameterized-test check cannot "
+            "run, and every entry's Param. Tests cell would be overwritten with "
+            "'n/a'. Pass --token or set GITHUB_TOKEN.",
+            file=sys.stderr,
+        )
+        return 1
+
     if not args.token:
         print(
             "Warning: no token. Unauthenticated GitHub API access is limited to 60 "
-            "requests per hour and each repository costs roughly 20.",
+            "requests per hour and each repository costs about 10.",
             file=sys.stderr,
         )
 
     api = GitHubAPI(token=args.token)
-    reports, drop, changes = {}, set(), []
+    reports, drop, changes, incomplete = {}, set(), [], []
 
     for entry in entries:
         name = entry["full_name"]
         if args.redact:
-            print(f"\nRechecking a listed entry...")
+            print("\nRechecking a listed entry...")
         else:
             print(f"\nRechecking {name} (listed as {entry['claimed_tier']})...")
 
-        report = verify_repository(api, entry["owner"], entry["repo"])
+        try:
+            report = verify_repository(api, entry["owner"], entry["repo"])
+        except VerificationIncomplete as e:
+            # A service that did not answer is not a repository that stopped
+            # qualifying. Leaving the entry exactly as it is costs a week;
+            # removing it on a 429 costs the entry and its report.
+            incomplete.append(name)
+            print(f"  Could not verify this entry, leaving it untouched: {e}", file=sys.stderr)
+            continue
+        except RepositoryMissing:
+            # Deleted, renamed away or made private. That is an answer.
+            drop.add(name)
+            changes.append({"name": name, "outcome": "removed", "tier": None})
+            continue
+
         outcome = classify(entry["claimed_tier"], report["tier"])
 
         if outcome == "removed":
@@ -168,6 +197,17 @@ def main():
         if outcome != "unchanged":
             changes.append({"name": name, "outcome": outcome, "tier": report["tier"]})
 
+    # A run that could not verify most of what it looked at has no business
+    # rewriting the list from its results.
+    verified = len(entries) - len(incomplete)
+    if args.apply and incomplete and verified < len(entries) * 0.8:
+        print(
+            f"\nOnly {verified} of {len(entries)} entries could be verified. "
+            "Refusing to rewrite the list from a partial run.",
+            file=sys.stderr,
+        )
+        return 1
+
     if args.apply:
         apply_changes(readme_path, reports, drop, output_dir)
 
@@ -175,7 +215,7 @@ def main():
     raised = [c for c in changes if c["outcome"] == "raised"]
 
     print(f"\n{'=' * 60}")
-    print(f"  Rechecked {len(entries)} entries")
+    print(f"  Rechecked {len(entries)} entries, {len(incomplete)} could not be verified")
     print(f"  {len(drop)} no longer qualify, {len(lowered)} lowered, {len(raised)} raised")
     print(f"{'=' * 60}\n")
 

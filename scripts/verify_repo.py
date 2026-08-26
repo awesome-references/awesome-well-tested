@@ -71,24 +71,48 @@ COVERAGE_TOOLS = {
         "language": "Kotlin",
     },
     "pytest-cov": {
-        "files": ["pyproject.toml", "setup.cfg", "pytest.ini", "tox.ini"],
-        "patterns": [r"pytest-cov", r"--cov", r"addopts.*--cov"],
+        "files": [
+            "pyproject.toml",
+            "setup.cfg",
+            "pytest.ini",
+            "tox.ini",
+            "noxfile.py",
+            ".github/workflows",
+        ],
+        # "--cov" without the boundary is a prefix of "--coverage-clover", so
+        # it matched every PHP workflow that collects coverage.
+        "patterns": [r"pytest-cov", r"--cov\b", r"--cov="],
         "language": "Python",
     },
     "coverage.py": {
-        "files": ["pyproject.toml", "setup.cfg", ".coveragerc"],
-        "patterns": [r"\[tool\.coverage\]", r"\[coverage:", r"coverage run"],
+        # "[tool.coverage]" is not a section coverage.py reads - the real ones
+        # are [tool.coverage.run], [tool.coverage.report] and friends - so the
+        # pattern that used to be here could never match anything.
+        # No workflows here. "coverage report" and "coverage xml" read as
+        # commands in a config file but as ordinary English in a CI step name -
+        # "Upload coverage report" matched every ecosystem.
+        "files": ["pyproject.toml", "setup.cfg", ".coveragerc", "tox.ini"],
+        "patterns": [
+            r"\[tool\.coverage\.",
+            r"\[coverage:",
+            r"coverage run",
+            r"coverage combine",
+        ],
         "language": "Python",
     },
     "istanbul": {
         "files": ["package.json", ".nycrc", ".nycrc.json", ".github/workflows"],
-        # Deliberately not "--coverage": that also matches phpunit
-        # --coverage-clover and go test --coverage in a CI workflow, which
-        # labelled PHP and Go repositories as using Istanbul.
+        # Every pattern names a package or a flag, never a bare word. "istanbul"
+        # on its own matches the timezone Europe/Istanbul in a CI matrix, and
+        # "\bc8\b" matches a container tag like quay.io/centos/centos:c8.
         "patterns": [
-            r"istanbul",
-            r"\"nyc\"",
-            r"\bc8\b",
+            r"babel-plugin-istanbul",
+            r"istanbul-lib",
+            r"@istanbuljs",
+            r"[\"']nyc[\"']",
+            r"\bnyc\s+--",
+            r"[\"']c8[\"']",
+            r"\bc8\s+--",
             r"collectCoverage",
             r"@vitest/coverage",
         ],
@@ -111,7 +135,20 @@ COVERAGE_TOOLS = {
             "phpunit.xml.dist",
             ".github/workflows",
         ],
-        "patterns": [r"coverage-clover", r"php-coveralls", r"phpunit", r"pcov", r"xdebug"],
+        # Not "phpunit": every PHP project declares phpunit/phpunit as a dev
+        # dependency, and the test runner's name is not evidence that coverage
+        # is collected. Not bare "xdebug" either: its commonest appearance in a
+        # workflow is the line that turns coverage off.
+        "patterns": [
+            r"coverage-clover",
+            r"coverage-cobertura",
+            r"coverage-text",
+            r"php-coveralls",
+            r"coverage:\s*(?:pcov|xdebug)",
+            r"xdebug\.mode\s*=\s*coverage",
+            r"pcov\.enabled",
+            r"<coverage",
+        ],
         "language": "PHP",
     },
     "simplecov": {
@@ -233,53 +270,116 @@ BADGE_PATTERNS = [
 ]
 
 
+class VerificationIncomplete(Exception):
+    """A check could not be carried out, as opposed to having found nothing.
+
+    The distinction decides whether an entry is removed from the list. A
+    repository that no longer publishes 80% coverage should come off; one whose
+    coverage service happened to answer 429 must not. Everything that talks to
+    the network raises this rather than returning a value that reads like a
+    negative result.
+    """
+
+
+class RepositoryMissing(Exception):
+    """The repository is gone: renamed away, deleted, or made private.
+
+    Unlike VerificationIncomplete this is an answer, and a listed entry that
+    raises it does belong off the list.
+    """
+
+
 class GitHubAPI:
     """Minimal GitHub API client using urllib."""
 
-    def __init__(self, token: str | None = None):
-        self.headers = {"Accept": "application/vnd.github.v3+json"}
+    # 403 is the primary rate limit, 429 the secondary one; 5xx is the service
+    # having a bad day. All three are worth waiting out rather than treating as
+    # an answer.
+    RETRY_CODES = (403, 429, 500, 502, 503, 504)
+    MAX_ATTEMPTS = 4
+
+    def __init__(self, token: str | None = None, retries: int | None = None):
+        self.headers = {
+            "Accept": "application/vnd.github.v3+json",
+            "User-Agent": "awesome-well-tested",
+        }
         self.authenticated = bool(token)
+        self.attempts = self.MAX_ATTEMPTS if retries is None else retries
+        self.requests = 0
         if token:
             self.headers["Authorization"] = f"token {token}"
 
+    def _sleep_for(self, error: urllib.error.HTTPError, attempt: int) -> float:
+        """How long to wait, preferring what the server asked for."""
+        retry_after = error.headers.get("Retry-After")
+        if retry_after and retry_after.isdigit():
+            return min(int(retry_after), 120)
+        reset = error.headers.get("X-RateLimit-Reset")
+        remaining = error.headers.get("X-RateLimit-Remaining")
+        if reset and remaining == "0":
+            try:
+                wait = int(reset) - int(time.time())
+                if 0 < wait <= 120:
+                    return wait
+            except ValueError:
+                pass
+        return min(2 ** attempt, 60)
+
+    def _request(self, url: str, headers: dict, decode):
+        """Issue a request, retrying what is worth retrying.
+
+        Returns None for 404 and 422 - the resource genuinely is not there, or
+        the query was rejected - and raises VerificationIncomplete for anything
+        that means "ask again later".
+        """
+        for attempt in range(1, self.attempts + 1):
+            req = urllib.request.Request(url, headers=headers)
+            try:
+                self.requests += 1
+                with urllib.request.urlopen(req, timeout=20) as resp:
+                    return decode(resp)
+            except urllib.error.HTTPError as e:
+                if e.code in (404, 422):
+                    return None
+                if e.code in self.RETRY_CODES and attempt < self.attempts:
+                    wait = self._sleep_for(e, attempt)
+                    print(
+                        f"  HTTP {e.code} from {url.split('?')[0]}, "
+                        f"retrying in {wait}s [{attempt}/{self.attempts - 1}]",
+                        file=sys.stderr,
+                    )
+                    time.sleep(wait)
+                    continue
+                raise VerificationIncomplete(f"HTTP {e.code} for {url}") from e
+            except (urllib.error.URLError, TimeoutError) as e:
+                if attempt < self.attempts:
+                    time.sleep(min(2 ** attempt, 30))
+                    continue
+                raise VerificationIncomplete(f"network error for {url}: {e}") from e
+            except json.JSONDecodeError as e:
+                raise VerificationIncomplete(f"malformed JSON from {url}") from e
+        raise VerificationIncomplete(f"gave up on {url}")
+
     def get(self, url: str) -> dict | list | None:
-        req = urllib.request.Request(url, headers=self.headers)
-        try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                return json.loads(resp.read().decode())
-        except urllib.error.HTTPError as e:
-            if e.code == 404:
-                return None
-            if e.code == 403:
-                print(f"Rate limited. Use --token for higher limits.", file=sys.stderr)
-                sys.exit(1)
-            raise
-        except urllib.error.URLError as e:
-            print(f"Network error: {e}", file=sys.stderr)
-            return None
+        return self._request(
+            url, self.headers, lambda resp: json.loads(resp.read().decode())
+        )
 
     def get_public_json(self, url: str) -> dict | list | None:
         """GET JSON from a non-GitHub public endpoint (Codecov, Coveralls).
 
         Deliberately does not send the GitHub token: these are third-party hosts.
         """
-        req = urllib.request.Request(
-            url, headers={"Accept": "application/json", "User-Agent": "awesome-well-tested"}
+        headers = {"Accept": "application/json", "User-Agent": "awesome-well-tested"}
+        return self._request(
+            url, headers, lambda resp: json.loads(resp.read().decode())
         )
-        try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                return json.loads(resp.read().decode())
-        except (urllib.error.HTTPError, urllib.error.URLError, json.JSONDecodeError):
-            return None
 
     def get_text(self, url: str) -> str | None:
         headers = {**self.headers, "Accept": "application/vnd.github.v3.raw"}
-        req = urllib.request.Request(url, headers=headers)
-        try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                return resp.read().decode(errors="replace")
-        except (urllib.error.HTTPError, urllib.error.URLError):
-            return None
+        return self._request(
+            url, headers, lambda resp: resp.read().decode(errors="replace")
+        )
 
 
 def parse_repo_arg(arg: str) -> tuple[str, str]:
@@ -299,8 +399,7 @@ def check_repo_metadata(api: GitHubAPI, owner: str, repo: str) -> dict:
     """Check basic repo info: license, activity, language."""
     data = api.get(f"{API_BASE}/repos/{owner}/{repo}")
     if not data:
-        print(f"Repository {owner}/{repo} not found.", file=sys.stderr)
-        sys.exit(1)
+        raise RepositoryMissing(f"{owner}/{repo}")
 
     pushed_at = data.get("pushed_at", "")
     days_since_push = None
@@ -323,16 +422,35 @@ def check_repo_metadata(api: GitHubAPI, owner: str, repo: str) -> dict:
     }
 
 
-def check_ci(api: GitHubAPI, owner: str, repo: str, branch: str) -> dict:
-    """Detect CI configuration."""
+def check_ci(
+    api: GitHubAPI, owner: str, repo: str, branch: str, tree: set | None = None
+) -> dict:
+    """Detect CI configuration.
+
+    With the tree in hand this costs nothing: every CI marker is a path, and
+    asking whether a path exists is a set lookup rather than a request.
+    """
     found = {}
 
-    # Check GitHub Actions specifically (most common)
+    if tree is not None:
+        workflow_names = sorted(
+            path.split("/", 2)[2]
+            for path in tree
+            if path.startswith(".github/workflows/") and path.count("/") == 2
+        )
+        if workflow_names:
+            found["github_actions"] = workflow_names
+        for ci_name, paths in CI_PATTERNS.items():
+            if ci_name == "github_actions":
+                continue
+            if any(path in tree for path in paths):
+                found[ci_name] = True
+        return found
+
     workflows = api.get(f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows?ref={branch}")
     if workflows and isinstance(workflows, list):
         found["github_actions"] = [w["name"] for w in workflows if w.get("name")]
 
-    # Check other CI files at repo root
     for ci_name, paths in CI_PATTERNS.items():
         if ci_name == "github_actions":
             continue
@@ -353,16 +471,49 @@ def search_file_for_patterns(content: str, patterns: list[str]) -> list[str]:
     return matches
 
 
-def fetch_workflow_contents(api: GitHubAPI, owner: str, repo: str, branch: str) -> dict:
+def fetch_tree(api: GitHubAPI, owner: str, repo: str, branch: str) -> set | None:
+    """Every file path in the repository, in one request.
+
+    Knowing what exists turns roughly twenty-five speculative fetches per
+    repository - Cargo.toml in a Java project, composer.json in a Python one -
+    into none. Returns None when the tree is unavailable or truncated, in which
+    case callers must fall back to asking for each file.
+    """
+    data = api.get(f"{API_BASE}/repos/{owner}/{repo}/git/trees/{branch}?recursive=1")
+    if not isinstance(data, dict) or data.get("truncated"):
+        return None
+    return {
+        entry["path"]
+        for entry in data.get("tree", [])
+        if entry.get("type") == "blob" and entry.get("path")
+    }
+
+
+def fetch_workflow_contents(
+    api: GitHubAPI, owner: str, repo: str, branch: str, tree: set | None = None
+) -> dict:
     """Download every GitHub Actions workflow file so tools invoked only in CI are visible."""
-    workflows = api.get(f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows?ref={branch}")
+    if tree is not None:
+        names = sorted(
+            path.split("/", 2)[2]
+            for path in tree
+            if path.startswith(".github/workflows/")
+            and path.endswith((".yml", ".yaml"))
+            and path.count("/") == 2
+        )
+    else:
+        workflows = api.get(
+            f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows?ref={branch}"
+        )
+        if not workflows or not isinstance(workflows, list):
+            return {}
+        names = [
+            w["name"] for w in workflows
+            if w.get("name", "").endswith((".yml", ".yaml"))
+        ]
+
     contents = {}
-    if not workflows or not isinstance(workflows, list):
-        return contents
-    for entry in workflows:
-        name = entry.get("name", "")
-        if not name.endswith((".yml", ".yaml")):
-            continue
+    for name in names:
         path = urllib.parse.quote(name)
         text = api.get_text(
             f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows/{path}?ref={branch}"
@@ -379,10 +530,18 @@ def check_tools(
     branch: str,
     tool_definitions: dict,
     workflow_contents: dict | None = None,
+    file_cache: dict | None = None,
+    tree: set | None = None,
 ) -> dict:
-    """Check for coverage or mutation testing tools in config files and CI workflows."""
+    """Check for coverage or mutation testing tools in config files and CI workflows.
+
+    file_cache is shared between the coverage and mutation passes. Without it
+    every build file common to both - pom.xml, package.json, Cargo.toml and
+    eight others - is fetched twice, which is eleven wasted requests per
+    repository against an hourly budget that a full recheck already strains.
+    """
     found = {}
-    checked_files: dict[str, str | None] = {}
+    checked_files: dict[str, str | None] = file_cache if file_cache is not None else {}
     workflow_contents = workflow_contents or {}
 
     for tool_name, tool_info in tool_definitions.items():
@@ -401,10 +560,13 @@ def check_tools(
                 continue
 
             if filename not in checked_files:
-                content = api.get_text(
-                    f"{API_BASE}/repos/{owner}/{repo}/contents/{filename}?ref={branch}"
-                )
-                checked_files[filename] = content
+                if tree is not None and filename not in tree:
+                    checked_files[filename] = None
+                else:
+                    checked_files[filename] = api.get_text(
+                        f"{API_BASE}/repos/{owner}/{repo}/contents/"
+                        f"{urllib.parse.quote(filename)}?ref={branch}"
+                    )
 
             content = checked_files[filename]
             if not content:
@@ -731,15 +893,23 @@ def verify_repository(
     metadata = check_repo_metadata(api, owner, repo)
     branch = metadata["default_branch"]
 
+    tree = fetch_tree(api, owner, repo, branch)
+
     say("  Checking CI configuration...")
-    ci = check_ci(api, owner, repo, branch)
-    workflow_contents = fetch_workflow_contents(api, owner, repo, branch)
+    ci = check_ci(api, owner, repo, branch, tree)
+    workflow_contents = fetch_workflow_contents(api, owner, repo, branch, tree)
+
+    file_cache: dict[str, str | None] = {}
 
     say("  Checking coverage tools...")
-    coverage_tools = check_tools(api, owner, repo, branch, COVERAGE_TOOLS, workflow_contents)
+    coverage_tools = check_tools(
+        api, owner, repo, branch, COVERAGE_TOOLS, workflow_contents, file_cache, tree
+    )
 
     say("  Checking mutation testing tools...")
-    mutation_tools = check_tools(api, owner, repo, branch, MUTATION_TOOLS, workflow_contents)
+    mutation_tools = check_tools(
+        api, owner, repo, branch, MUTATION_TOOLS, workflow_contents, file_cache, tree
+    )
 
     say("  Checking badges...")
     readme = fetch_readme(api, owner, repo, branch)
