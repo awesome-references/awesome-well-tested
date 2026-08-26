@@ -1,0 +1,72 @@
+{
+  "repository": "markuspoerschke/iCal",
+  "verified_at": "2026-08-26T11:26:02.475554+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 93.22,
+    "source": "https://codecov.io/gh/markuspoerschke/iCal"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 9
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "markuspoerschke/iCal",
+    "description": "iCal-creator for PHP",
+    "language": "PHP",
+    "license": "MIT",
+    "stars": 1174,
+    "forks": 170,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-11T14:40:33Z",
+    "days_since_push": 14,
+    "default_branch": "2.x"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "danger.yml",
+      "dependabot-auto-approve.yml",
+      "draft-new-release.yml",
+      "publish-new-release.yml",
+      "reviewdog.yml",
+      "website.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": "phpunit.xml.dist",
+      "language": "PHP",
+      "matched_patterns": [
+        "phpunit"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "infection.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/markuspoerschke/iCal"
+    }
+  ]
+}

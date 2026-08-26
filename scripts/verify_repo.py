@@ -80,7 +80,16 @@ COVERAGE_TOOLS = {
     },
     "istanbul": {
         "files": ["package.json", ".nycrc", ".nycrc.json", ".github/workflows"],
-        "patterns": [r"istanbul", r"\"nyc\"", r"c8"],
+        # Deliberately not "--coverage": that also matches phpunit
+        # --coverage-clover and go test --coverage in a CI workflow, which
+        # labelled PHP and Go repositories as using Istanbul.
+        "patterns": [
+            r"istanbul",
+            r"\"nyc\"",
+            r"\bc8\b",
+            r"collectCoverage",
+            r"@vitest/coverage",
+        ],
         "language": "JavaScript/TypeScript",
     },
     "go_cover": {
@@ -92,6 +101,16 @@ COVERAGE_TOOLS = {
         "files": ["Cargo.toml", ".github/workflows"],
         "patterns": [r"cargo-tarpaulin", r"tarpaulin"],
         "language": "Rust",
+    },
+    "phpunit": {
+        "files": [
+            "composer.json",
+            "phpunit.xml",
+            "phpunit.xml.dist",
+            ".github/workflows",
+        ],
+        "patterns": [r"coverage-clover", r"php-coveralls", r"phpunit", r"pcov", r"xdebug"],
+        "language": "PHP",
     },
     "simplecov": {
         "files": ["Gemfile", ".simplecov", ".github/workflows"],
@@ -342,8 +361,9 @@ def fetch_workflow_contents(api: GitHubAPI, owner: str, repo: str, branch: str) 
         name = entry.get("name", "")
         if not name.endswith((".yml", ".yaml")):
             continue
+        path = urllib.parse.quote(name)
         text = api.get_text(
-            f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows/{name}?ref={branch}"
+            f"{API_BASE}/repos/{owner}/{repo}/contents/.github/workflows/{path}?ref={branch}"
         )
         if text:
             contents[f".github/workflows/{name}"] = text
@@ -516,13 +536,22 @@ def determine_tier(
     """
     if not ci:
         return None, "No CI configuration found"
-    if not coverage_tools:
-        return None, "No coverage tool configuration found"
 
     if coverage is None:
         return None, (
             f"Coverage percentage could not be verified automatically; "
             f"supply it with --coverage once confirmed (>= {MIN_COVERAGE:.0f}% required)"
+        )
+
+    # A percentage published by Codecov or Coveralls is itself proof that CI
+    # reports coverage: somebody had to upload it. Demanding that a coverage
+    # tool also be recognisable in the build files on top of that rejected
+    # repositories with published, verified coverage merely because their
+    # tooling was not in the list - which is a gap in the list, not in them.
+    if coverage["service"] == "manual" and not coverage_tools:
+        return None, (
+            "Coverage was supplied by hand and no coverage tool could be found in "
+            "the repository, so there is nothing to corroborate the figure"
         )
 
     if coverage["coverage"] < MIN_COVERAGE:
@@ -550,6 +579,21 @@ def determine_tier(
     return "gold", (
         f"Coverage {coverage['coverage']}% and mutation score {mutation_score}%"
     )
+
+
+def primary_coverage_tool(coverage_tools: dict, language: str | None) -> str | None:
+    """Pick the tool to name for a repository when several patterns matched.
+
+    Build and CI files borrow each other's vocabulary, so a repository can match
+    more than one tool. The one whose language matches the repository is the
+    honest answer.
+    """
+    if not coverage_tools:
+        return None
+    for name, info in coverage_tools.items():
+        if language and language in (info.get("language") or ""):
+            return name
+    return next(iter(coverage_tools))
 
 
 def generate_report(
@@ -597,6 +641,9 @@ def generate_report(
         "metadata": metadata,
         "ci": ci if ci else None,
         "coverage_tools": coverage_tools if coverage_tools else None,
+        "primary_coverage_tool": primary_coverage_tool(
+            coverage_tools, metadata.get("language")
+        ),
         "mutation_tools": mutation_tools if mutation_tools else None,
         "badges": badges if badges else None,
     }

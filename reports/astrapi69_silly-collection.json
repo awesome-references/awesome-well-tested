@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T10:54:59.580207+00:00",
+  "verified_at": "2026-08-26T11:20:26.255760+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -42,6 +42,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": null,
   "badges": [
     {

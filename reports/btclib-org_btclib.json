@@ -1,0 +1,86 @@
+{
+  "repository": "btclib-org/btclib",
+  "verified_at": "2026-08-26T11:21:49.472676+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 99.93,
+    "source": "https://coveralls.io/github/btclib-org/btclib"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "pytest.mark.parametrize",
+        "matches": 102
+      },
+      {
+        "framework": "Hypothesis (property-based)",
+        "matches": 14
+      }
+    ],
+    "detected": true,
+    "language": "Python"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "btclib-org/btclib",
+    "description": "btclib: a python3 library for 'bitcoin cryptography'",
+    "language": "Python",
+    "license": "MIT",
+    "stars": 112,
+    "forks": 47,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T10:35:11Z",
+    "days_since_push": 0,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "claude-review.yml",
+      "codeql.yml",
+      "deps-latest.yml",
+      "docs.yml",
+      "fuzz.yml",
+      "integration-bitcoind.yml",
+      "integration-hwi.yml",
+      "links.yml",
+      "lint.yml",
+      "mutation.yml",
+      "os-macos.yml",
+      "os-ubuntu.yml",
+      "os-windows.yml",
+      "py-arm-authority.yml",
+      "pypi-install.yml",
+      "release.yml",
+      "scorecard.yml",
+      "test.yml",
+      "vendored-vectors.yml",
+      "website.yml"
+    ]
+  },
+  "coverage_tools": {
+    "pytest-cov": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "pytest-cov",
+        "--cov",
+        "addopts.*--cov"
+      ]
+    }
+  },
+  "primary_coverage_tool": "pytest-cov",
+  "mutation_tools": {
+    "cosmic-ray": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "cosmic.ray"
+      ]
+    }
+  },
+  "badges": null
+}

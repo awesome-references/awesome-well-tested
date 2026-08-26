@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-08-26T10:54:24.557154+00:00",
+  "verified_at": "2026-08-26T11:19:47.230901+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.91% and mutation score 99.0%",
   "coverage": {
@@ -50,6 +50,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",

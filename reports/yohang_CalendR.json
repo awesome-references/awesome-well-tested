@@ -1,0 +1,67 @@
+{
+  "repository": "yohang/CalendR",
+  "verified_at": "2026-08-26T11:25:15.470891+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 100.0,
+    "source": "https://coveralls.io/github/yohang/CalendR"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 16
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "yohang/CalendR",
+    "description": "A modern, object-oriented calendar management library for PHP 8.2+.",
+    "language": "PHP",
+    "license": "MIT",
+    "stars": 467,
+    "forks": 67,
+    "archived": false,
+    "fork": false,
+    "last_push": "2025-12-02T20:13:31Z",
+    "days_since_push": 266,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/ci.yml",
+      "language": "PHP",
+      "matched_patterns": [
+        "phpunit"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/yohang/CalendR"
+    }
+  ]
+}

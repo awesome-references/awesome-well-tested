@@ -1,0 +1,67 @@
+{
+  "repository": "giggsey/Locale",
+  "verified_at": "2026-08-26T11:24:49.092103+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Coveralls",
+    "coverage": 100.0,
+    "source": "https://coveralls.io/github/giggsey/Locale"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "PHPUnit @dataProvider",
+        "matches": 3
+      }
+    ],
+    "detected": true,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "giggsey/Locale",
+    "description": null,
+    "language": "PHP",
+    "license": "MIT",
+    "stars": 632,
+    "forks": 11,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-02-24T15:32:58Z",
+    "days_since_push": 182,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "ci.yml",
+      "mutation-tests.yml",
+      "php-cs-fixer.yml",
+      "sast.yml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/ci.yml",
+      "language": "PHP",
+      "matched_patterns": [
+        "coverage-clover",
+        "phpunit",
+        "xdebug"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "infection.json.dist",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": null
+}

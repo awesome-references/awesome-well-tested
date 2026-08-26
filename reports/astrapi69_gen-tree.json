@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/gen-tree",
-  "verified_at": "2026-08-26T10:54:42.404064+00:00",
+  "verified_at": "2026-08-26T11:20:06.667022+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 98.01% and mutation score 98.0%",
   "coverage": {
@@ -43,6 +43,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",

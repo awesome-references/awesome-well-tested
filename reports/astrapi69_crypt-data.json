@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-08-26T10:53:47.905780+00:00",
+  "verified_at": "2026-08-26T11:19:06.926403+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%",
   "coverage": {
@@ -47,6 +47,7 @@
       ]
     }
   },
+  "primary_coverage_tool": "jacoco",
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",

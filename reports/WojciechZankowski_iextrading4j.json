@@ -1,0 +1,69 @@
+{
+  "repository": "WojciechZankowski/iextrading4j",
+  "verified_at": "2026-08-26T11:21:25.932856+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 96.25,
+    "source": "https://codecov.io/gh/WojciechZankowski/iextrading4j"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [
+      {
+        "framework": "JUnit 5 @ParameterizedTest",
+        "matches": 2
+      }
+    ],
+    "detected": true,
+    "language": "Java"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "WojciechZankowski/iextrading4j",
+    "description": "IEX Cloud open source API wrapper",
+    "language": "Java",
+    "license": "Apache-2.0",
+    "stars": 123,
+    "forks": 45,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-01-26T21:50:23Z",
+    "days_since_push": 211,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "documentation.yml",
+      "main.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": ".github/workflows/main.yml",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco",
+        "org\\.jacoco"
+      ]
+    }
+  },
+  "primary_coverage_tool": "jacoco",
+  "mutation_tools": {
+    "pit": {
+      "file": "pom.xml",
+      "language": "Java",
+      "matched_patterns": [
+        "pitest",
+        "org\\.pitest"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/WojciechZankowski/iextrading4j"
+    }
+  ]
+}

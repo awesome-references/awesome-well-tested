@@ -1,0 +1,66 @@
+{
+  "repository": "nicmart/Tree",
+  "verified_at": "2026-08-26T11:25:02.449227+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 100.0,
+    "source": "https://codecov.io/gh/nicmart/Tree"
+  },
+  "mutation_score": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "PHP"
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "nicmart/Tree",
+    "description": "A basic but flexible tree data structure for php and a fluent tree builder implementation.",
+    "language": "PHP",
+    "license": "MIT",
+    "stars": 577,
+    "forks": 61,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-13T11:53:45Z",
+    "days_since_push": 12,
+    "default_branch": "master"
+  },
+  "ci": {
+    "github_actions": [
+      "integrate.yaml",
+      "merge.yaml",
+      "release.yaml"
+    ]
+  },
+  "coverage_tools": {
+    "phpunit": {
+      "file": ".github/workflows/integrate.yaml",
+      "language": "PHP",
+      "matched_patterns": [
+        "coverage-clover",
+        "phpunit",
+        "xdebug"
+      ]
+    }
+  },
+  "primary_coverage_tool": "phpunit",
+  "mutation_tools": {
+    "infection": {
+      "file": "infection.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "infection",
+        "infection/infection"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/nicmart/tree"
+    }
+  ]
+}
