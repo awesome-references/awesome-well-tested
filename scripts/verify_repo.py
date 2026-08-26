@@ -707,7 +707,7 @@ class GitHubAPI:
                 pass
         return min(2 ** attempt, 60)
 
-    def _request(self, url: str, headers: dict, decode):
+    def _request(self, url: str, headers: dict, decode, absent_codes=(404, 422)):
         """Issue a request, retrying what is worth retrying.
 
         Returns None for 404 and 422 - the resource genuinely is not there, or
@@ -721,7 +721,7 @@ class GitHubAPI:
                 with urllib.request.urlopen(req, timeout=20) as resp:
                     return decode(resp)
             except urllib.error.HTTPError as e:
-                if e.code in (404, 422):
+                if e.code in absent_codes:
                     return None
                 if e.code in self.RETRY_CODES and attempt < self.attempts:
                     wait = self._sleep_for(e, attempt)
@@ -753,8 +753,15 @@ class GitHubAPI:
         Deliberately does not send the GitHub token: these are third-party hosts.
         """
         headers = {"Accept": "application/json", "User-Agent": "awesome-well-tested"}
+        # A coverage service answers 401 or 403 for a repository it does not
+        # track, not only for a caller it is throttling. Retrying that as if it
+        # were a rate limit, and then giving up on the whole verification, would
+        # mean an entry never gets rechecked again.
         return self._request(
-            url, headers, lambda resp: json.loads(resp.read().decode())
+            url,
+            headers,
+            lambda resp: json.loads(resp.read().decode()),
+            absent_codes=(401, 403, 404, 422, 451),
         )
 
     def get_text(self, url: str) -> str | None:
@@ -1635,14 +1642,26 @@ def main():
     api = GitHubAPI(token=args.token)
 
     print(f"Verifying {owner}/{repo}...")
-    report = verify_repository(
-        api, owner, repo, args.coverage, args.mutation_score
-    )
+    try:
+        report = verify_repository(
+            api, owner, repo, args.coverage, args.mutation_score
+        )
+    except RepositoryMissing as e:
+        print(f"Repository {e} not found: deleted, renamed or private.", file=sys.stderr)
+        return 1
+    except VerificationIncomplete as e:
+        print(
+            f"Could not finish verifying {owner}/{repo}: {e}\n"
+            "This is a failure to check, not a verdict on the repository.",
+            file=sys.stderr,
+        )
+        return 1
 
     report_path = save_report(report, args.output_dir)
     print_summary(report)
     print(f"Report saved to {report_path}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -260,6 +260,57 @@ class Verifying(unittest.TestCase):
         self.assertEqual(self.verify(api)["tier"], "bronze")
 
 
+class CommandLine(unittest.TestCase):
+    """The single-repository entry point should never end in a traceback."""
+
+    def patch(self, obj, name, value):
+        original = getattr(obj, name)
+        setattr(obj, name, value)
+        self.addCleanup(setattr, obj, name, original)
+
+    def run_main(self, behaviour):
+        import io
+        import tempfile
+
+        def fake_verify(api, owner, repo, *a, **kw):
+            return behaviour(f"{owner}/{repo}")
+
+        self.patch(vr, "verify_repository", fake_verify)
+        self.patch(vr, "GitHubAPI", lambda **kw: object())
+        self.patch(vr.sys, "stderr", io.StringIO())
+        self.patch(vr.sys, "stdout", io.StringIO())
+        with tempfile.TemporaryDirectory() as directory:
+            self.patch(vr.sys, "argv", ["verify_repo.py", "acme/widget",
+                                        "--token", "t", "--output-dir", directory])
+            return vr.main(), vr.sys.stderr.getvalue()
+
+    def test_a_missing_repository_reports_and_exits(self):
+        def behaviour(name):
+            raise vr.RepositoryMissing(name)
+
+        code, err = self.run_main(behaviour)
+        self.assertEqual(code, 1)
+        self.assertIn("not found", err)
+
+    def test_an_unfinished_check_says_it_is_not_a_verdict(self):
+        def behaviour(name):
+            raise vr.VerificationIncomplete("codecov said 503")
+
+        code, err = self.run_main(behaviour)
+        self.assertEqual(code, 1)
+        self.assertIn("not a verdict", err)
+
+    def test_a_successful_run_exits_zero(self):
+        def behaviour(name):
+            return {"repository": name, "tier": "bronze", "tier_reason": "fine",
+                    "coverage": {"service": "Codecov", "coverage": 90.0},
+                    "mutation_score": None, "metadata": {"language": "Java"},
+                    "issues": None}
+
+        code, _ = self.run_main(behaviour)
+        self.assertEqual(code, 0)
+
+
 class Reports(unittest.TestCase):
     def test_a_report_round_trips_through_disk(self):
         import json

@@ -105,6 +105,31 @@ class Retrying(unittest.TestCase):
         self.assertNotIn("sys.exit", api_class)
 
 
+class CoverageServiceStatuses(Retrying):
+    """A coverage service says 403 for a repository it does not track."""
+
+    def test_a_forbidden_response_from_a_coverage_service_is_an_answer(self):
+        # Retrying it as a rate limit and then giving up would mean an entry
+        # never gets rechecked again.
+        api = self.client([http_error(403)])
+        self.assertIsNone(api.get_public_json("https://api.codecov.io/x"))
+        self.assertEqual(len(self.calls), 1)
+
+    def test_an_unauthorised_response_is_also_an_answer(self):
+        api = self.client([http_error(401)])
+        self.assertIsNone(api.get_public_json("https://coveralls.io/x"))
+
+    def test_the_github_client_still_treats_403_as_a_rate_limit(self):
+        api = self.client([http_error(403)] * 4)
+        with self.assertRaises(vr.VerificationIncomplete):
+            api.get("https://api.github.com/x")
+
+    def test_a_service_outage_still_propagates(self):
+        api = self.client([http_error(503)] * 4)
+        with self.assertRaises(vr.VerificationIncomplete):
+            api.get_public_json("https://api.codecov.io/x")
+
+
 class TreeLookups(unittest.TestCase):
     def test_a_truncated_tree_falls_back_rather_than_lying(self):
         api = vr.GitHubAPI(token="t")
