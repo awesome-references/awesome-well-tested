@@ -49,6 +49,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.AWESOME_LIST_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
+          # Without pipefail the exit status is tee's, so a crashing script
+          # reports the job as green.
+          set -o pipefail
           args="--language ${{ inputs.language }} --min-stars ${{ inputs.min_stars }}"
           if [ "${{ inputs.mutation_only }}" = "true" ]; then
             args="$args --mutation-only"

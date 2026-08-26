@@ -66,30 +66,66 @@ SEARCH_QUERIES = {
 }
 
 
-def search_code(token: str, query: str, language: str) -> list[dict]:
-    """Search GitHub code for repos matching a query."""
-    search_q = f"{query} language:{language}"
-    params = f"q={urllib.parse.quote(search_q)}&per_page=30&sort=indexed"
-    url = f"{API_BASE}/search/code?{params}"
+# Search rejects requests faster than the rest of the API: 403 for the primary
+# limit, 429 for the secondary one. Both carry Retry-After often enough to obey.
+RETRY_CODES = (403, 429)
+MAX_RETRIES = 3
 
+
+def github_search(token: str, query: str, per_page: int = 30) -> dict | None:
+    """Call the code search endpoint, backing off when the limit is hit.
+
+    Note that no `language:` qualifier is added. In code search that qualifier
+    matches the language of the *file*, and every query here pins a build or
+    config file: pom.xml is XML, pyproject.toml is TOML, package.json is JSON.
+    Combining the two is self-contradictory and returns nothing at all.
+    """
+    params = f"q={urllib.parse.quote(query)}&per_page={per_page}&sort=indexed"
+    url = f"{API_BASE}/search/code?{params}"
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"token {token}",
+        "User-Agent": "awesome-well-tested",
     }
 
-    req = urllib.request.Request(url, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            data = json.loads(resp.read().decode())
-    except urllib.error.HTTPError as e:
-        if e.code == 403:
-            print(f"  Rate limited, waiting 30s...", file=sys.stderr)
-            time.sleep(30)
-            return []
-        if e.code == 422:
-            print(f"  Search query too complex, skipping: {query}", file=sys.stderr)
-            return []
-        raise
+    for attempt in range(1, MAX_RETRIES + 1):
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                return json.loads(resp.read().decode())
+        except urllib.error.HTTPError as e:
+            if e.code == 422:
+                print(f"  Query rejected, skipping: {query}", file=sys.stderr)
+                return None
+            if e.code in RETRY_CODES and attempt < MAX_RETRIES:
+                wait = int(e.headers.get("Retry-After") or 0) or 15 * attempt
+                print(
+                    f"  Search limited (HTTP {e.code}), retrying in {wait}s "
+                    f"[{attempt}/{MAX_RETRIES - 1}]...",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+                continue
+            if e.code in RETRY_CODES:
+                print(
+                    f"  Search still limited (HTTP {e.code}) after {MAX_RETRIES} "
+                    f"attempts, skipping: {query}",
+                    file=sys.stderr,
+                )
+                return None
+            raise
+        except urllib.error.URLError as e:
+            print(f"  Network error, skipping: {query} ({e})", file=sys.stderr)
+            return None
+
+    return None
+
+
+def search_code(token: str, query: str) -> list[dict]:
+    """Search GitHub code for repos matching a query."""
+    data = github_search(token, query)
+    if data is None:
+        return []
 
     # Deduplicate by repo
     seen = set()
@@ -178,7 +214,7 @@ def main():
 
     for query, description in queries:
         print(f"Searching: {description} ({query})...")
-        repos = search_code(args.token, query, args.language)
+        repos = search_code(args.token, query)
 
         for repo in repos:
             name = repo["full_name"]
