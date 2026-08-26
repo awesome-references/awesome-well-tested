@@ -2,28 +2,33 @@
 """
 recheck_listed.py - Re-verify every repository already listed in README.md.
 
-The README promises that entries are re-verified periodically and demoted when
-their test quality degrades. This script is what makes that true: it reads the
-listed entries and their claimed tier out of the README tables, verifies each
-one again, refreshes the report under reports/ and reports any entry whose tier
-no longer matches what the list claims.
+The README promises that entries are re-verified and that an entry whose test
+quality degrades does not stay. This is what makes that true.
+
+Removal is silent by design. A repository that falls below the bar is taken off
+the list without the list recording why, and without naming it in any public
+run output. The list exists to point at software that is well tested; it is not
+a place to publish a verdict on software that no longer is. An entry that moves
+between tiers is simply rewritten to the tier it now holds - which is still a
+statement that it qualifies, not a demotion notice.
 
 Usage:
-    python recheck_listed.py
-    python recheck_listed.py --repo astrapi69/crypt-data
-    python recheck_listed.py --fail-on-mismatch
+    python recheck_listed.py                     # report only
+    python recheck_listed.py --apply             # rewrite README and reports
+    python recheck_listed.py --apply --redact    # ... naming nothing in output
+    python recheck_listed.py --dry-run           # just parse the entries
 
 The token defaults to $GITHUB_TOKEN, which GitHub Actions provides for free.
 """
 
 import argparse
 import os
-import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import readme_table as rt  # noqa: E402
 from verify_repo import (  # noqa: E402
     GitHubAPI,
     print_summary,
@@ -33,28 +38,45 @@ from verify_repo import (  # noqa: E402
 
 TIER_ORDER = {"bronze": 1, "silver": 2, "gold": 3}
 
-REPO_LINK = re.compile(r"\[[^\]]+\]\(https://github\.com/([^/)]+)/([^/)#]+?)/?\)")
-TIER_BADGE = re.compile(r"!\[(Gold|Silver|Bronze)\]\(badges/", re.IGNORECASE)
+
+def classify(claimed: str, actual: str | None) -> str:
+    if actual is None:
+        return "removed"
+    if actual == claimed:
+        return "unchanged"
+    if TIER_ORDER.get(actual, 0) < TIER_ORDER.get(claimed, 0):
+        return "lowered"
+    return "raised"
 
 
-def parse_listed_entries(readme_path: Path) -> list[dict]:
-    """Read owner/repo and the claimed tier out of the README tables."""
-    entries = []
-    for line in readme_path.read_text().split("\n"):
-        if not line.startswith("|"):
-            continue
-        repo_match = REPO_LINK.search(line)
-        tier_match = TIER_BADGE.search(line)
-        if not repo_match or not tier_match:
-            continue
-        entries.append(
-            {
-                "owner": repo_match.group(1),
-                "repo": repo_match.group(2),
-                "claimed_tier": tier_match.group(1).lower(),
-            }
-        )
-    return entries
+def apply_changes(
+    readme_path: Path,
+    reports: dict,
+    drop: set,
+    output_dir: Path,
+) -> None:
+    """Rewrite the README rows and delete the reports of dropped entries."""
+
+    def transform(section, header, body):
+        kept = []
+        for row in body:
+            name = rt.row_full_name(row)
+            if name in drop:
+                continue
+            report = reports.get(name)
+            if report is not None:
+                row = rt.update_row(row, header, rt.cells_from_report(report, header))
+            kept.append(row)
+        return kept
+
+    text = rt.transform_tables(rt.read_readme(readme_path), transform)
+    rt.write_readme(readme_path, text)
+
+    for name in drop:
+        owner, repo = name.split("/", 1)
+        path = output_dir / f"{owner}_{repo}.json"
+        if path.exists():
+            path.unlink()
 
 
 def main():
@@ -72,20 +94,22 @@ def main():
         default=None,
         help="Only recheck this owner/repo; may be repeated",
     )
-    parser.add_argument(
-        "--readme",
-        default=None,
-        help="Path to the README to read entries from",
-    )
-    parser.add_argument(
-        "--output-dir",
-        default=None,
-        help="Where reports are written",
-    )
+    parser.add_argument("--readme", default=None, help="README to read entries from")
+    parser.add_argument("--output-dir", default=None, help="Where reports are written")
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print the entries parsed out of the README and exit without calling the API",
+    )
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Rewrite the README: refresh figures, and silently drop entries that no longer qualify",
+    )
+    parser.add_argument(
+        "--redact",
+        action="store_true",
+        help="Never name a dropped or lowered entry in the output; print counts only",
     )
     parser.add_argument(
         "--fail-on-mismatch",
@@ -98,10 +122,10 @@ def main():
     readme_path = Path(args.readme) if args.readme else repo_root / "README.md"
     output_dir = Path(args.output_dir) if args.output_dir else repo_root / "reports"
 
-    entries = parse_listed_entries(readme_path)
+    entries = rt.parse_entries(rt.read_readme(readme_path))
     if args.repo:
         wanted = {r.lower() for r in args.repo}
-        entries = [e for e in entries if f"{e['owner']}/{e['repo']}".lower() in wanted]
+        entries = [e for e in entries if e["full_name"].lower() in wanted]
 
     if not entries:
         print("No listed entries found to recheck.", file=sys.stderr)
@@ -109,7 +133,7 @@ def main():
 
     if args.dry_run:
         for entry in entries:
-            print(f"{entry['owner']}/{entry['repo']} listed as {entry['claimed_tier']}")
+            print(f"{entry['full_name']} listed as {entry['claimed_tier']}")
         print(f"\n{len(entries)} entries parsed from {readme_path}")
         return 0
 
@@ -121,44 +145,50 @@ def main():
         )
 
     api = GitHubAPI(token=args.token)
-    mismatches = []
+    reports, drop, changes = {}, set(), []
 
     for entry in entries:
-        full_name = f"{entry['owner']}/{entry['repo']}"
-        print(f"\nRechecking {full_name} (listed as {entry['claimed_tier']})...")
-        report = verify_repository(api, entry["owner"], entry["repo"])
-        save_report(report, output_dir)
-        print_summary(report)
+        name = entry["full_name"]
+        if args.redact:
+            print(f"\nRechecking a listed entry...")
+        else:
+            print(f"\nRechecking {name} (listed as {entry['claimed_tier']})...")
 
-        actual = report["tier"]
-        claimed = entry["claimed_tier"]
-        if actual != claimed:
-            direction = (
-                "downgrade"
-                if TIER_ORDER.get(actual, 0) < TIER_ORDER.get(claimed, 0)
-                else "upgrade"
-            )
-            mismatches.append(
-                {
-                    "repository": full_name,
-                    "claimed": claimed,
-                    "actual": actual,
-                    "direction": direction,
-                    "reason": report["tier_reason"],
-                }
-            )
+        report = verify_repository(api, entry["owner"], entry["repo"])
+        outcome = classify(entry["claimed_tier"], report["tier"])
+
+        if outcome == "removed":
+            drop.add(name)
+        else:
+            reports[name] = report
+            save_report(report, output_dir)
+            if not args.redact:
+                print_summary(report)
+
+        if outcome != "unchanged":
+            changes.append({"name": name, "outcome": outcome, "tier": report["tier"]})
+
+    if args.apply:
+        apply_changes(readme_path, reports, drop, output_dir)
+
+    lowered = [c for c in changes if c["outcome"] == "lowered"]
+    raised = [c for c in changes if c["outcome"] == "raised"]
 
     print(f"\n{'=' * 60}")
-    print(f"  Rechecked {len(entries)} entries, {len(mismatches)} mismatched")
+    print(f"  Rechecked {len(entries)} entries")
+    print(f"  {len(drop)} no longer qualify, {len(lowered)} lowered, {len(raised)} raised")
     print(f"{'=' * 60}\n")
 
-    for m in mismatches:
-        actual = m["actual"] or "not qualified"
-        print(f"  {m['direction'].upper():<9} {m['repository']}: {m['claimed']} -> {actual}")
-        print(f"            {m['reason']}")
+    if args.apply:
+        print("  README and reports updated." if changes else "  No changes needed.")
+    elif changes and not args.redact:
+        for change in changes:
+            tier = change["tier"] or "no longer qualifies"
+            print(f"  {change['outcome']:<9} {change['name']}: now {tier}")
+        print("\n  Re-run with --apply to write these changes.")
 
-    if mismatches and args.fail_on_mismatch:
-        print("\nREADME tiers are out of date. Update the entries above.", file=sys.stderr)
+    if changes and args.fail_on_mismatch:
+        print("\nThe README no longer matches what was verified.", file=sys.stderr)
         return 1
     return 0
 

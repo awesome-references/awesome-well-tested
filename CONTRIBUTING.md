@@ -89,7 +89,19 @@ Nothing else needs one.
 
 ## Re-verification
 
-The `verify` workflow rechecks every listed repo weekly. If you notice a listed repo no longer meets its tier criteria before the workflow catches it, open an issue with details.
+The `verify` workflow rechecks every listed repo weekly and rewrites the list
+from what it finds.
+
+Removal is silent, on purpose. A repository that falls below the bar is taken
+off the list without the list saying why, and without its name appearing in the
+public run output. An entry that moves between tiers is rewritten to the tier it
+now holds, which is still a statement that it qualifies rather than a demotion
+notice. A curated list is a recommendation; a project that no longer belongs on
+it simply stops being recommended.
+
+If you notice a listed repo no longer meets its criteria before the workflow
+catches it, open an issue. You do not need to make a case in public: naming the
+repository is enough.
 
 ## Self-Submissions
 
