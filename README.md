@@ -83,12 +83,13 @@
 
 Every repository on this list is verified before inclusion:
 
-| Step           | What happens                                                                                                                                                                                                               |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Coverage check | `scripts/verify_repo.py` reads the actual coverage percentage from the Codecov or Coveralls public API. A configured coverage tool is not enough on its own: without a number, no tier is awarded.                         |
-| Tooling check  | We inspect CI config, build files and GitHub Actions workflows for coverage tools (JaCoCo, coverage.py, Istanbul, etc.) and mutation testing tools (PIT, mutmut, Stryker, cargo-mutants, go-mutesting, mutant, Infection). |
-| Mutation score | Read from a Shields.io mutation badge in the README, or supplied with `--mutation-score` after running the mutation tool. No hosted service publishes mutation scores, so this step stays partly manual.                   |
-| Provenance     | Each entry ships with a JSON report under `reports/` recording the tier, the numbers and where they came from. A PR without one does not get merged.                                                                       |
+| Step                | What happens                                                                                                                                                                                                                                        |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Coverage check      | `scripts/verify_repo.py` reads the actual coverage percentage from the Codecov or Coveralls public API. A configured coverage tool is not enough on its own: without a number, no tier is awarded.                                                  |
+| Tooling check       | We inspect CI config, build files and GitHub Actions workflows for coverage tools (JaCoCo, coverage.py, Istanbul, etc.) and mutation testing tools (PIT, mutmut, Stryker, cargo-mutants, go-mutesting, mutant, Infection).                          |
+| Mutation score      | Read from a Shields.io mutation badge in the README, or supplied with `--mutation-score` after running the mutation tool. No hosted service publishes mutation scores, so this step stays partly manual.                                            |
+| Parameterized tests | Repository-scoped code search looks for parameterized and property-based tests. Coverage cannot express this: a function exercised across many inputs is tested harder than one exercised once. Reported, not scored - it does not decide the tier. |
+| Provenance          | Each entry ships with a JSON report under `reports/` recording the tier, the numbers and where they came from. A PR without one does not get merged.                                                                                                |
 
 Repos are re-verified periodically. If a repo's test quality degrades significantly, it may be moved to a lower tier or removed.
 
@@ -99,6 +100,11 @@ JaCoCo, Kover, Istanbul/nyc, coverage.py, pytest-cov, go cover, cargo-tarpaulin,
 
 **Mutation Testing:**
 PIT (Java), mutmut (Python), cosmic-ray (Python), Stryker (JS/TS/C#), cargo-mutants (Rust), go-mutesting (Go), mutant (Ruby), Infection (PHP)
+
+**Parameterized and property-based tests:**
+JUnit 5 `@ParameterizedTest`, JUnit 4 `@Parameterized`, jqwik, Kotest property testing, Spock `@Unroll`, `pytest.mark.parametrize`, Hypothesis, Jest/Vitest `.each`, fast-check, rstest, proptest, quickcheck, RSpec shared examples, Rantly, xUnit `[Theory]`, NUnit `[TestCase]`, FsCheck, PHPUnit `@dataProvider`
+
+Go is missing from that list on purpose. Table-driven tests are idiomatic there but use no keyword of their own, so any marker would be guesswork. Go entries show `n/a` rather than a false negative.
 
 ## Contributing
 

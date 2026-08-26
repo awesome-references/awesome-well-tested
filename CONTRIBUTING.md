@@ -21,6 +21,11 @@ A repository must meet **all** of the following baseline criteria:
 | **Silver** | Mutation testing tool configured and integrated into build |
 | **Gold** | Mutation testing with a verified mutation score >= 70% |
 
+Parameterized and property-based tests are detected and shown in their own
+column, but they do not change the tier. They are recorded because coverage
+cannot express them: a function exercised across many inputs is tested harder
+than one exercised once.
+
 ### What does NOT qualify?
 
 - Toy projects, demo repos, or tutorial code
