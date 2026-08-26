@@ -40,6 +40,41 @@ from pathlib import Path
 API_BASE = "https://api.github.com"
 CODECOV_API = "https://api.codecov.io/api/v2/github"
 COVERALLS_API = "https://coveralls.io/github"
+STRYKER_DASHBOARD_API = "https://dashboard.stryker-mutator.io/api/reports/github.com"
+
+# How a mutation tool looks when a CI workflow actually runs it, as opposed to
+# merely declaring it as a dependency.
+MUTATION_INVOCATIONS = {
+    "pit": r"pitest|pitestReport|mutationCoverage",
+    "stryker": r"stryker\s+run|npx\s+stryker|dotnet\s+stryker",
+    "infection": r"infection(?:\.phar)?\s|--min-msi",
+    "mutmut": r"mutmut\s+run",
+    "cosmic-ray": r"cosmic-ray\s+(?:init|exec)",
+    "mutant": r"mutant\s+run|bundle\s+exec\s+mutant",
+    "cargo-mutants": r"cargo\s+mutants",
+    "go-mutesting": r"go-mutesting",
+}
+
+# A threshold the build fails below. The number is a floor somebody else's
+# machine has verified, which is what makes it usable as evidence.
+#
+# Keyed by tool: a repository can carry configuration for more than one, and
+# reading Stryker's "break" as if it were PIT's mutationThreshold would award a
+# tier on a number belonging to something else.
+MUTATION_THRESHOLDS = {
+    "pit": [
+        r"mutationThreshold\s*[=:]\s*(\d+(?:\.\d+)?)",
+        r"<mutationThreshold>\s*(\d+(?:\.\d+)?)\s*</mutationThreshold>",
+    ],
+    "infection": [
+        r"--min-msi[= ](\d+(?:\.\d+)?)",
+        r"[\"']minMsi[\"']\s*:\s*(\d+(?:\.\d+)?)",
+    ],
+    "stryker": [
+        r"[\"']break[\"']\s*:\s*(\d+(?:\.\d+)?)",
+        r"--break-at[= ](\d+(?:\.\d+)?)",
+    ],
+}
 
 # Minimum line/branch coverage required for any tier
 MIN_COVERAGE = 80.0
@@ -655,37 +690,194 @@ def check_parameterized_tests(
     }
 
 
-def fetch_coverage_percent(api: GitHubAPI, owner: str, repo: str) -> dict | None:
+def _age_in_days(timestamp: str | None) -> int | None:
+    """Days between a service's timestamp and now, or None if it is unreadable."""
+    if not timestamp:
+        return None
+    text = timestamp.replace("Z", "+00:00")
+    try:
+        measured = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if measured.tzinfo is None:
+        measured = measured.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - measured).days
+
+
+def fetch_coverage_percent(
+    api: GitHubAPI, owner: str, repo: str, default_branch: str | None = None
+) -> dict | None:
     """Fetch the real coverage percentage from a public coverage service.
 
     Tries Codecov first, then Coveralls. Both expose public read endpoints for
-    public repositories, so no extra credentials are needed. Returns None when
-    neither service knows the repository.
+    public repositories, so no extra credentials are needed.
+
+    Both also answer with the last build they saw, on whatever branch that was,
+    and neither says so unless asked. A figure from a release branch, a
+    maintenance branch or a dependabot pull request is reported here as such,
+    along with how old it is, because a number measured against code that has
+    since been rewritten is not evidence about the code as it stands.
     """
-    # Codecov v2 API
     data = api.get_public_json(f"{CODECOV_API}/{owner}/repos/{repo}/")
     if isinstance(data, dict):
         totals = data.get("totals") or {}
         coverage = totals.get("coverage")
         if coverage is not None:
+            branch = data.get("branch")
+            measured_at = data.get("updatestamp")
             return {
                 "service": "Codecov",
                 "coverage": round(float(coverage), 2),
+                "branch": branch,
+                "is_default_branch": (
+                    None if not (branch and default_branch) else branch == default_branch
+                ),
+                "measured_at": measured_at,
+                "age_days": _age_in_days(measured_at),
                 "source": f"https://codecov.io/gh/{owner}/{repo}",
             }
 
-    # Coveralls JSON endpoint
     data = api.get_public_json(f"{COVERALLS_API}/{owner}/{repo}.json")
     if isinstance(data, dict):
         coverage = data.get("covered_percent")
         if coverage is not None:
+            branch = data.get("branch")
+            measured_at = data.get("created_at")
             return {
                 "service": "Coveralls",
                 "coverage": round(float(coverage), 2),
+                "branch": branch,
+                "is_default_branch": (
+                    None if not (branch and default_branch) else branch == default_branch
+                ),
+                "measured_at": measured_at,
+                "age_days": _age_in_days(measured_at),
                 "source": f"https://coveralls.io/github/{owner}/{repo}",
             }
 
     return None
+
+
+def fetch_dashboard_mutation_score(
+    api: GitHubAPI, owner: str, repo: str, default_branch: str | None
+) -> dict | None:
+    """Read a mutation score from the Stryker dashboard.
+
+    This is the one mutation figure that is not self-reported. The report is
+    produced by the repository's own CI, but it is stored and served by
+    stryker-mutator.io at a URL the repository does not control, so a project
+    cannot state a score it has not measured. Any tool emitting the
+    mutation-testing-elements format can publish there, Stryker and Infection
+    among them.
+    """
+    branches = [b for b in (default_branch, "main", "master") if b]
+    seen = set()
+    for branch in branches:
+        if branch in seen:
+            continue
+        seen.add(branch)
+        report = api.get_public_json(f"{STRYKER_DASHBOARD_API}/{owner}/{repo}/{branch}")
+        if not isinstance(report, dict) or "files" not in report:
+            continue
+
+        detected = total = 0
+        for entry in report["files"].values():
+            for mutant in entry.get("mutants", []):
+                status = mutant.get("status")
+                # NoCoverage counts against the score; Ignored and CompileError
+                # are excluded, which is how the format defines it.
+                if status in ("Killed", "Survived", "Timeout", "NoCoverage"):
+                    total += 1
+                if status in ("Killed", "Timeout"):
+                    detected += 1
+        if not total:
+            continue
+
+        return {
+            "score": round(100 * detected / total, 2),
+            "branch": branch,
+            "mutants": total,
+            "source": f"https://dashboard.stryker-mutator.io/reports/github.com/{owner}/{repo}/{branch}",
+        }
+    return None
+
+
+def check_ci_enforced_mutation(
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    branch: str,
+    mutation_tools: dict,
+    workflow_contents: dict,
+    file_cache: dict,
+) -> dict | None:
+    """Detect a mutation run that CI performs and that fails below a threshold.
+
+    A threshold the build enforces is a lower bound somebody else's machine has
+    already checked: if the workflow is green, the score is at least that. That
+    makes it evidence in a way a number typed into a README is not.
+    """
+    if not mutation_tools:
+        return None
+
+    invoking = None
+    for path, text in workflow_contents.items():
+        for tool in mutation_tools:
+            if re.search(MUTATION_INVOCATIONS.get(tool, tool), text, re.IGNORECASE):
+                invoking = (path, tool)
+                break
+        if invoking:
+            break
+    if not invoking:
+        return None
+
+    workflow_path, tool = invoking
+
+    patterns = MUTATION_THRESHOLDS.get(tool)
+    if not patterns:
+        return None
+
+    threshold = None
+    for text in list(file_cache.values()) + list(workflow_contents.values()):
+        if not text:
+            continue
+        for pattern in patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                try:
+                    candidate = float(match.group(1))
+                except (TypeError, ValueError):
+                    continue
+                if 0 < candidate <= 100:
+                    threshold = candidate
+                    break
+        if threshold is not None:
+            break
+    if threshold is None:
+        return None
+
+    workflow_file = workflow_path.rsplit("/", 1)[-1]
+    runs = api.get(
+        f"{API_BASE}/repos/{owner}/{repo}/actions/workflows/"
+        f"{urllib.parse.quote(workflow_file)}/runs"
+        f"?branch={urllib.parse.quote(branch)}&per_page=1&status=completed"
+    )
+    conclusion = None
+    if isinstance(runs, dict) and runs.get("workflow_runs"):
+        conclusion = runs["workflow_runs"][0].get("conclusion")
+
+    return {
+        "tool": tool,
+        "threshold": threshold,
+        "workflow": workflow_path,
+        "last_run": conclusion,
+        "passing": conclusion == "success",
+    }
+
+
+# A mutation score only earns Gold when something other than the repository's
+# own prose stands behind it.
+GOLD_EVIDENCE = ("dashboard", "ci-threshold")
 
 
 def determine_tier(
@@ -694,6 +886,7 @@ def determine_tier(
     mutation_tools: dict,
     coverage: dict | None,
     mutation_score: float | None,
+    mutation_score_source: str | None = None,
 ) -> tuple[str | None, str]:
     """Determine the tier and the reason for it.
 
@@ -732,8 +925,7 @@ def determine_tier(
 
     if mutation_score is None:
         return "silver", (
-            "Mutation testing is configured but the mutation score is unverified; "
-            f"supply it with --mutation-score (>= {MIN_MUTATION_SCORE:.0f}% required for Gold)"
+            "Mutation testing is configured but no mutation score could be established"
         )
 
     if mutation_score < MIN_MUTATION_SCORE:
@@ -742,8 +934,23 @@ def determine_tier(
             f"{MIN_MUTATION_SCORE:.0f}% required for Gold"
         )
 
+    if mutation_score_source not in GOLD_EVIDENCE:
+        # The number is high enough, but nothing outside the repository stands
+        # behind it. Anyone can write a percentage into their own README.
+        return "silver", (
+            f"Mutation score {mutation_score}% is self-reported; Gold needs either a "
+            "score hosted by a service the repository does not control, or a mutation "
+            "run that CI performs and fails below a threshold"
+        )
+
+    evidence = (
+        "an independently hosted report"
+        if mutation_score_source == "dashboard"
+        else "a threshold the build enforces"
+    )
     return "gold", (
-        f"Coverage {coverage['coverage']}% and mutation score {mutation_score}%"
+        f"Coverage {coverage['coverage']}% and mutation score {mutation_score}%, "
+        f"backed by {evidence}"
     )
 
 
@@ -779,10 +986,12 @@ def generate_report(
     mutation_score: float | None,
     parameterized: dict | None = None,
     mutation_score_source: str | None = None,
+    dashboard: dict | None = None,
+    ci_enforced: dict | None = None,
 ) -> dict:
     """Generate the full verification report."""
     tier, tier_reason = determine_tier(
-        ci, coverage_tools, mutation_tools, coverage, mutation_score
+        ci, coverage_tools, mutation_tools, coverage, mutation_score, mutation_score_source
     )
 
     issues = []
@@ -809,6 +1018,8 @@ def generate_report(
         "coverage": coverage,
         "mutation_score": mutation_score,
         "mutation_score_source": mutation_score_source,
+        "mutation_dashboard": dashboard,
+        "mutation_ci_enforced": ci_enforced,
         "parameterized_tests": parameterized,
         "issues": issues if issues else None,
         "metadata": metadata,
@@ -847,10 +1058,16 @@ def print_summary(report: dict) -> None:
 
     if report.get("coverage"):
         cov = report["coverage"]
-        print(f"  Coverage:    {cov['coverage']}% (via {cov['service']})")
+        detail = f"via {cov['service']}"
+        if cov.get("branch"):
+            detail += f", branch {cov['branch']}"
+        if cov.get("age_days") is not None:
+            detail += f", {cov['age_days']}d old"
+        print(f"  Coverage:    {cov['coverage']}% ({detail})")
 
     if report.get("mutation_score") is not None:
-        print(f"  Mut. score:  {report['mutation_score']}%")
+        source = report.get("mutation_score_source") or "unknown"
+        print(f"  Mut. score:  {report['mutation_score']}% ({source})")
 
     param = report.get("parameterized_tests")
     if param is not None:
@@ -924,13 +1141,31 @@ def verify_repository(
     readme = fetch_readme(api, owner, repo, branch)
     badges = check_badges(readme)
 
+    say("  Looking for an independently hosted mutation report...")
+    dashboard = fetch_dashboard_mutation_score(api, owner, repo, branch)
+
+    ci_enforced = check_ci_enforced_mutation(
+        api, owner, repo, branch, mutation_tools, workflow_contents, file_cache
+    )
+
+    # In order of how much the number can be trusted.
     mutation_score = mutation_score_override
     mutation_score_source = "manual" if mutation_score is not None else None
+    if mutation_score is None and dashboard:
+        mutation_score = dashboard["score"]
+        mutation_score_source = "dashboard"
+        say(f"  Mutation score {mutation_score}% from the Stryker dashboard.")
+    if mutation_score is None and ci_enforced and ci_enforced["passing"]:
+        # The build fails below the threshold and the build is green, so the
+        # real score is at least this.
+        mutation_score = ci_enforced["threshold"]
+        mutation_score_source = "ci-threshold"
+        say(f"  Mutation score at least {mutation_score}%, enforced by {ci_enforced['workflow']}.")
     if mutation_score is None and readme:
         mutation_score = extract_mutation_score_from_readme(readme)
         if mutation_score is not None:
             mutation_score_source = "readme-badge"
-            say(f"  Mutation score {mutation_score}% read from README badge.")
+            say(f"  Mutation score {mutation_score}% read from README badge (self-reported).")
 
     say("  Checking for parameterized tests...")
     parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
@@ -945,7 +1180,7 @@ def verify_repository(
             "source": "supplied via --coverage",
         }
     else:
-        coverage = fetch_coverage_percent(api, owner, repo)
+        coverage = fetch_coverage_percent(api, owner, repo, branch)
 
     return generate_report(
         owner,
@@ -959,6 +1194,8 @@ def verify_repository(
         mutation_score,
         parameterized,
         mutation_score_source,
+        dashboard,
+        ci_enforced,
     )
 
 

@@ -1,15 +1,26 @@
 {
   "repository": "regseb/castkodi",
-  "verified_at": "2026-08-26T12:18:59.803132+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T12:39:24.618745+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 95.89%, backed by an independently hosted report",
   "coverage": {
     "service": "Coveralls",
     "coverage": 100.0,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2022-05-20T04:29:28Z",
+    "age_days": 1559,
     "source": "https://coveralls.io/github/regseb/castkodi"
   },
-  "mutation_score": null,
-  "mutation_score_source": null,
+  "mutation_score": 95.89,
+  "mutation_score_source": "dashboard",
+  "mutation_dashboard": {
+    "score": 95.89,
+    "branch": "main",
+    "mutants": 2528,
+    "source": "https://dashboard.stryker-mutator.io/reports/github.com/regseb/castkodi/main"
+  },
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {

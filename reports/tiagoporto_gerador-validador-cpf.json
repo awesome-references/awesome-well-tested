@@ -1,15 +1,26 @@
 {
   "repository": "tiagoporto/gerador-validador-cpf",
-  "verified_at": "2026-08-26T12:19:08.346281+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T12:39:33.641121+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 97.19% and mutation score 88.76%, backed by an independently hosted report",
   "coverage": {
     "service": "Codecov",
     "coverage": 97.19,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-07-01T15:17:08.383123Z",
+    "age_days": 55,
     "source": "https://codecov.io/gh/tiagoporto/gerador-validador-cpf"
   },
-  "mutation_score": null,
-  "mutation_score_source": null,
+  "mutation_score": 88.76,
+  "mutation_score_source": "dashboard",
+  "mutation_dashboard": {
+    "score": 88.76,
+    "branch": "main",
+    "mutants": 169,
+    "source": "https://dashboard.stryker-mutator.io/reports/github.com/tiagoporto/gerador-validador-cpf/main"
+  },
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,

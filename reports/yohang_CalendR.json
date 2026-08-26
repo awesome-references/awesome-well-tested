@@ -1,15 +1,26 @@
 {
   "repository": "yohang/CalendR",
-  "verified_at": "2026-08-26T12:20:24.754494+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T12:40:52.536656+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 100.0%, backed by an independently hosted report",
   "coverage": {
     "service": "Coveralls",
     "coverage": 100.0,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2025-12-02T20:08:43Z",
+    "age_days": 266,
     "source": "https://coveralls.io/github/yohang/CalendR"
   },
-  "mutation_score": null,
-  "mutation_score_source": null,
+  "mutation_score": 100.0,
+  "mutation_score_source": "dashboard",
+  "mutation_dashboard": {
+    "score": 100.0,
+    "branch": "main",
+    "mutants": 261,
+    "source": "https://dashboard.stryker-mutator.io/reports/github.com/yohang/CalendR/main"
+  },
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {

@@ -19,7 +19,23 @@ A repository must meet **all** of the following baseline criteria:
 |------|----------------------------------------|
 | **Bronze** | Baseline only: coverage >= 80% with CI reporting |
 | **Silver** | Mutation testing tool configured and integrated into build |
-| **Gold** | Mutation testing with a verified mutation score >= 70% |
+| **Gold** | A mutation score >= 70% that the repository cannot have made up |
+
+Gold turns on where the number comes from, not just how big it is. Two sources
+count:
+
+- a report on the [Stryker dashboard](https://dashboard.stryker-mutator.io),
+  which your CI writes but which is stored and served at a URL you do not
+  control. Any tool emitting the mutation-testing-elements format can publish
+  there, Stryker and Infection among them.
+- a mutation run your CI performs behind a threshold that fails the build -
+  `mutationThreshold` for PIT, `minMsi` for Infection, `break` for Stryker. If
+  the build is green, the score is at least that, and somebody else's machine
+  checked it.
+
+A score read off a Shields.io badge is recorded and shown, marked
+`self-reported`, but it does not reach Gold. Anyone can type a percentage into
+their own README, and the list would have no way to tell the difference.
 
 Parameterized and property-based tests are detected and shown in their own
 column, but they do not change the tier. They are recorded because coverage

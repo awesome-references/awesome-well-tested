@@ -1,15 +1,21 @@
 {
   "repository": "dkubb/memoizable",
-  "verified_at": "2026-08-26T12:19:25.726427+00:00",
+  "verified_at": "2026-08-26T12:39:51.650464+00:00",
   "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Coveralls",
     "coverage": 100.0,
+    "branch": "upgrade/dependencies",
+    "is_default_branch": false,
+    "measured_at": "2020-10-16T13:17:16Z",
+    "age_days": 2139,
     "source": "https://coveralls.io/github/dkubb/memoizable"
   },
   "mutation_score": null,
   "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {

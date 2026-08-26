@@ -1,15 +1,21 @@
 {
   "repository": "Automattic/stream-builder",
-  "verified_at": "2026-08-26T12:20:53.741520+00:00",
+  "verified_at": "2026-08-26T12:41:29.215390+00:00",
   "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Coveralls",
     "coverage": 80.27,
+    "branch": "dependabot/github_actions/actions-major-46e1ab33c4",
+    "is_default_branch": false,
+    "measured_at": "2026-06-09T00:55:21Z",
+    "age_days": 78,
     "source": "https://coveralls.io/github/Automattic/stream-builder"
   },
   "mutation_score": null,
   "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {

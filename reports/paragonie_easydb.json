@@ -1,15 +1,21 @@
 {
   "repository": "paragonie/easydb",
-  "verified_at": "2026-08-26T12:20:30.546265+00:00",
+  "verified_at": "2026-08-26T12:40:58.872155+00:00",
   "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Coveralls",
     "coverage": 97.42,
+    "branch": "v1.3.0",
+    "is_default_branch": false,
+    "measured_at": "2019-04-09T00:39:32Z",
+    "age_days": 2696,
     "source": "https://coveralls.io/github/paragonie/easydb"
   },
   "mutation_score": null,
   "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {

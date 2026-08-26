@@ -184,12 +184,14 @@ class DetermineTier(unittest.TestCase):
     def test_mutation_testing_without_a_score_is_silver(self):
         self.assertEqual(self.tier(mutation_tools={"pit": {}}), "silver")
 
-    def test_gold_needs_the_score_not_just_the_tool(self):
+    def test_a_score_alone_no_longer_reaches_gold(self):
+        # See GoldNeedsEvidence: the number must come from somewhere the
+        # repository does not control.
         self.assertEqual(
             self.tier(mutation_tools={"pit": {}}, mutation_score=69.9), "silver"
         )
         self.assertEqual(
-            self.tier(mutation_tools={"pit": {}}, mutation_score=70.0), "gold"
+            self.tier(mutation_tools={"pit": {}}, mutation_score=100.0), "silver"
         )
 
     def test_every_outcome_explains_itself(self):
@@ -222,6 +224,77 @@ class MutationBadgeNumbers(unittest.TestCase):
                 "![m](https://img.shields.io/badge/mutation%20coverage-150%25-green)"
             )
         )
+
+
+class GoldNeedsEvidence(unittest.TestCase):
+    """Gold is the tier that says a project measured its tests, so the number
+    behind it must not be one the project simply asserted."""
+
+    def tier(self, score, source):
+        return vr.determine_tier(
+            ci={"github_actions": ["ci.yml"]},
+            coverage_tools={"jacoco": {}},
+            mutation_tools={"pit": {}},
+            coverage={"service": "Codecov", "coverage": 95.0},
+            mutation_score=score,
+            mutation_score_source=source,
+        )[0]
+
+    def test_a_readme_badge_does_not_reach_gold(self):
+        self.assertEqual(self.tier(100.0, "readme-badge"), "silver")
+
+    def test_an_independently_hosted_score_reaches_gold(self):
+        self.assertEqual(self.tier(88.76, "dashboard"), "gold")
+
+    def test_a_threshold_the_build_enforces_reaches_gold(self):
+        self.assertEqual(self.tier(92.0, "ci-threshold"), "gold")
+
+    def test_a_hand_supplied_score_does_not_reach_gold(self):
+        self.assertEqual(self.tier(100.0, "manual"), "silver")
+
+    def test_evidence_does_not_rescue_a_score_below_the_bar(self):
+        self.assertEqual(self.tier(69.9, "dashboard"), "silver")
+
+    def test_the_reason_says_the_score_was_self_reported(self):
+        _, reason = vr.determine_tier(
+            ci={"github_actions": ["ci.yml"]},
+            coverage_tools={"jacoco": {}},
+            mutation_tools={"pit": {}},
+            coverage={"service": "Codecov", "coverage": 95.0},
+            mutation_score=100.0,
+            mutation_score_source="readme-badge",
+        )
+        self.assertIn("self-reported", reason)
+
+
+class MutationThresholds(unittest.TestCase):
+    def test_thresholds_are_bound_to_the_tool_that_defines_them(self):
+        # Reading Stryker's "break" as PIT's mutationThreshold would award a
+        # tier on a number belonging to a different tool.
+        self.assertIn("pit", vr.MUTATION_THRESHOLDS)
+        for tool, patterns in vr.MUTATION_THRESHOLDS.items():
+            self.assertTrue(patterns, f"{tool} has no threshold pattern")
+
+    def test_infection_min_msi_is_read(self):
+        import re
+        patterns = vr.MUTATION_THRESHOLDS["infection"]
+        hits = [re.search(p, '  "minMsi": 92,', re.IGNORECASE) for p in patterns]
+        self.assertTrue(any(h for h in hits))
+        self.assertEqual(next(h for h in hits if h).group(1), "92")
+
+    def test_a_pit_pattern_does_not_read_an_infection_setting(self):
+        import re
+        for pattern in vr.MUTATION_THRESHOLDS["pit"]:
+            self.assertIsNone(re.search(pattern, '  "minMsi": 92,', re.IGNORECASE))
+
+
+class CoverageProvenance(unittest.TestCase):
+    def test_an_unreadable_timestamp_is_not_an_age(self):
+        self.assertIsNone(vr._age_in_days("not a date"))
+        self.assertIsNone(vr._age_in_days(None))
+
+    def test_an_old_timestamp_reads_as_old(self):
+        self.assertGreater(vr._age_in_days("2020-01-01T00:00:00Z"), 1500)
 
 
 class PrimaryCoverageTool(unittest.TestCase):
