@@ -1,31 +1,32 @@
 {
-  "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-08-26T10:02:44.714794+00:00",
+  "repository": "astrapi69/gen-tree",
+  "verified_at": "2026-08-26T10:03:16.307415+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 100.0% and mutation score 100.0%",
+  "tier_reason": "Coverage 98.01% and mutation score 98.0%",
   "coverage": {
     "service": "Codecov",
-    "coverage": 100.0,
-    "source": "https://codecov.io/gh/astrapi69/crypt-data"
+    "coverage": 98.01,
+    "source": "https://codecov.io/gh/astrapi69/gen-tree"
   },
-  "mutation_score": 100.0,
+  "mutation_score": 98.0,
   "issues": null,
   "metadata": {
-    "full_name": "astrapi69/crypt-data",
-    "description": "Provides data beans and writers and readers of private and public keys ",
+    "full_name": "astrapi69/gen-tree",
+    "description": "Project that holds a generic model for tree objects",
     "language": "Java",
     "license": "MIT",
-    "stars": 4,
-    "forks": 1,
+    "stars": 2,
+    "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T09:50:00Z",
-    "days_since_push": 0,
+    "last_push": "2026-08-24T16:09:28Z",
+    "days_since_push": 1,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
-      "gradle.yml"
+      "gradle.yml",
+      "publish.yml"
     ]
   },
   "coverage_tools": {
@@ -49,7 +50,7 @@
   "badges": [
     {
       "service": "Codecov",
-      "match": "codecov.io/gh/astrapi69/crypt-data"
+      "match": "codecov.io/gh/astrapi69/gen-tree"
     }
   ]
 }
