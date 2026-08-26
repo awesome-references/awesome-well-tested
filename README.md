@@ -113,7 +113,7 @@ Every repository on this list is verified before inclusion:
 | Parameterized tests | Repository-scoped code search looks for parameterized and property-based tests. Coverage cannot express this: a function exercised across many inputs is tested harder than one exercised once. Reported, not scored - it does not decide the tier. |
 | Provenance          | Each entry ships with a JSON report under `reports/` recording the tier, the numbers and where they came from. A PR without one does not get merged.                                                                                                |
 
-Repos are re-verified periodically. If a repo's test quality degrades significantly, it may be moved to a lower tier or removed.
+Entries are re-verified weekly. An entry that no longer clears the bar is removed quietly: the list records that it qualified, never that it stopped. An entry that moves between tiers is rewritten to the tier it holds now, with no note of what it held before. This list exists to point at software that is well tested, not to publish a verdict on software that is not.
 
 ### Recognized Tools
 

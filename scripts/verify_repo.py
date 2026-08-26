@@ -65,7 +65,9 @@ COVERAGE_TOOLS = {
     },
     "kover": {
         "files": ["build.gradle", "build.gradle.kts", ".github/workflows"],
-        "patterns": [r"kotlinx\.kover", r"koverReport", r"koverXmlReport", r"\bkover\b"],
+        # A leading word boundary only: "\bkover\b" fails on koverXmlReport and
+        # koverVerify, while a bare "kover" matches "stackoverflow".
+        "patterns": [r"kotlinx\.kover", r"\bkover"],
         "language": "Kotlin",
     },
     "pytest-cov": {
