@@ -41,6 +41,12 @@ from verify_repo import (  # noqa: E402
 
 TIER_ORDER = {"bronze": 1, "silver": 2, "gold": 3}
 
+# A run that verified less than this share of the list does not get to rewrite it.
+MIN_VERIFIED_FRACTION = 0.8
+# ... and however much it verified, this is all it may remove at once.
+MAX_REMOVALS_FRACTION = 0.2
+MAX_REMOVALS_FLOOR = 2
+
 
 def carried_over_figures(output_dir: Path, owner: str, repo: str) -> tuple:
     """Figures a maintainer supplied by hand, which no recheck can rediscover.
@@ -85,14 +91,22 @@ def apply_changes(
     reports: dict,
     drop: set,
     output_dir: Path,
-) -> None:
-    """Rewrite the README rows and delete the reports of dropped entries."""
+) -> set:
+    """Rewrite the README rows and delete the reports of dropped entries.
+
+    Returns the names actually removed from the tables. The entries are found by
+    one parser and rewritten by another, and a malformed table can make the two
+    disagree - so the caller checks that every name it meant to drop really
+    left, rather than deleting the evidence for a row the list still shows.
+    """
+    removed = set()
 
     def transform(section, header, body):
         kept = []
         for row in body:
             name = rt.row_full_name(row)
             if name in drop:
+                removed.add(name)
                 continue
             report = reports.get(name)
             if report is not None:
@@ -103,11 +117,12 @@ def apply_changes(
     text = rt.transform_tables(rt.read_readme(readme_path), transform)
     rt.write_readme(readme_path, text)
 
-    for name in drop:
+    for name in removed:
         owner, repo = name.split("/", 1)
         path = output_dir / f"{owner}_{repo}.json"
         if path.exists():
             path.unlink()
+    return removed
 
 
 def main():
@@ -228,7 +243,6 @@ def main():
             drop.add(name)
         else:
             reports[name] = report
-            save_report(report, output_dir)
             if not args.redact:
                 print_summary(report)
 
@@ -238,7 +252,7 @@ def main():
     # A run that could not verify most of what it looked at has no business
     # rewriting the list from its results.
     verified = len(entries) - len(incomplete)
-    if args.apply and incomplete and verified < len(entries) * 0.8:
+    if args.apply and incomplete and verified < len(entries) * MIN_VERIFIED_FRACTION:
         print(
             f"\nOnly {verified} of {len(entries)} entries could be verified. "
             "Refusing to rewrite the list from a partial run.",
@@ -246,8 +260,37 @@ def main():
         )
         return 1
 
+    # That guard only catches entries that raised. A repository whose coverage
+    # service answers "no figure" is an answer, not a failure, and travels the
+    # other path straight to removal - so one systemic cause, a service-wide 403
+    # or a renamed field in its JSON, could empty the list in a single run
+    # without a single exception being raised. Nothing legitimate removes a
+    # large share of a curated list in one week.
+    allowed = max(MAX_REMOVALS_FLOOR, int(len(entries) * MAX_REMOVALS_FRACTION))
+    if args.apply and len(drop) > allowed:
+        print(
+            f"\n{len(drop)} of {len(entries)} entries came back not qualifying, which is "
+            f"more than the {allowed} a single run may remove. That is a systemic cause, "
+            "not that many projects degrading in a week. Nothing was changed.",
+            file=sys.stderr,
+        )
+        return 1
+
     if args.apply:
-        apply_changes(readme_path, reports, drop, output_dir)
+        for report in reports.values():
+            save_report(report, output_dir)
+        removed = apply_changes(readme_path, reports, drop, output_dir)
+        stranded = drop - removed
+        if stranded:
+            # The row could not be found where the entry was parsed from. The
+            # report must not be deleted for an entry the list still shows.
+            print(
+                f"\n{len(stranded)} entries were dropped from the reports but their rows "
+                "were not found in the README. Its tables are malformed; fix them and "
+                "re-run. Nothing was deleted for them.",
+                file=sys.stderr,
+            )
+            return 1
 
     lowered = [c for c in changes if c["outcome"] == "lowered"]
     raised = [c for c in changes if c["outcome"] == "raised"]

@@ -76,6 +76,40 @@ class ParseEntries(unittest.TestCase):
         self.assertNotIn("", [e["full_name"] for e in rt.parse_entries(FIXTURE)])
 
 
+class RepositoryLinks(unittest.TestCase):
+    """The same repository, written four ways, has to parse as one name."""
+
+    def name(self, link):
+        row = [f"| [x]({link}) |"]
+        return rt.row_full_name(rt.split_row(row[0]))
+
+    def test_a_plain_link(self):
+        self.assertEqual(self.name("https://github.com/acme/widget"), "acme/widget")
+
+    def test_a_trailing_slash(self):
+        self.assertEqual(self.name("https://github.com/acme/widget/"), "acme/widget")
+
+    def test_a_git_suffix(self):
+        # Otherwise the row reads as "acme/widget.git", never matches the entry
+        # the run just decided to remove, and the row survives while its report
+        # is deleted.
+        self.assertEqual(self.name("https://github.com/acme/widget.git"), "acme/widget")
+
+    def test_an_anchor(self):
+        self.assertEqual(self.name("https://github.com/acme/widget#readme"), "acme/widget")
+
+    def test_all_four_spellings_parse_as_one_entry(self):
+        table = (
+            "| Repository | Tier |\n| --- | --- |\n"
+            "| [a](https://github.com/acme/widget.git) | ![Gold](badges/gold.svg) |\n"
+            "| [b](https://github.com/acme/other/) | ![Silver](badges/silver.svg) |\n"
+        )
+        self.assertEqual(
+            [e["full_name"] for e in rt.parse_entries(table)],
+            ["acme/widget", "acme/other"],
+        )
+
+
 class TransformTables(unittest.TestCase):
     def test_round_trip_is_idempotent(self):
         once = rt.transform_tables(FIXTURE, lambda s, h, b: b)

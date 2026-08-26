@@ -24,6 +24,7 @@ class FakeAPI:
         dashboard=None,
         searches=None,
         runs=None,
+        jobs=None,
         authenticated=True,
         raise_on=None,
     ):
@@ -35,6 +36,7 @@ class FakeAPI:
         self.dashboard = dashboard or {}
         self.searches = searches or {}
         self.runs = runs
+        self.jobs = jobs
         self.authenticated = authenticated
         self.raise_on = raise_on or ()
         self.requests = 0
@@ -75,6 +77,9 @@ class FakeAPI:
 
         if "/actions/workflows/" in url:
             return self.runs
+
+        if "/actions/runs/" in url and "/jobs" in url:
+            return self.jobs
 
         if "/contents/" in url and self._path_of(url) == ".github/workflows":
             return [{"name": n} for n in self.workflows]

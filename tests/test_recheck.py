@@ -144,6 +144,50 @@ class Recheck(unittest.TestCase):
         self.assertEqual(rl.main(), 1)
         self.assertEqual(self.names(), ["acme/alpha", "acme/beta", "acme/gamma"])
 
+    # -- bounds on destruction ----------------------------------------------
+
+    def test_a_run_where_everything_stopped_qualifying_is_refused(self):
+        # One systemic cause - a coverage service answering 403 to the runner
+        # for a whole run - makes every entry look like it stopped qualifying,
+        # and no exception is raised anywhere. Nothing legitimate removes a
+        # whole curated list in one week.
+        code = self.run_with(lambda name, **kw: report(name, tier=None), "--apply")
+        self.assertEqual(code, 1)
+        self.assertEqual(self.names(), ["acme/alpha", "acme/beta", "acme/gamma"])
+        for name in ("acme_alpha", "acme_beta", "acme_gamma"):
+            self.assertTrue((self.reports / f"{name}.json").exists())
+
+    def test_removing_one_entry_is_still_allowed(self):
+        def behaviour(name, **kw):
+            return report(name, tier=None if name == "acme/beta" else "bronze")
+
+        self.assertEqual(self.run_with(behaviour, "--apply"), 0)
+        self.assertEqual(self.names(), ["acme/alpha", "acme/gamma"])
+
+    def test_a_refused_run_writes_no_reports_at_all(self):
+        # save_report used to run inside the loop, so a run that then refused to
+        # apply still left refreshed reports for the workflow to commit.
+        before = {p.name: p.read_text() for p in self.reports.glob("*.json")}
+        self.run_with(lambda name, **kw: report(name, tier=None), "--apply")
+        after = {p.name: p.read_text() for p in self.reports.glob("*.json")}
+        self.assertEqual(before, after)
+
+    def test_a_row_that_could_not_be_removed_keeps_its_report(self):
+        # The entries are found by one parser and rewritten by another. A
+        # malformed table makes them disagree, and deleting the evidence for a
+        # row the list still shows is the worst outcome available.
+        self.readme.write_text(README.replace(
+            "| [beta](https://github.com/acme/beta)",
+            "\n| [beta](https://github.com/acme/beta)",
+        ))
+
+        def behaviour(name, **kw):
+            return report(name, tier=None if name == "acme/beta" else "bronze")
+
+        code = self.run_with(behaviour, "--apply")
+        self.assertEqual(code, 1)
+        self.assertTrue((self.reports / "acme_beta.json").exists())
+
     # -- reporting -----------------------------------------------------------
 
     def test_a_dry_run_touches_no_service(self):

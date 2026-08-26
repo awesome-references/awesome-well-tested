@@ -79,31 +79,57 @@ class Verifying(unittest.TestCase):
         self.assertEqual(report["mutation_score"], 94.0)
         self.assertEqual(report["mutation_score_source"], "dashboard")
 
-    def test_a_green_build_behind_a_threshold_reaches_gold(self):
-        api = self.api(
+    def enforced(self, *, conclusion="success", jobs=None, **kw):
+        return self.api(
             tree=[".github/workflows/mutation.yml", "build.gradle"],
             workflows={"mutation.yml": WORKFLOW_PIT},
             files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
             coverage={"codecov": codecov(91.0)},
-            runs={"workflow_runs": [{"conclusion": "success"}]},
+            runs={"workflow_runs": [{"id": 7, "conclusion": conclusion}]},
+            jobs={"jobs": jobs if jobs is not None
+                  else [{"name": "pit", "conclusion": "success"}]},
+            **kw,
         )
-        report = self.verify(api)
+
+    def test_a_green_build_behind_a_threshold_reaches_gold(self):
+        report = self.verify(self.enforced())
         self.assertEqual(report["tier"], "gold")
         self.assertEqual(report["mutation_score"], 85.0)
         self.assertEqual(report["mutation_score_source"], "ci-threshold")
 
     def test_a_failing_build_behind_a_threshold_proves_nothing(self):
+        report = self.verify(self.enforced(conclusion="failure"))
+        self.assertEqual(report["tier"], "silver")
+        self.assertIsNone(report["mutation_score"])
+        self.assertFalse(report["mutation_ci_enforced"]["passing"])
+
+    def test_a_skipped_mutation_job_in_a_green_run_proves_nothing(self):
+        # A run concludes success when the job that matters was skipped by an
+        # `if:`, excluded from a matrix, or failed under continue-on-error.
+        report = self.verify(self.enforced(
+            jobs=[{"name": "test", "conclusion": "success"},
+                  {"name": "pit", "conclusion": "skipped"}]))
+        self.assertEqual(report["tier"], "silver")
+        self.assertFalse(report["mutation_ci_enforced"]["passing"])
+        self.assertIn("pit", report["mutation_ci_enforced"]["run"]["why"])
+
+    def test_jobs_that_cannot_be_read_prove_nothing(self):
+        report = self.verify(self.enforced(jobs=[]))
+        self.assertEqual(report["tier"], "silver")
+
+    def test_a_threshold_in_a_comment_is_not_enforced(self):
         api = self.api(
             tree=[".github/workflows/mutation.yml", "build.gradle"],
             workflows={"mutation.yml": WORKFLOW_PIT},
-            files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
+            files={"build.gradle": BUILD_JACOCO
+                   + "// pitest { mutationThreshold = 85 }\n"},
             coverage={"codecov": codecov(91.0)},
-            runs={"workflow_runs": [{"conclusion": "failure"}]},
+            runs={"workflow_runs": [{"id": 7, "conclusion": "success"}]},
+            jobs={"jobs": [{"name": "pit", "conclusion": "success"}]},
         )
         report = self.verify(api)
         self.assertEqual(report["tier"], "silver")
         self.assertIsNone(report["mutation_score"])
-        self.assertFalse(report["mutation_ci_enforced"]["passing"])
 
     def test_a_readme_badge_stops_at_silver(self):
         api = self.api(
@@ -235,6 +261,41 @@ class Verifying(unittest.TestCase):
             coverage={"codecov": codecov(91.0)},
         )
         self.assertIsNone(self.verify(api)["parameterized_tests"])
+
+    # -- config files that are their own evidence ---------------------------
+
+    def test_a_bare_coveragerc_counts_as_a_coverage_tool(self):
+        # Its sections are "[run]" and "[report]", so no pattern written for
+        # pyproject.toml's "[tool.coverage." spelling can ever match it.
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml", ".coveragerc"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={".coveragerc": "[run]\nbranch = True\n\n[report]\nfail_under = 92\n"},
+            coverage={"codecov": codecov(91.0)},
+        )
+        report = self.verify(api)
+        self.assertIn("coverage.py", report["coverage_tools"])
+        self.assertEqual(report["coverage_tools"]["coverage.py"]["file"], ".coveragerc")
+
+    def test_a_bare_nycrc_counts_as_a_coverage_tool(self):
+        api = self.api(
+            metadata=repo_metadata(language="TypeScript"),
+            tree=[".github/workflows/ci.yml", ".nycrc"],
+            files={".nycrc": '{"all": true, "check-coverage": true, "lines": 95}'},
+            workflows={"ci.yml": WORKFLOW_CI},
+            coverage={"codecov": codecov(91.0)},
+        )
+        self.assertIn("istanbul", self.verify(api)["coverage_tools"])
+
+    def test_an_absent_config_file_is_not_evidence(self):
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            coverage={"codecov": codecov(91.0)},
+        )
+        self.assertEqual(self.verify(api)["coverage_tools"], None)
 
     # -- request economy -----------------------------------------------------
 
