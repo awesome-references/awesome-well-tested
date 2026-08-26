@@ -8,15 +8,26 @@ on:
         type: choice
         required: true
         options:
-          - java
-          - python
-          - javascript
-          - typescript
-          - go
-          - rust
-          - ruby
-          - php
+          - c
+          - cpp
           - csharp
+          - dart
+          - elixir
+          - fsharp
+          - go
+          - groovy
+          - haskell
+          - java
+          - javascript
+          - kotlin
+          - php
+          - python
+          - ruby
+          - rust
+          - scala
+          - swift
+          - typescript
+          - vbnet
       mutation_only:
         description: 'Only search for mutation testing config (higher quality candidates)'
         type: boolean
@@ -74,5 +85,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: candidates-${{ inputs.language }}
-          path: reports/candidates_*.json
+          path: reports/candidates/*.json
           if-no-files-found: warn

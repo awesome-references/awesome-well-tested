@@ -1,18 +1,32 @@
 {
   "repository": "javierbrea/eslint-plugin-boundaries",
-  "verified_at": "2026-08-26T11:22:41.253828+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T13:03:53.231863+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 94.72%, backed by an independently hosted report",
   "coverage": {
     "service": "Coveralls",
     "coverage": 100.0,
+    "branch": "release",
+    "is_default_branch": false,
+    "measured_at": "2026-08-10T05:37:42Z",
+    "age_days": 16,
     "source": "https://coveralls.io/github/javierbrea/eslint-plugin-boundaries"
   },
-  "mutation_score": null,
+  "mutation_score": 94.72,
+  "mutation_score_source": "dashboard",
+  "mutation_dashboard": {
+    "score": 94.72,
+    "branch": "master",
+    "mutants": 2519,
+    "source": "https://dashboard.stryker-mutator.io/reports/github.com/javierbrea/eslint-plugin-boundaries/master"
+  },
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": [
     "No coverage tool configuration found"

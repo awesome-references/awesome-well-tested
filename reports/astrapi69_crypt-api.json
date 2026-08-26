@@ -1,14 +1,21 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-26T11:19:27.566491+00:00",
-  "tier": "gold",
-  "tier_reason": "Coverage 99.39% and mutation score 100.0%",
+  "verified_at": "2026-08-26T13:00:18.387157+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation score 100.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
     "service": "Codecov",
     "coverage": 99.39,
+    "branch": "master",
+    "is_default_branch": false,
+    "measured_at": "2026-08-26T10:06:51.804612Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
   "mutation_score": 100.0,
+  "mutation_score_source": "readme-badge",
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -42,7 +51,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco"
       ]
@@ -52,7 +61,7 @@
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "pitest"
       ]

@@ -1,23 +1,32 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-08-26T11:19:47.230901+00:00",
-  "tier": "gold",
-  "tier_reason": "Coverage 99.91% and mutation score 99.0%",
+  "verified_at": "2026-08-26T13:00:32.784124+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation score 99.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
     "service": "Codecov",
     "coverage": 99.91,
+    "branch": "develop",
+    "is_default_branch": true,
+    "measured_at": "2026-08-26T12:06:28.671245Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
   "mutation_score": 99.0,
+  "mutation_score_source": "readme-badge",
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {
         "framework": "JUnit 5 @ParameterizedTest",
-        "matches": 49
+        "matches": 61
       }
     ],
     "detected": true,
-    "language": "Java"
+    "language": "Java",
+    "terms_tried": 4,
+    "terms_available": 5
   },
   "issues": null,
   "metadata": {
@@ -29,7 +38,7 @@
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:45:16Z",
+    "last_push": "2026-08-26T12:58:20Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
@@ -44,7 +53,7 @@
   "coverage_tools": {
     "jacoco": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "jacoco"
       ]
@@ -54,7 +63,7 @@
   "mutation_tools": {
     "pit": {
       "file": "build.gradle",
-      "language": "Java",
+      "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
         "pitest"
       ]

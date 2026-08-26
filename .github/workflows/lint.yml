@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   awesome-lint:
     name: awesome-lint
@@ -18,7 +21,7 @@ jobs:
         run: npx awesome-lint
 
   scripts:
-    name: python scripts
+    name: tests and coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -36,6 +39,44 @@ jobs:
       - name: Check that every listed entry parses
         run: python scripts/recheck_listed.py --dry-run
 
-      - name: Run the tests
-        working-directory: tests
-        run: python -m unittest discover -s . -p "test_*.py" -v
+      - name: Install coverage
+        run: pip install --quiet coverage
+
+      - name: Run the tests under coverage
+        # fail_under is set to 80 in pyproject.toml: the same bar this list
+        # applies to everything it recommends.
+        run: |
+          coverage run
+          coverage report
+
+      - name: Export lcov
+        run: coverage lcov -o coverage.lcov
+
+      - name: Publish the figure
+        # Coveralls is what makes the number verifiable by this project's own
+        # scripts. A list that will not publish its own coverage has no business
+        # asking others to.
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: coverage.lcov
+          format: lcov
+
+  mutation:
+    name: mutation testing
+    # Slower than the rest, and its result is informational: this project holds
+    # no mutation score it can prove to anyone else, so by its own rules it is
+    # Silver, not Gold.
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Install mutmut
+        run: pip install --quiet mutmut
+      - name: Mutate the module that rewrites the list
+        run: mutmut run || true
+      - name: Show the results
+        run: mutmut results || true

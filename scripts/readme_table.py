@@ -39,6 +39,14 @@ MUTATION_TOOL_NAMES = {
     "cargo-mutants": "cargo-mutants",
     "go-mutesting": "go-mutesting",
 }
+# Beyond this the figure is annotated with the year it was measured. A year is
+# long enough that most projects have moved on, and short enough that an annual
+# release cycle does not get flagged.
+STALE_AFTER_DAYS = 365
+
+# Long enough to identify a branch, short enough not to set the table width.
+BRANCH_NAME_LIMIT = 24
+
 PARAMETERIZED_SHORT = {
     "JUnit 5 @ParameterizedTest": "JUnit 5",
     "JUnit 4 @Parameterized": "JUnit 4",
@@ -157,8 +165,26 @@ def row_full_name(row: list[str]) -> str | None:
 def cells_from_report(report: dict, header: list[str]) -> dict:
     """The cell values a report implies, keyed by column heading."""
     tier = report["tier"]
-    coverage = report["coverage"]["coverage"]
-    coverage_text = f"{coverage:g}%"
+    coverage_info = report["coverage"]
+    coverage_text = f"{coverage_info['coverage']:g}%"
+
+    # Both services report the last build they saw, on whatever branch that was.
+    # A figure from a release branch, or one measured years before the code it
+    # is quoted against, is still worth listing - but not without saying so.
+    qualifiers = []
+    if coverage_info.get("is_default_branch") is False and coverage_info.get("branch"):
+        branch = coverage_info["branch"]
+        # Dependabot and release-automation branch names run to fifty characters
+        # and would set the width of the whole table.
+        if len(branch) > BRANCH_NAME_LIMIT:
+            branch = branch[: BRANCH_NAME_LIMIT - 1] + "\u2026"
+        qualifiers.append(branch)
+    age = coverage_info.get("age_days")
+    measured_at = coverage_info.get("measured_at") or ""
+    if age is not None and age > STALE_AFTER_DAYS and len(measured_at) >= 4:
+        qualifiers.append(measured_at[:4])
+    if qualifiers:
+        coverage_text += f" ({', '.join(qualifiers)})"
 
     tool_key = report.get("primary_coverage_tool")
     coverage_tool = COVERAGE_TOOL_NAMES.get(tool_key, tool_key) or report["coverage"]["service"]
@@ -168,7 +194,16 @@ def cells_from_report(report: dict, header: list[str]) -> dict:
     ) or "n/a"
 
     score = report.get("mutation_score")
-    score_text = f"{score:g}%" if score is not None else "n/a"
+    if score is None:
+        score_text = "n/a"
+    elif report.get("mutation_score_source") == "readme-badge":
+        # High enough for Gold or not, the number came from the repository's own
+        # README, and the column says so.
+        score_text = f"{score:g}% (self-reported)"
+    elif report.get("mutation_score_source") == "ci-threshold":
+        score_text = f">= {score:g}%"
+    else:
+        score_text = f"{score:g}%"
 
     parameterized = report.get("parameterized_tests")
     if parameterized and parameterized.get("frameworks"):

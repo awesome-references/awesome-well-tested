@@ -1,14 +1,21 @@
 {
   "repository": "boxed/mutmut",
-  "verified_at": "2026-08-26T11:22:24.525488+00:00",
+  "verified_at": "2026-08-26T13:03:38.353917+00:00",
   "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
     "coverage": 81.44,
+    "branch": "master",
+    "is_default_branch": false,
+    "measured_at": "2024-03-31T07:59:39.572601Z",
+    "age_days": 878,
     "source": "https://codecov.io/gh/boxed/mutmut"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "Python"
+    "language": "Python",
+    "terms_tried": 4,
+    "terms_available": 4
   },
   "issues": [
     "No coverage tool configuration found"

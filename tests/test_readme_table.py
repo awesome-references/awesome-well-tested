@@ -152,6 +152,53 @@ class CellsFromReport(unittest.TestCase):
         self.assertEqual(cells["Mutation Tool"], "n/a")
 
 
+class CoverageQualifiers(unittest.TestCase):
+    HEADER = [
+        "Repository", "Tier", "Coverage", "Mutation Score",
+        "Param. Tests", "Coverage Tool", "Mutation Tool",
+    ]
+
+    def cell(self, **coverage):
+        base = {"service": "Codecov", "coverage": 96.87}
+        base.update(coverage)
+        return rt.cells_from_report(report("acme/x", coverage=base["coverage"], **{}) | {"coverage": base}, self.HEADER)
+
+    def test_a_default_branch_figure_carries_no_qualifier(self):
+        cells = self.cell(is_default_branch=True, age_days=10, measured_at="2026-08-01T00:00:00Z")
+        self.assertEqual(cells["Coverage"], "96.87%")
+
+    def test_another_branch_is_named(self):
+        cells = self.cell(is_default_branch=False, branch="develop", age_days=1)
+        self.assertEqual(cells["Coverage"], "96.87% (develop)")
+
+    def test_a_long_branch_name_is_truncated(self):
+        cells = self.cell(
+            is_default_branch=False,
+            branch="dependabot/github_actions/actions-major-46e1ab33c4",
+            age_days=1,
+        )
+        self.assertLess(len(cells["Coverage"]), 40)
+        self.assertIn("dependabot", cells["Coverage"])
+
+    def test_a_stale_figure_is_dated(self):
+        cells = self.cell(is_default_branch=True, age_days=2047, measured_at="2021-01-17T00:12:54Z")
+        self.assertEqual(cells["Coverage"], "96.87% (2021)")
+
+    def test_a_self_reported_score_says_so(self):
+        cells = rt.cells_from_report(
+            report("acme/x", mutation_score=100.0, mutation_score_source="readme-badge"),
+            self.HEADER,
+        )
+        self.assertEqual(cells["Mutation Score"], "100% (self-reported)")
+
+    def test_an_enforced_threshold_reads_as_a_floor(self):
+        cells = rt.cells_from_report(
+            report("acme/x", mutation_score=92.0, mutation_score_source="ci-threshold"),
+            self.HEADER,
+        )
+        self.assertEqual(cells["Mutation Score"], ">= 92%")
+
+
 class ApplyChanges(unittest.TestCase):
     def setUp(self):
         import tempfile

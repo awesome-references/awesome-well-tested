@@ -19,7 +19,23 @@ A repository must meet **all** of the following baseline criteria:
 |------|----------------------------------------|
 | **Bronze** | Baseline only: coverage >= 80% with CI reporting |
 | **Silver** | Mutation testing tool configured and integrated into build |
-| **Gold** | Mutation testing with a verified mutation score >= 70% |
+| **Gold** | A mutation score >= 70% that the repository cannot have made up |
+
+Gold turns on where the number comes from, not just how big it is. Two sources
+count:
+
+- a report on the [Stryker dashboard](https://dashboard.stryker-mutator.io),
+  which your CI writes but which is stored and served at a URL you do not
+  control. Any tool emitting the mutation-testing-elements format can publish
+  there, Stryker and Infection among them.
+- a mutation run your CI performs behind a threshold that fails the build -
+  `mutationThreshold` for PIT, `minMsi` for Infection, `break` for Stryker. If
+  the build is green, the score is at least that, and somebody else's machine
+  checked it.
+
+A score read off a Shields.io badge is recorded and shown, marked
+`self-reported`, but it does not reach Gold. Anyone can type a percentage into
+their own README, and the list would have no way to tell the difference.
 
 Parameterized and property-based tests are detected and shown in their own
 column, but they do not change the tier. They are recorded because coverage
@@ -78,8 +94,13 @@ from 60 to 1000 requests per hour.
 - Refreshed reports come back as a pull request, so nothing is written to the
   default branch without review.
 
-The workflow also runs weekly and fails when a listed entry no longer holds its
-tier, which is how the list stays honest.
+The workflow also runs weekly with no input. That run rewrites the list from
+what it verified rather than reporting on it: figures are refreshed, an entry
+that moved between tiers is rewritten to the tier it now holds, and an entry
+that no longer clears the bar is dropped. It fails only when the verification
+itself could not be carried out, and it refuses to touch the list at all if it
+could not verify at least four fifths of the entries - a coverage service
+answering 429 is not a repository that stopped qualifying.
 
 Discovering new candidates uses `scripts/discover_candidates.py` and the
 `discover` workflow. GitHub's code search endpoint is stricter than the rest of

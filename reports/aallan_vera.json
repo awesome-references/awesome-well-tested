@@ -1,14 +1,21 @@
 {
   "repository": "aallan/vera",
-  "verified_at": "2026-08-26T11:22:07.706282+00:00",
+  "verified_at": "2026-08-26T13:03:24.435976+00:00",
   "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
     "coverage": 94.78,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-08-25T07:08:48.925467Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/aallan/vera"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -21,7 +28,9 @@
       }
     ],
     "detected": true,
-    "language": "Python"
+    "language": "Python",
+    "terms_tried": 2,
+    "terms_available": 4
   },
   "issues": null,
   "metadata": {
@@ -50,17 +59,18 @@
   },
   "coverage_tools": {
     "pytest-cov": {
-      "file": "pyproject.toml",
+      "file": ".github/workflows/ci.yml",
       "language": "Python",
       "matched_patterns": [
-        "pytest-cov"
+        "--cov\\b",
+        "--cov="
       ]
     },
-    "istanbul": {
+    "c8": {
       "file": ".github/workflows/ci.yml",
       "language": "JavaScript/TypeScript",
       "matched_patterns": [
-        "\\bc8\\b"
+        "npx c8\\b"
       ]
     }
   },

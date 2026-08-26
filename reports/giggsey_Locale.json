@@ -1,14 +1,27 @@
 {
   "repository": "giggsey/Locale",
-  "verified_at": "2026-08-26T11:24:49.092103+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T13:06:35.849931+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 92.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Coveralls",
     "coverage": 100.0,
+    "branch": "1.9",
+    "is_default_branch": false,
+    "measured_at": "2020-07-07T11:21:17Z",
+    "age_days": 2241,
     "source": "https://coveralls.io/github/giggsey/Locale"
   },
-  "mutation_score": null,
+  "mutation_score": 92.0,
+  "mutation_score_source": "ci-threshold",
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": {
+    "tool": "infection",
+    "threshold": 92.0,
+    "workflow": ".github/workflows/mutation-tests.yml",
+    "last_run": "success",
+    "passing": true
+  },
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +30,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -47,8 +62,15 @@
       "language": "PHP",
       "matched_patterns": [
         "coverage-clover",
-        "phpunit",
-        "xdebug"
+        "coverage-text",
+        "coverage:\\s*(?:pcov|xdebug)"
+      ]
+    },
+    "php-coveralls": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "php-coveralls"
       ]
     }
   },

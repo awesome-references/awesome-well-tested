@@ -1,14 +1,32 @@
 {
   "repository": "ScriptFUSION/Porter",
-  "verified_at": "2026-08-26T11:24:21.583324+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T13:05:53.026659+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 97.91%, backed by an independently hosted report",
   "coverage": {
     "service": "Codecov",
     "coverage": 100.0,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2026-05-12T08:36:49.594141Z",
+    "age_days": 106,
     "source": "https://codecov.io/gh/ScriptFUSION/Porter"
   },
-  "mutation_score": null,
+  "mutation_score": 97.91,
+  "mutation_score_source": "dashboard",
+  "mutation_dashboard": {
+    "score": 97.91,
+    "branch": "master",
+    "mutants": 191,
+    "source": "https://dashboard.stryker-mutator.io/reports/github.com/ScriptFUSION/Porter/master"
+  },
+  "mutation_ci_enforced": {
+    "tool": "infection",
+    "threshold": 97.0,
+    "workflow": ".github/workflows/Tests.yaml",
+    "last_run": "success",
+    "passing": true
+  },
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +35,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -46,7 +66,7 @@
       "language": "PHP",
       "matched_patterns": [
         "coverage-clover",
-        "pcov"
+        "coverage:\\s*(?:pcov|xdebug)"
       ]
     }
   },

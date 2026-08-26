@@ -1,0 +1,25 @@
+[tool.coverage.run]
+branch = true
+source = ["scripts"]
+command_line = "-m unittest discover -s tests -p test_*.py"
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+# The bar this list sets for everything it recommends. It applies here too.
+fail_under = 80
+exclude_also = [
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.paths]
+source = ["scripts", "*/scripts"]
+
+[tool.mutmut]
+# readme_table.py is the module that rewrites the list itself, so it is the one
+# where a surviving mutant matters most. Mutating all of scripts/ would take
+# longer than a CI run allows.
+paths_to_mutate = ["scripts/readme_table.py"]
+tests_dir = ["tests/"]
+runner = "python -m unittest discover -s tests -p test_*.py"

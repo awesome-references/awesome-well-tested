@@ -1,14 +1,27 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-26T11:24:35.316375+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T13:06:05.781495+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 90.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
     "coverage": 100.0,
+    "branch": "master",
+    "is_default_branch": false,
+    "measured_at": "2026-08-25T13:40:27.511371Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
-  "mutation_score": null,
+  "mutation_score": 90.0,
+  "mutation_score_source": "ci-threshold",
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": {
+    "tool": "infection",
+    "threshold": 90.0,
+    "workflow": ".github/workflows/continuous-integration.yml",
+    "last_run": "success",
+    "passing": true
+  },
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +30,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -44,9 +59,7 @@
       "file": ".github/workflows/continuous-integration.yml",
       "language": "PHP",
       "matched_patterns": [
-        "coverage-clover",
-        "phpunit",
-        "pcov"
+        "coverage-clover"
       ]
     }
   },

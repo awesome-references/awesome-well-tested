@@ -1,14 +1,26 @@
 {
   "repository": "php-standard-library/php-standard-library",
-  "verified_at": "2026-08-26T11:25:48.094709+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "verified_at": "2026-08-26T13:07:58.681835+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 96.56% and mutation score 95.74%, backed by an independently hosted report",
   "coverage": {
     "service": "Coveralls",
     "coverage": 96.56,
+    "branch": "next",
+    "is_default_branch": true,
+    "measured_at": "2026-08-26T10:38:55Z",
+    "age_days": 0,
     "source": "https://coveralls.io/github/php-standard-library/php-standard-library"
   },
-  "mutation_score": null,
+  "mutation_score": 95.74,
+  "mutation_score_source": "dashboard",
+  "mutation_dashboard": {
+    "score": 95.74,
+    "branch": "next",
+    "mutants": 4551,
+    "source": "https://dashboard.stryker-mutator.io/reports/github.com/php-standard-library/php-standard-library/next"
+  },
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +29,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -55,8 +69,14 @@
       "file": "composer.json",
       "language": "PHP",
       "matched_patterns": [
-        "php-coveralls",
-        "phpunit"
+        "php-coveralls"
+      ]
+    },
+    "php-coveralls": {
+      "file": "composer.json",
+      "language": "PHP",
+      "matched_patterns": [
+        "php-coveralls"
       ]
     }
   },

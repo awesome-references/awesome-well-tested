@@ -1,18 +1,27 @@
 {
   "repository": "technicalpickles/homesick",
-  "verified_at": "2026-08-26T11:24:07.317596+00:00",
+  "verified_at": "2026-08-26T13:05:41.323317+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 89.52% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Coveralls",
     "coverage": 89.52,
+    "branch": "master",
+    "is_default_branch": true,
+    "measured_at": "2020-10-19T07:55:37Z",
+    "age_days": 2137,
     "source": "https://coveralls.io/github/technicalpickles/homesick"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
-    "language": "Ruby"
+    "language": "Ruby",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": [
     "No coverage tool configuration found"

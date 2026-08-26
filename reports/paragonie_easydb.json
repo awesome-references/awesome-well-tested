@@ -1,14 +1,21 @@
 {
   "repository": "paragonie/easydb",
-  "verified_at": "2026-08-26T11:25:30.552799+00:00",
+  "verified_at": "2026-08-26T13:07:38.246746+00:00",
   "tier": "silver",
-  "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
+  "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Coveralls",
     "coverage": 97.42,
+    "branch": "v1.3.0",
+    "is_default_branch": false,
+    "measured_at": "2019-04-09T00:39:32Z",
+    "age_days": 2696,
     "source": "https://coveralls.io/github/paragonie/easydb"
   },
   "mutation_score": null,
+  "mutation_score_source": null,
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -17,7 +24,9 @@
       }
     ],
     "detected": true,
-    "language": "PHP"
+    "language": "PHP",
+    "terms_tried": 3,
+    "terms_available": 3
   },
   "issues": null,
   "metadata": {
@@ -43,10 +52,10 @@
   },
   "coverage_tools": {
     "phpunit": {
-      "file": ".github/workflows/ci.yml",
+      "file": ".github/workflows/mutation.yml",
       "language": "PHP",
       "matched_patterns": [
-        "phpunit"
+        "coverage:\\s*(?:pcov|xdebug)"
       ]
     }
   },
