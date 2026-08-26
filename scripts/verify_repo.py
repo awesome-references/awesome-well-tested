@@ -1121,8 +1121,34 @@ def fetch_coverage_percent(
     return None
 
 
+# Projects that publish to the dashboard usually link it from their README,
+# either as a shields endpoint badge or as a plain link to the report. Both name
+# the branch, which saves guessing at it.
+DASHBOARD_BADGE_PATTERNS = [
+    r"badge-api\.stryker-mutator\.io%2Fgithub\.com%2F[^%]+%2F[^%]+%2F([^%&\)\"'\s]+)",
+    r"dashboard\.stryker-mutator\.io/reports/github\.com/[^/]+/[^/]+/([^\)\"'\s#]+)",
+]
+
+
+def dashboard_branch_from_readme(readme: str | None) -> str | None:
+    """The branch a project's own dashboard link points at."""
+    if not readme:
+        return None
+    for pattern in DASHBOARD_BADGE_PATTERNS:
+        match = re.search(pattern, readme)
+        if match:
+            branch = match.group(1).strip()
+            if branch and "/" not in branch:
+                return branch
+    return None
+
+
 def fetch_dashboard_mutation_score(
-    api: GitHubAPI, owner: str, repo: str, default_branch: str | None
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    default_branch: str | None,
+    hinted_branch: str | None = None,
 ) -> dict | None:
     """Read a mutation score from the Stryker dashboard.
 
@@ -1133,7 +1159,7 @@ def fetch_dashboard_mutation_score(
     mutation-testing-elements format can publish there, Stryker and Infection
     among them.
     """
-    branches = [b for b in (default_branch, "main", "master") if b]
+    branches = [b for b in (hinted_branch, default_branch, "main", "master") if b]
     seen = set()
     for branch in branches:
         if branch in seen:
@@ -1505,7 +1531,9 @@ def verify_repository(
     badges = check_badges(readme)
 
     say("  Looking for an independently hosted mutation report...")
-    dashboard = fetch_dashboard_mutation_score(api, owner, repo, branch)
+    dashboard = fetch_dashboard_mutation_score(
+        api, owner, repo, branch, dashboard_branch_from_readme(readme)
+    )
 
     ci_enforced = check_ci_enforced_mutation(
         api, owner, repo, branch, mutation_tools, workflow_contents, file_cache

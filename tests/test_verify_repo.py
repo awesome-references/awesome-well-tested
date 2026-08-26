@@ -185,6 +185,25 @@ class PatternsThatNameThingsNotWords(unittest.TestCase):
         self.assertFalse(self.matched("coverage.py", "[tool.coverage]\nbranch = true"))
 
 
+class DashboardBranchHint(unittest.TestCase):
+    """Guessing default/main/master misses projects that publish from elsewhere."""
+
+    def test_a_shields_endpoint_badge_names_the_branch(self):
+        readme = (
+            "![m](https://img.shields.io/endpoint?url=https%3A%2F%2Fbadge-api."
+            "stryker-mutator.io%2Fgithub.com%2Facme%2Fthing%2Fnext)"
+        )
+        self.assertEqual(vr.dashboard_branch_from_readme(readme), "next")
+
+    def test_a_plain_report_link_names_the_branch(self):
+        readme = "[report](https://dashboard.stryker-mutator.io/reports/github.com/a/b/develop)"
+        self.assertEqual(vr.dashboard_branch_from_readme(readme), "develop")
+
+    def test_a_readme_without_one_hints_nothing(self):
+        self.assertIsNone(vr.dashboard_branch_from_readme("no badge here"))
+        self.assertIsNone(vr.dashboard_branch_from_readme(None))
+
+
 class MutationInvocations(unittest.TestCase):
     def test_every_mutation_tool_can_be_recognised_when_ci_runs_it(self):
         # Without an entry the CI-enforced check falls back to the dict key,
