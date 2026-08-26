@@ -1,0 +1,55 @@
+{
+  "repository": "astrapi69/crypt-data",
+  "verified_at": "2026-08-26T09:41:03.998853+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 100.0%",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 100.0,
+    "source": "https://codecov.io/gh/astrapi69/crypt-data"
+  },
+  "mutation_score": 100.0,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/crypt-data",
+    "description": "Provides data beans and writers and readers of private and public keys ",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 4,
+    "forks": 1,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T09:24:35Z",
+    "days_since_push": 0,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "gradle.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": {
+    "pit": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "pitest"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/crypt-data"
+    }
+  ]
+}
