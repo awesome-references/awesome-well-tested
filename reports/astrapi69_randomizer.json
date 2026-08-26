@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-08-26T10:03:45.875368+00:00",
+  "verified_at": "2026-08-26T10:14:02.350597+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 88.44% with CI reporting, no mutation testing configured",
   "coverage": {

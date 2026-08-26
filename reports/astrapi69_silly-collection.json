@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T10:03:26.280939+00:00",
+  "verified_at": "2026-08-26T10:13:46.959541+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {

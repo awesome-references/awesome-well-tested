@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-26T10:02:55.184382+00:00",
+  "verified_at": "2026-08-26T10:13:22.646286+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.39% and mutation score 100.0%",
   "coverage": {
@@ -19,8 +19,8 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-23T17:43:51Z",
-    "days_since_push": 2,
+    "last_push": "2026-08-26T10:05:42Z",
+    "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
