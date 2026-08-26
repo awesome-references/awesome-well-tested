@@ -1,6 +1,6 @@
 {
   "repository": "paragonie/easydb",
-  "verified_at": "2026-08-26T11:25:30.552799+00:00",
+  "verified_at": "2026-08-26T12:12:11.473828+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -43,10 +43,10 @@
   },
   "coverage_tools": {
     "phpunit": {
-      "file": ".github/workflows/ci.yml",
+      "file": ".github/workflows/mutation.yml",
       "language": "PHP",
       "matched_patterns": [
-        "phpunit"
+        "coverage:\\s*(?:pcov|xdebug)"
       ]
     }
   },

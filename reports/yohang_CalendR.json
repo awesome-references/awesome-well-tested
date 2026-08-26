@@ -1,6 +1,6 @@
 {
   "repository": "yohang/CalendR",
-  "verified_at": "2026-08-26T11:25:15.470891+00:00",
+  "verified_at": "2026-08-26T12:12:56.148421+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -19,7 +19,9 @@
     "detected": true,
     "language": "PHP"
   },
-  "issues": null,
+  "issues": [
+    "No coverage tool configuration found"
+  ],
   "metadata": {
     "full_name": "yohang/CalendR",
     "description": "A modern, object-oriented calendar management library for PHP 8.2+.",
@@ -38,16 +40,8 @@
       "ci.yml"
     ]
   },
-  "coverage_tools": {
-    "phpunit": {
-      "file": ".github/workflows/ci.yml",
-      "language": "PHP",
-      "matched_patterns": [
-        "phpunit"
-      ]
-    }
-  },
-  "primary_coverage_tool": "phpunit",
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
   "mutation_tools": {
     "infection": {
       "file": "composer.json",

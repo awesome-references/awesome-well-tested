@@ -1,6 +1,6 @@
 {
   "repository": "aallan/vera",
-  "verified_at": "2026-08-26T11:22:07.706282+00:00",
+  "verified_at": "2026-08-26T12:10:04.096690+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -50,17 +50,11 @@
   },
   "coverage_tools": {
     "pytest-cov": {
-      "file": "pyproject.toml",
+      "file": ".github/workflows/ci.yml",
       "language": "Python",
       "matched_patterns": [
-        "pytest-cov"
-      ]
-    },
-    "istanbul": {
-      "file": ".github/workflows/ci.yml",
-      "language": "JavaScript/TypeScript",
-      "matched_patterns": [
-        "\\bc8\\b"
+        "--cov\\b",
+        "--cov="
       ]
     }
   },

@@ -1,6 +1,6 @@
 {
   "repository": "markuspoerschke/iCal",
-  "verified_at": "2026-08-26T11:26:02.475554+00:00",
+  "verified_at": "2026-08-26T12:12:27.062533+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -49,7 +49,7 @@
       "file": "phpunit.xml.dist",
       "language": "PHP",
       "matched_patterns": [
-        "phpunit"
+        "<coverage"
       ]
     }
   },

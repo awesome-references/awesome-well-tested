@@ -89,7 +89,7 @@
 | [doctrine-mysql-come-back](https://github.com/facile-it/doctrine-mysql-come-back)    | ![Silver](badges/silver.svg) | 100%     | n/a            | PHPUnit      | PHPUnit       | Infection     |
 | [Locale](https://github.com/giggsey/Locale)                                          | ![Silver](badges/silver.svg) | 100%     | n/a            | PHPUnit      | PHPUnit       | Infection     |
 | [Tree](https://github.com/nicmart/Tree)                                              | ![Silver](badges/silver.svg) | 100%     | n/a            | no           | PHPUnit       | Infection     |
-| [CalendR](https://github.com/yohang/CalendR)                                         | ![Silver](badges/silver.svg) | 100%     | n/a            | PHPUnit      | PHPUnit       | Infection     |
+| [CalendR](https://github.com/yohang/CalendR)                                         | ![Silver](badges/silver.svg) | 100%     | n/a            | PHPUnit      | Coveralls     | Infection     |
 | [easydb](https://github.com/paragonie/easydb)                                        | ![Silver](badges/silver.svg) | 97.42%   | n/a            | PHPUnit      | PHPUnit       | Infection     |
 | [php-standard-library](https://github.com/php-standard-library/php-standard-library) | ![Silver](badges/silver.svg) | 96.56%   | n/a            | PHPUnit      | PHPUnit       | Infection     |
 | [iCal](https://github.com/markuspoerschke/iCal)                                      | ![Silver](badges/silver.svg) | 93.22%   | n/a            | PHPUnit      | PHPUnit       | Infection     |

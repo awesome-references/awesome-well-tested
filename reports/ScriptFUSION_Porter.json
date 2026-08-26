@@ -1,6 +1,6 @@
 {
   "repository": "ScriptFUSION/Porter",
-  "verified_at": "2026-08-26T11:24:21.583324+00:00",
+  "verified_at": "2026-08-26T12:11:42.370450+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -46,7 +46,7 @@
       "language": "PHP",
       "matched_patterns": [
         "coverage-clover",
-        "pcov"
+        "coverage:\\s*(?:pcov|xdebug)"
       ]
     }
   },

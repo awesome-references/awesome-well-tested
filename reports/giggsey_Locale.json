@@ -1,6 +1,6 @@
 {
   "repository": "giggsey/Locale",
-  "verified_at": "2026-08-26T11:24:49.092103+00:00",
+  "verified_at": "2026-08-26T12:11:54.675047+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -47,8 +47,8 @@
       "language": "PHP",
       "matched_patterns": [
         "coverage-clover",
-        "phpunit",
-        "xdebug"
+        "coverage-text",
+        "coverage:\\s*(?:pcov|xdebug)"
       ]
     }
   },

@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-08-26T11:21:49.472676+00:00",
+  "verified_at": "2026-08-26T12:09:54.971723+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -33,7 +33,7 @@
     "forks": 47,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T10:35:11Z",
+    "last_push": "2026-08-26T12:06:25Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -63,12 +63,17 @@
   },
   "coverage_tools": {
     "pytest-cov": {
+      "file": ".github/workflows/os-ubuntu.yml",
+      "language": "Python",
+      "matched_patterns": [
+        "--cov\\b"
+      ]
+    },
+    "coverage.py": {
       "file": "pyproject.toml",
       "language": "Python",
       "matched_patterns": [
-        "pytest-cov",
-        "--cov",
-        "addopts.*--cov"
+        "\\[tool\\.coverage\\."
       ]
     }
   },

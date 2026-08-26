@@ -1,6 +1,6 @@
 {
   "repository": "nicmart/Tree",
-  "verified_at": "2026-08-26T11:25:02.449227+00:00",
+  "verified_at": "2026-08-26T12:11:59.956471+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -25,7 +25,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-13T11:53:45Z",
-    "days_since_push": 12,
+    "days_since_push": 13,
     "default_branch": "master"
   },
   "ci": {
@@ -40,9 +40,7 @@
       "file": ".github/workflows/integrate.yaml",
       "language": "PHP",
       "matched_patterns": [
-        "coverage-clover",
-        "phpunit",
-        "xdebug"
+        "coverage-clover"
       ]
     }
   },

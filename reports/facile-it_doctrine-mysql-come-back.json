@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-26T11:24:35.316375+00:00",
+  "verified_at": "2026-08-26T12:11:48.182600+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -44,9 +44,7 @@
       "file": ".github/workflows/continuous-integration.yml",
       "language": "PHP",
       "matched_patterns": [
-        "coverage-clover",
-        "phpunit",
-        "pcov"
+        "coverage-clover"
       ]
     }
   },

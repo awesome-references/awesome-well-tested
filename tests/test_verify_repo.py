@@ -77,6 +77,67 @@ class ParameterizedMarkers(unittest.TestCase):
                 self.assertNotIn(" OR ", term, "code search does not honour OR")
 
 
+class PatternsThatNameThingsNotWords(unittest.TestCase):
+    """Every case here is a counterexample an audit produced against the live table."""
+
+    def matched(self, tool, text):
+        return bool(
+            vr.search_file_for_patterns(text, vr.COVERAGE_TOOLS[tool]["patterns"])
+        )
+
+    def test_phpunit_as_a_dev_dependency_is_not_coverage(self):
+        # Every PHP project declares it; the runner's name proves nothing.
+        self.assertFalse(
+            self.matched("phpunit", '{"require-dev": {"phpunit/phpunit": "^11.0"}}')
+        )
+
+    def test_a_workflow_switching_coverage_off_is_not_coverage(self):
+        self.assertFalse(self.matched("phpunit", "  coverage: none   # xdebug is slow"))
+
+    def test_phpunit_collecting_coverage_is_coverage(self):
+        self.assertTrue(
+            self.matched("phpunit", "run: vendor/bin/phpunit --coverage-clover coverage.xml")
+        )
+        self.assertTrue(self.matched("phpunit", "  with:\n    coverage: pcov"))
+
+    def test_the_istanbul_timezone_is_not_the_coverage_tool(self):
+        # Date libraries run their suite across timezones; Europe/Istanbul is a
+        # standard DST fixture.
+        self.assertFalse(self.matched("istanbul", "env:\n  TZ: Europe/Istanbul"))
+
+    def test_a_centos_container_tag_is_not_c8(self):
+        self.assertFalse(self.matched("istanbul", "container: quay.io/centos/centos:c8"))
+
+    def test_nyc_as_a_dependency_is_coverage(self):
+        self.assertTrue(self.matched("istanbul", '"devDependencies": {"nyc": "^15.1.0"}'))
+
+    def test_the_real_coverage_py_sections_match(self):
+        self.assertTrue(self.matched("coverage.py", "[tool.coverage.run]\nbranch = true"))
+
+    def test_cov_does_not_match_the_start_of_coverage(self):
+        # "--cov" is a prefix of "--coverage-clover", so without a boundary it
+        # made every PHP repository look like a pytest-cov user.
+        self.assertFalse(
+            self.matched("pytest-cov", "run: vendor/bin/phpunit --coverage-clover coverage.xml")
+        )
+        self.assertFalse(self.matched("pytest-cov", "run: npx jest --coverage"))
+
+    def test_pytest_collecting_coverage_still_matches(self):
+        self.assertTrue(self.matched("pytest-cov", "run: pytest --cov=src"))
+        self.assertTrue(self.matched("pytest-cov", "addopts = --cov src"))
+
+    def test_a_step_named_upload_coverage_report_is_not_coverage_py(self):
+        # Reads as a command in a config file and as English in a CI step name.
+        self.assertFalse(
+            self.matched("coverage.py", "- name: Upload coverage report\n  uses: codecov/codecov-action@v4")
+        )
+
+    def test_the_section_coverage_py_does_not_have_does_not_match(self):
+        # "[tool.coverage]" is not a section coverage.py reads, so a pattern for
+        # it could never match a real file.
+        self.assertFalse(self.matched("coverage.py", "[tool.coverage]\nbranch = true"))
+
+
 class DetermineTier(unittest.TestCase):
     CI = {"github_actions": ["ci.yml"]}
     TOOLS = {"jacoco": {}}

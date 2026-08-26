@@ -1,6 +1,6 @@
 {
   "repository": "onury/accesscontrol",
-  "verified_at": "2026-08-26T11:23:31.501118+00:00",
+  "verified_at": "2026-08-26T12:10:58.551305+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but the mutation score is unverified; supply it with --mutation-score (>= 70% required for Gold)",
   "coverage": {
@@ -36,10 +36,10 @@
   },
   "coverage_tools": {
     "istanbul": {
-      "file": ".github/workflows/ci.yml",
+      "file": "package.json",
       "language": "JavaScript/TypeScript",
       "matched_patterns": [
-        "istanbul"
+        "@vitest/coverage"
       ]
     }
   },
