@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/checksum-up",
-  "verified_at": "2026-08-26T10:03:36.215987+00:00",
+  "verified_at": "2026-08-26T10:13:54.608770+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 96.42% with CI reporting, no mutation testing configured",
   "coverage": {
