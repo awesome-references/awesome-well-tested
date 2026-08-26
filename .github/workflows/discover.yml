@@ -1,0 +1,75 @@
+name: discover
+
+on:
+  workflow_dispatch:
+    inputs:
+      language:
+        description: 'Language to search'
+        type: choice
+        required: true
+        options:
+          - java
+          - python
+          - javascript
+          - typescript
+          - go
+          - rust
+          - ruby
+          - php
+          - csharp
+      mutation_only:
+        description: 'Only search for mutation testing config (higher quality candidates)'
+        type: boolean
+        required: false
+        default: true
+      min_stars:
+        description: 'Minimum star count'
+        required: false
+        default: '50'
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    name: find candidates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Search for candidates
+        # The built-in GITHUB_TOKEN is scoped to this repository, and the code
+        # search endpoint may refuse it. Add a personal access token with
+        # public_repo as the AWESOME_LIST_TOKEN secret if the search returns
+        # nothing; the fallback keeps the workflow runnable without one.
+        env:
+          GITHUB_TOKEN: ${{ secrets.AWESOME_LIST_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          args="--language ${{ inputs.language }} --min-stars ${{ inputs.min_stars }}"
+          if [ "${{ inputs.mutation_only }}" = "true" ]; then
+            args="$args --mutation-only"
+          fi
+          python scripts/discover_candidates.py $args | tee discover.log
+
+      - name: Write job summary
+        if: always()
+        run: |
+          {
+            echo '## Candidates'
+            echo
+            echo '```'
+            tail -n 60 discover.log 2>/dev/null || echo 'No output captured.'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload candidate list
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidates-${{ inputs.language }}
+          path: reports/candidates_*.json
+          if-no-files-found: warn

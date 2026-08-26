@@ -1,0 +1,47 @@
+{
+  "repository": "astrapi69/checksum-up",
+  "verified_at": "2026-08-26T10:03:36.215987+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 96.42% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 96.42,
+    "source": "https://codecov.io/gh/astrapi69/checksum-up"
+  },
+  "mutation_score": null,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/checksum-up",
+    "description": "Provides algorithms for calculate checksums for files, byte arrays and objects",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 2,
+    "forks": 1,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-19T11:17:33Z",
+    "days_since_push": 6,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "gradle.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/checksum-up"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "repository": "astrapi69/mystic-crypt",
+  "verified_at": "2026-08-26T10:03:05.829797+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 99.91% and mutation score 99.0%",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 99.91,
+    "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
+  },
+  "mutation_score": 99.0,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/mystic-crypt",
+    "description": "Cpyptograhic library in java",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 11,
+    "forks": 6,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-26T09:18:57Z",
+    "days_since_push": 0,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "gradle.yml",
+      "greetings.yml",
+      "publish.yml",
+      "test-badge.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": {
+    "pit": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "pitest"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/mystic-crypt"
+    }
+  ]
+}

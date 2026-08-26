@@ -1,0 +1,47 @@
+{
+  "repository": "astrapi69/silly-collection",
+  "verified_at": "2026-08-26T10:03:26.280939+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 98.08,
+    "source": "https://codecov.io/gh/astrapi69/silly-collection"
+  },
+  "mutation_score": null,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/silly-collection",
+    "description": "Utility library for collections, comparators and iterator classes",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 9,
+    "forks": 4,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-12T17:11:23Z",
+    "days_since_push": 13,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "gradle.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/silly-collection"
+    }
+  ]
+}

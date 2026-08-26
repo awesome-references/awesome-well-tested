@@ -1,0 +1,56 @@
+{
+  "repository": "astrapi69/crypt-api",
+  "verified_at": "2026-08-26T10:02:55.184382+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 99.39% and mutation score 100.0%",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 99.39,
+    "source": "https://codecov.io/gh/astrapi69/crypt-api"
+  },
+  "mutation_score": 100.0,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/crypt-api",
+    "description": "Provides interfaces for encrypting and decrypting bytes, text, and files",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 3,
+    "forks": 1,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-23T17:43:51Z",
+    "days_since_push": 2,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "codeql.yml",
+      "gradle.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": {
+    "pit": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "pitest"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/crypt-api"
+    }
+  ]
+}

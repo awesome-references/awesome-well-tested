@@ -1,0 +1,47 @@
+{
+  "repository": "astrapi69/randomizer",
+  "verified_at": "2026-08-26T10:03:45.875368+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 88.44% with CI reporting, no mutation testing configured",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 88.44,
+    "source": "https://codecov.io/gh/astrapi69/randomizer"
+  },
+  "mutation_score": null,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/randomizer",
+    "description": "Create and generate random data ",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 5,
+    "forks": 1,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-19T08:54:21Z",
+    "days_since_push": 7,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "gradle.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": null,
+  "badges": [
+    {
+      "service": "Coveralls",
+      "match": "coveralls.io/repos/github/astrapi69/randomizer"
+    }
+  ]
+}

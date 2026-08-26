@@ -1,0 +1,56 @@
+{
+  "repository": "astrapi69/gen-tree",
+  "verified_at": "2026-08-26T10:03:16.307415+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 98.01% and mutation score 98.0%",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 98.01,
+    "source": "https://codecov.io/gh/astrapi69/gen-tree"
+  },
+  "mutation_score": 98.0,
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/gen-tree",
+    "description": "Project that holds a generic model for tree objects",
+    "language": "Java",
+    "license": "MIT",
+    "stars": 2,
+    "forks": 0,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-08-24T16:09:28Z",
+    "days_since_push": 1,
+    "default_branch": "develop"
+  },
+  "ci": {
+    "github_actions": [
+      "gradle.yml",
+      "publish.yml"
+    ]
+  },
+  "coverage_tools": {
+    "jacoco": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "jacoco"
+      ]
+    }
+  },
+  "mutation_tools": {
+    "pit": {
+      "file": "build.gradle",
+      "language": "Java",
+      "matched_patterns": [
+        "pitest"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/gen-tree"
+    }
+  ]
+}
