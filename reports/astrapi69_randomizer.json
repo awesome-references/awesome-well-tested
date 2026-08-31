@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-08-26T13:02:26.178083+00:00",
+  "verified_at": "2026-08-31T10:52:13.306681+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 88.44% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "develop",
     "is_default_branch": true,
     "measured_at": "2026-08-19T08:20:52.717381Z",
-    "age_days": 7,
+    "age_days": 12,
     "source": "https://codecov.io/gh/astrapi69/randomizer"
   },
   "mutation_score": null,
@@ -17,16 +17,12 @@
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
   "parameterized_tests": {
-    "frameworks": [
-      {
-        "framework": "JUnit 5 @ParameterizedTest",
-        "matches": 1
-      }
-    ],
-    "detected": true,
+    "frameworks": [],
+    "detected": false,
     "language": "Java",
     "terms_tried": 4,
-    "terms_available": 5
+    "terms_available": 5,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -39,7 +35,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-19T08:54:21Z",
-    "days_since_push": 7,
+    "days_since_push": 12,
     "default_branch": "develop"
   },
   "ci": {

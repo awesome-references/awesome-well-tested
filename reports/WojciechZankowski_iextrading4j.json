@@ -1,6 +1,6 @@
 {
   "repository": "WojciechZankowski/iextrading4j",
-  "verified_at": "2026-08-26T13:02:39.879146+00:00",
+  "verified_at": "2026-08-31T10:52:52.858976+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2024-01-29T20:01:36.916216Z",
-    "age_days": 939,
+    "age_days": 944,
     "source": "https://codecov.io/gh/WojciechZankowski/iextrading4j"
   },
   "mutation_score": null,
@@ -17,16 +17,12 @@
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
   "parameterized_tests": {
-    "frameworks": [
-      {
-        "framework": "JUnit 5 @ParameterizedTest",
-        "matches": 2
-      }
-    ],
-    "detected": true,
+    "frameworks": [],
+    "detected": false,
     "language": "Java",
     "terms_tried": 4,
-    "terms_available": 5
+    "terms_available": 5,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -39,7 +35,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-01-26T21:50:23Z",
-    "days_since_push": 211,
+    "days_since_push": 216,
     "default_branch": "master"
   },
   "ci": {

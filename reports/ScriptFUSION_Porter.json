@@ -1,6 +1,6 @@
 {
   "repository": "ScriptFUSION/Porter",
-  "verified_at": "2026-08-26T14:50:59.890160+00:00",
+  "verified_at": "2026-08-31T10:54:57.408499+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 97.91%, backed by an independently hosted report",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2026-05-12T08:36:49.594141Z",
-    "age_days": 106,
+    "age_days": 111,
     "source": "https://codecov.io/gh/ScriptFUSION/Porter"
   },
   "mutation_score": 97.91,
@@ -18,6 +18,15 @@
     "score": 97.91,
     "branch": "master",
     "mutants": 191,
+    "killed": 187,
+    "survived": 4,
+    "not_covered": 0,
+    "statuses": {
+      "Killed": 186,
+      "RuntimeError": 1,
+      "Timeout": 1,
+      "Survived": 4
+    },
     "source": "https://dashboard.stryker-mutator.io/reports/github.com/ScriptFUSION/Porter/master"
   },
   "mutation_ci_enforced": {
@@ -69,7 +78,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-03-10T18:24:41Z",
-    "days_since_push": 168,
+    "days_since_push": 173,
     "default_branch": "master"
   },
   "ci": {

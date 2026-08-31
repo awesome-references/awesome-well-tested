@@ -1,15 +1,15 @@
 {
   "repository": "MobileNativeFoundation/Store",
-  "verified_at": "2026-08-26T14:51:49.183802+00:00",
+  "verified_at": "2026-08-31T10:55:52.605047+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 80.89% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 80.81% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Codecov",
-    "coverage": 80.89,
+    "coverage": 80.81,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-08-24T08:54:59.490275Z",
-    "age_days": 2,
+    "measured_at": "2026-08-30T02:34:40.897461Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/MobileNativeFoundation/Store"
   },
   "mutation_score": null,
@@ -34,8 +34,8 @@
     "forks": 215,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-24T08:48:43Z",
-    "days_since_push": 2,
+    "last_push": "2026-08-30T02:31:51Z",
+    "days_since_push": 1,
     "default_branch": "main"
   },
   "ci": {

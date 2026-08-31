@@ -1,6 +1,6 @@
 {
   "repository": "zio/zio-quill",
-  "verified_at": "2026-08-26T14:52:25.009245+00:00",
+  "verified_at": "2026-08-31T10:56:32.806837+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 83.6% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 83.6,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-08-19T01:16:24.483559Z",
-    "age_days": 7,
+    "measured_at": "2026-08-27T01:41:55.389092Z",
+    "age_days": 4,
     "source": "https://codecov.io/gh/zio/zio-quill"
   },
   "mutation_score": null,
@@ -34,8 +34,8 @@
     "forks": 352,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T00:12:25Z",
-    "days_since_push": 0,
+    "last_push": "2026-08-27T01:30:21Z",
+    "days_since_push": 4,
     "default_branch": "master"
   },
   "ci": {
