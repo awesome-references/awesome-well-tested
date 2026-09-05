@@ -1,6 +1,6 @@
 {
   "repository": "onury/accesscontrol",
-  "verified_at": "2026-08-26T13:04:52.162631+00:00",
+  "verified_at": "2026-08-31T10:54:42.363346+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2021-01-17T00:12:54Z",
-    "age_days": 2047,
+    "age_days": 2052,
     "source": "https://coveralls.io/github/onury/accesscontrol"
   },
   "mutation_score": null,
@@ -17,16 +17,12 @@
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
   "parameterized_tests": {
-    "frameworks": [
-      {
-        "framework": "Jest/Vitest .each",
-        "matches": 1
-      }
-    ],
-    "detected": true,
+    "frameworks": [],
+    "detected": false,
     "language": "TypeScript",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": null,
   "metadata": {
@@ -34,12 +30,12 @@
     "description": "Role and Attribute based Access Control for Node.js",
     "language": "TypeScript",
     "license": "MIT",
-    "stars": 2327,
+    "stars": 2328,
     "forks": 181,
     "archived": false,
     "fork": false,
     "last_push": "2026-08-12T04:55:50Z",
-    "days_since_push": 14,
+    "days_since_push": 19,
     "default_branch": "master"
   },
   "ci": {

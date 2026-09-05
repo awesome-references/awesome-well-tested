@@ -1,15 +1,15 @@
 {
   "repository": "fzyzcjy/flutter_rust_bridge",
-  "verified_at": "2026-08-26T14:52:08.099716+00:00",
+  "verified_at": "2026-08-31T10:56:14.021929+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 98.62% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 99.18% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Codecov",
-    "coverage": 98.62,
+    "coverage": 99.18,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-08-24T04:09:21.437541Z",
-    "age_days": 2,
+    "measured_at": "2026-08-30T18:52:38.559837Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/fzyzcjy/flutter_rust_bridge"
   },
   "mutation_score": null,
@@ -30,12 +30,12 @@
     "description": "Flutter/Dart <-> Rust binding generator, feature-rich, but seamless and simple.",
     "language": "Dart",
     "license": "MIT",
-    "stars": 5385,
+    "stars": 5393,
     "forks": 419,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T14:50:56Z",
-    "days_since_push": 0,
+    "last_push": "2026-08-30T10:15:16Z",
+    "days_since_push": 1,
     "default_branch": "master"
   },
   "ci": {

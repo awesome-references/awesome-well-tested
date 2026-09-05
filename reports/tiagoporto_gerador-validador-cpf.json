@@ -1,6 +1,6 @@
 {
   "repository": "tiagoporto/gerador-validador-cpf",
-  "verified_at": "2026-08-26T14:50:45.879335+00:00",
+  "verified_at": "2026-08-31T10:54:30.113146+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 97.19% and mutation score 88.76%, backed by an independently hosted report",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "main",
     "is_default_branch": true,
     "measured_at": "2026-07-01T15:17:08.383123Z",
-    "age_days": 55,
+    "age_days": 60,
     "source": "https://codecov.io/gh/tiagoporto/gerador-validador-cpf"
   },
   "mutation_score": 88.76,
@@ -18,6 +18,16 @@
     "score": 88.76,
     "branch": "main",
     "mutants": 169,
+    "killed": 150,
+    "survived": 16,
+    "not_covered": 3,
+    "statuses": {
+      "CompileError": 25,
+      "Killed": 130,
+      "Survived": 16,
+      "Timeout": 20,
+      "NoCoverage": 3
+    },
     "source": "https://dashboard.stryker-mutator.io/reports/github.com/tiagoporto/gerador-validador-cpf/main"
   },
   "mutation_ci_enforced": null,
@@ -40,7 +50,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-01T04:04:37Z",
-    "days_since_push": 25,
+    "days_since_push": 30,
     "default_branch": "main"
   },
   "ci": {

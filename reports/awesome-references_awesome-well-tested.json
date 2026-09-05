@@ -1,15 +1,15 @@
 {
   "repository": "awesome-references/awesome-well-tested",
-  "verified_at": "2026-08-26T15:02:03.107284+00:00",
+  "verified_at": "2026-08-31T10:53:53.490188+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Coveralls",
-    "coverage": 93.53,
-    "branch": "audit-round-two",
-    "is_default_branch": false,
-    "measured_at": "2026-08-26T14:54:34Z",
-    "age_days": 0,
+    "coverage": 93.54,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-08-26T16:21:56Z",
+    "age_days": 4,
     "source": "https://coveralls.io/github/awesome-references/awesome-well-tested"
   },
   "mutation_score": null,
@@ -34,8 +34,8 @@
     "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-26T14:53:03Z",
-    "days_since_push": 0,
+    "last_push": "2026-08-26T16:01:18Z",
+    "days_since_push": 4,
     "default_branch": "main"
   },
   "ci": {

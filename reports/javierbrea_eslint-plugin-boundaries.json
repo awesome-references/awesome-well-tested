@@ -1,6 +1,6 @@
 {
   "repository": "javierbrea/eslint-plugin-boundaries",
-  "verified_at": "2026-08-26T13:03:53.231863+00:00",
+  "verified_at": "2026-08-31T10:54:10.940430+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 94.72%, backed by an independently hosted report",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "release",
     "is_default_branch": false,
     "measured_at": "2026-08-10T05:37:42Z",
-    "age_days": 16,
+    "age_days": 21,
     "source": "https://coveralls.io/github/javierbrea/eslint-plugin-boundaries"
   },
   "mutation_score": 94.72,
@@ -18,6 +18,15 @@
     "score": 94.72,
     "branch": "master",
     "mutants": 2519,
+    "killed": 2386,
+    "survived": 131,
+    "not_covered": 2,
+    "statuses": {
+      "NoCoverage": 2,
+      "Killed": 2132,
+      "Timeout": 254,
+      "Survived": 131
+    },
     "source": "https://dashboard.stryker-mutator.io/reports/github.com/javierbrea/eslint-plugin-boundaries/master"
   },
   "mutation_ci_enforced": null,
@@ -26,7 +35,8 @@
     "detected": false,
     "language": "TypeScript",
     "terms_tried": 3,
-    "terms_available": 3
+    "terms_available": 3,
+    "complete": true
   },
   "issues": [
     "No coverage tool configuration found"
@@ -36,11 +46,11 @@
     "description": "Enforce architectural boundaries in your JavaScript and TypeScript projects",
     "language": "TypeScript",
     "license": "MIT",
-    "stars": 967,
+    "stars": 972,
     "forks": 20,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-25T19:37:38Z",
+    "last_push": "2026-08-31T02:04:48Z",
     "days_since_push": 0,
     "default_branch": "master"
   },
