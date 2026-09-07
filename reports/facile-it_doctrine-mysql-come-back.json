@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-31T10:55:03.368653+00:00",
+  "verified_at": "2026-09-07T09:23:05.047912+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 100.0,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2026-08-31T03:49:30.941192Z",
+    "measured_at": "2026-09-07T03:50:13.520224Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
@@ -50,12 +50,12 @@
     "description": "Doctrine DBAL able to try reconnect on MySQL has gone away exceptions",
     "language": "PHP",
     "license": "Apache-2.0",
-    "stars": 212,
+    "stars": 211,
     "forks": 47,
     "archived": false,
     "fork": false,
     "last_push": "2026-08-25T13:44:05Z",
-    "days_since_push": 5,
+    "days_since_push": 12,
     "default_branch": "3.x"
   },
   "ci": {
