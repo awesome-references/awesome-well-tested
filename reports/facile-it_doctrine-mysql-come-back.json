@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-31T10:55:03.368653+00:00",
+  "verified_at": "2026-09-21T09:57:40.295994+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 100.0,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2026-08-31T03:49:30.941192Z",
+    "measured_at": "2026-09-21T03:52:16.366872Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
@@ -21,9 +21,9 @@
     "threshold_from": "infection.json",
     "workflow": ".github/workflows/continuous-integration.yml",
     "run": {
-      "run_id": 32855126886,
-      "head_sha": "96d39d446b83d3b8bc9d86146a59c3015eb51a9b",
-      "created_at": "2026-08-25T13:44:06Z",
+      "run_id": 34250479548,
+      "head_sha": "afb566e7f9885c464adbc0b7fa6bcb84288f0c53",
+      "created_at": "2026-09-08T16:20:47Z",
       "conclusion": "failure",
       "event": "push",
       "passing": false,
@@ -50,12 +50,12 @@
     "description": "Doctrine DBAL able to try reconnect on MySQL has gone away exceptions",
     "language": "PHP",
     "license": "Apache-2.0",
-    "stars": 212,
+    "stars": 211,
     "forks": 47,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-25T13:44:05Z",
-    "days_since_push": 5,
+    "last_push": "2026-09-08T16:20:46Z",
+    "days_since_push": 12,
     "default_branch": "3.x"
   },
   "ci": {

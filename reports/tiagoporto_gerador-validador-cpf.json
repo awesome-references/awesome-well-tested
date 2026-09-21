@@ -1,6 +1,6 @@
 {
   "repository": "tiagoporto/gerador-validador-cpf",
-  "verified_at": "2026-08-31T10:54:30.113146+00:00",
+  "verified_at": "2026-09-21T09:57:23.810424+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 97.19% and mutation score 88.76%, backed by an independently hosted report",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 97.19,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-07-01T15:17:08.383123Z",
-    "age_days": 60,
+    "measured_at": "2026-09-15T14:56:51.491072Z",
+    "age_days": 5,
     "source": "https://codecov.io/gh/tiagoporto/gerador-validador-cpf"
   },
   "mutation_score": 88.76,
@@ -49,8 +49,8 @@
     "forks": 78,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-01T04:04:37Z",
-    "days_since_push": 30,
+    "last_push": "2026-09-15T14:55:47Z",
+    "days_since_push": 5,
     "default_branch": "main"
   },
   "ci": {
