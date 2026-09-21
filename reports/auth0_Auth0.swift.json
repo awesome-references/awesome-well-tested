@@ -1,6 +1,6 @@
 {
   "repository": "auth0/Auth0.swift",
-  "verified_at": "2026-08-31T10:55:56.851739+00:00",
+  "verified_at": "2026-09-21T09:58:25.386061+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 94.59% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 94.59,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-08-28T12:59:40.594715Z",
-    "age_days": 2,
+    "measured_at": "2026-09-16T13:08:01.435274Z",
+    "age_days": 4,
     "source": "https://codecov.io/gh/auth0/Auth0.swift"
   },
   "mutation_score": null,
@@ -34,7 +34,7 @@
     "forks": 267,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-31T05:31:11Z",
+    "last_push": "2026-09-21T02:06:16Z",
     "days_since_push": 0,
     "default_branch": "master"
   },
