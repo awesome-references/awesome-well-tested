@@ -1,6 +1,6 @@
 {
   "repository": "auth0/Auth0.swift",
-  "verified_at": "2026-08-31T10:55:56.851739+00:00",
+  "verified_at": "2026-09-28T11:08:24.404727+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 94.59% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 94.59,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-08-28T12:59:40.594715Z",
-    "age_days": 2,
+    "measured_at": "2026-09-25T05:52:46.316002Z",
+    "age_days": 3,
     "source": "https://codecov.io/gh/auth0/Auth0.swift"
   },
   "mutation_score": null,
@@ -30,11 +30,11 @@
     "description": "Auth0 SDK for Apple platforms",
     "language": "Swift",
     "license": "MIT",
-    "stars": 461,
-    "forks": 267,
+    "stars": 463,
+    "forks": 268,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-31T05:31:11Z",
+    "last_push": "2026-09-28T11:00:24Z",
     "days_since_push": 0,
     "default_branch": "master"
   },

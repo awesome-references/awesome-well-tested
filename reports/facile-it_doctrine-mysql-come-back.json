@@ -1,19 +1,19 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-08-31T10:55:03.368653+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but no mutation score could be established",
+  "verified_at": "2026-09-28T11:07:35.388023+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 100.0% and mutation score 90.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
     "coverage": 100.0,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2026-08-31T03:49:30.941192Z",
+    "measured_at": "2026-09-28T03:56:37.924749Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
-  "mutation_score": null,
-  "mutation_score_source": null,
+  "mutation_score": 90.0,
+  "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
   "mutation_ci_enforced": {
     "tool": "infection",
@@ -21,15 +21,26 @@
     "threshold_from": "infection.json",
     "workflow": ".github/workflows/continuous-integration.yml",
     "run": {
-      "run_id": 32855126886,
-      "head_sha": "96d39d446b83d3b8bc9d86146a59c3015eb51a9b",
-      "created_at": "2026-08-25T13:44:06Z",
-      "conclusion": "failure",
+      "run_id": 35840922240,
+      "head_sha": "a2bea945c4f1a1f7459fc088e92f029b2bfee1aa",
+      "created_at": "2026-09-23T09:05:54Z",
+      "conclusion": "success",
       "event": "push",
-      "passing": false,
-      "why": "run concluded failure"
+      "passing": true,
+      "jobs": {
+        "Code style": "success",
+        "Tests (PHP 8.3 / MySQL 8.0)": "success",
+        "Lowest deps (PHP 8.1 / MySQL 5.7)": "success",
+        "Tests (PHP 8.1 / MySQL 8.0)": "success",
+        "Tests (PHP 8.2 / MySQL 8.0)": "success",
+        "Tests (PHP 8.4 / MySQL 8.0)": "success",
+        "Rector": "success",
+        "Psalm": "success",
+        "(PHP 8.5 / MySQL 8.4)": "success",
+        "Infection (PHP 8.5 / MySQL 8.2)": "success"
+      }
     },
-    "passing": false
+    "passing": true
   },
   "parameterized_tests": {
     "frameworks": [
@@ -50,11 +61,11 @@
     "description": "Doctrine DBAL able to try reconnect on MySQL has gone away exceptions",
     "language": "PHP",
     "license": "Apache-2.0",
-    "stars": 212,
+    "stars": 211,
     "forks": 47,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-25T13:44:05Z",
+    "last_push": "2026-09-23T09:05:53Z",
     "days_since_push": 5,
     "default_branch": "3.x"
   },
