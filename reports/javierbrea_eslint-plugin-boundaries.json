@@ -1,15 +1,15 @@
 {
   "repository": "javierbrea/eslint-plugin-boundaries",
-  "verified_at": "2026-08-31T10:54:10.940430+00:00",
+  "verified_at": "2026-10-05T11:31:32.498130+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 94.72%, backed by an independently hosted report",
   "coverage": {
     "service": "Coveralls",
     "coverage": 100.0,
-    "branch": "release",
+    "branch": "renovate/npm-baseline-browser-mapping-vulnerability",
     "is_default_branch": false,
-    "measured_at": "2026-08-10T05:37:42Z",
-    "age_days": 21,
+    "measured_at": "2026-09-10T01:42:47Z",
+    "age_days": 25,
     "source": "https://coveralls.io/github/javierbrea/eslint-plugin-boundaries"
   },
   "mutation_score": 94.72,
@@ -46,11 +46,11 @@
     "description": "Enforce architectural boundaries in your JavaScript and TypeScript projects",
     "language": "TypeScript",
     "license": "MIT",
-    "stars": 972,
+    "stars": 994,
     "forks": 20,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-31T02:04:48Z",
+    "last_push": "2026-10-05T01:37:42Z",
     "days_since_push": 0,
     "default_branch": "master"
   },

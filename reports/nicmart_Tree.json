@@ -1,6 +1,6 @@
 {
   "repository": "nicmart/Tree",
-  "verified_at": "2026-08-26T14:51:13.898216+00:00",
+  "verified_at": "2026-10-05T11:32:18.790203+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2025-11-25T08:41:53.652707Z",
-    "age_days": 274,
+    "age_days": 314,
     "source": "https://codecov.io/gh/nicmart/Tree"
   },
   "mutation_score": 100.0,
@@ -21,24 +21,25 @@
     "threshold_from": "infection.json",
     "workflow": ".github/workflows/integrate.yaml",
     "run": {
-      "run_id": 24399171143,
-      "head_sha": "f265b88b3956f0e49087fc3ebc7bebb7e0e0e839",
-      "created_at": "2026-04-14T12:34:40Z",
+      "run_id": 34842262354,
+      "head_sha": "cce660f6d9c33199212f9ddb654dd0c2ecd76cbd",
+      "created_at": "2026-09-14T12:13:35Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
       "jobs": {
-        "Static Code Analysis (8.0, locked)": "success",
-        "Coding Standards (8.0, locked)": "success",
         "Code Coverage (8.0, locked)": "success",
-        "Dependency Analysis (8.0, locked)": "success",
-        "Mutation Tests (8.0, locked)": "success",
-        "Tests (8.0, locked)": "success",
+        "Tests (8.4, locked)": "success",
         "Tests (8.3, locked)": "success",
+        "Tests (8.6, locked)": "success",
+        "Tests (8.0, locked)": "success",
         "Tests (8.1, locked)": "success",
         "Tests (8.2, locked)": "success",
+        "Mutation Tests (8.0, locked)": "success",
         "Tests (8.5, locked)": "success",
-        "Tests (8.4, locked)": "success"
+        "Dependency Analysis (8.0, locked)": "success",
+        "Coding Standards (8.0, locked)": "success",
+        "Static Code Analysis (8.0, locked)": "success"
       }
     },
     "passing": true
@@ -57,12 +58,12 @@
     "description": "A basic but flexible tree data structure for php and a fluent tree builder implementation.",
     "language": "PHP",
     "license": "MIT",
-    "stars": 577,
+    "stars": 576,
     "forks": 61,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-13T11:53:45Z",
-    "days_since_push": 13,
+    "last_push": "2026-09-28T11:56:02Z",
+    "days_since_push": 6,
     "default_branch": "master"
   },
   "ci": {
