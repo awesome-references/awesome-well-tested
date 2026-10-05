@@ -1,6 +1,6 @@
 {
   "repository": "zio/zio-quill",
-  "verified_at": "2026-08-31T10:56:32.806837+00:00",
+  "verified_at": "2026-10-05T11:33:53.041754+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 83.6% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 83.6,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-08-27T01:41:55.389092Z",
-    "age_days": 4,
+    "measured_at": "2026-10-03T00:36:07.698035Z",
+    "age_days": 2,
     "source": "https://codecov.io/gh/zio/zio-quill"
   },
   "mutation_score": null,
@@ -34,12 +34,14 @@
     "forks": 352,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-27T01:30:21Z",
-    "days_since_push": 4,
+    "last_push": "2026-10-03T00:25:44Z",
+    "days_since_push": 2,
     "default_branch": "master"
   },
   "ci": {
     "github_actions": [
+      "auto-approve.yml",
+      "auto-merge.yml",
       "ci.yml",
       "release-drafter.yml",
       "scala-steward.yml",

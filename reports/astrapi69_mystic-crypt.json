@@ -1,15 +1,15 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-08-31T10:50:49.185225+00:00",
+  "verified_at": "2026-10-05T11:27:15.820741+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 99.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
     "service": "Codecov",
-    "coverage": 99.93,
+    "coverage": 99.83,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-08-29T06:15:08.541307Z",
-    "age_days": 2,
+    "measured_at": "2026-10-04T16:16:46.742126Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
   "mutation_score": 99.0,
@@ -35,16 +35,18 @@
     "description": "Modern Java cryptography library: encryption, password hashing, digital signatures, key agreement and post-quantum algorithms (ML-KEM, ML-DSA, SLH-DSA)",
     "language": "Java",
     "license": "MIT",
-    "stars": 11,
+    "stars": 13,
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-29T06:39:22Z",
-    "days_since_push": 2,
+    "last_push": "2026-10-04T16:40:51Z",
+    "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
+      "codeql.yml",
+      "commit-provenance.yml",
       "gradle.yml",
       "publish.yml",
       "test-badge.yml"
@@ -52,10 +54,11 @@
   },
   "coverage_tools": {
     "jacoco": {
-      "file": "build.gradle",
+      "file": ".github/workflows/gradle.yml",
       "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
-        "jacoco"
+        "jacoco",
+        "jacocoTestReport"
       ]
     }
   },

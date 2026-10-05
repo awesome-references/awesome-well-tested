@@ -1,6 +1,6 @@
 {
   "repository": "tiagoporto/gerador-validador-cpf",
-  "verified_at": "2026-08-31T10:54:30.113146+00:00",
+  "verified_at": "2026-10-05T11:31:42.504849+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 97.19% and mutation score 88.76%, backed by an independently hosted report",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 97.19,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-07-01T15:17:08.383123Z",
-    "age_days": 60,
+    "measured_at": "2026-10-03T20:22:36.191953Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/tiagoporto/gerador-validador-cpf"
   },
   "mutation_score": 88.76,
@@ -45,12 +45,12 @@
     "description": "JS lib to generate and validate CPF (Cadastro de Pessoas F\u00edsicas) of Brazil.",
     "language": "TypeScript",
     "license": "MIT",
-    "stars": 404,
+    "stars": 406,
     "forks": 78,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-01T04:04:37Z",
-    "days_since_push": 30,
+    "last_push": "2026-10-03T20:21:51Z",
+    "days_since_push": 1,
     "default_branch": "main"
   },
   "ci": {

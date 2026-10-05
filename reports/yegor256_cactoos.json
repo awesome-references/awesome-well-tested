@@ -1,14 +1,14 @@
 {
   "repository": "yegor256/cactoos",
-  "verified_at": "2026-08-31T10:53:16.263356+00:00",
+  "verified_at": "2026-10-05T11:30:50.303325+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
-    "coverage": 89.75,
+    "coverage": 89.81,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-08-29T17:25:24.596309Z",
+    "measured_at": "2026-10-04T10:58:53.398740Z",
     "age_days": 1,
     "source": "https://codecov.io/gh/yegor256/cactoos"
   },
@@ -35,11 +35,11 @@
     "description": "Object-Oriented Java primitives, as an alternative to Google Guava and Apache Commons",
     "language": "Java",
     "license": "MIT",
-    "stars": 780,
-    "forks": 176,
+    "stars": 782,
+    "forks": 177,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-30T08:41:57Z",
+    "last_push": "2026-10-04T10:52:53Z",
     "days_since_push": 1,
     "default_branch": "master"
   },

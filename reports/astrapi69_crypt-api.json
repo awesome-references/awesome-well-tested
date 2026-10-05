@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-31T10:50:44.929518+00:00",
+  "verified_at": "2026-10-05T11:27:10.180321+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 100.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 99.39,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2026-08-29T06:16:15.093420Z",
+    "measured_at": "2026-10-03T08:35:26.327704Z",
     "age_days": 2,
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
@@ -34,22 +34,24 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-29T06:37:43Z",
+    "last_push": "2026-10-03T08:36:29Z",
     "days_since_push": 2,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
       "codeql.yml",
-      "gradle.yml"
+      "gradle.yml",
+      "publish.yml"
     ]
   },
   "coverage_tools": {
     "jacoco": {
-      "file": "build.gradle",
+      "file": ".github/workflows/gradle.yml",
       "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
-        "jacoco"
+        "jacoco",
+        "jacocoTestReport"
       ]
     }
   },
