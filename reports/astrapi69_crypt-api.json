@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-08-31T10:50:44.929518+00:00",
+  "verified_at": "2026-10-12T11:56:49.291011+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 100.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 99.39,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2026-08-29T06:16:15.093420Z",
-    "age_days": 2,
+    "measured_at": "2026-10-12T11:01:50.424889Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
   "mutation_score": 100.0,
@@ -30,26 +30,31 @@
     "description": "Interfaces, enums and constants that define the cryptographic contracts shared by crypt-data and mystic-crypt",
     "language": "Java",
     "license": "MIT",
-    "stars": 3,
+    "stars": 2,
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-29T06:37:43Z",
-    "days_since_push": 2,
+    "last_push": "2026-10-12T11:03:17Z",
+    "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
+      "closing-references.yml",
       "codeql.yml",
-      "gradle.yml"
+      "commit-provenance.yml",
+      "gradle.yml",
+      "publish.yml",
+      "release-freeze.yml"
     ]
   },
   "coverage_tools": {
     "jacoco": {
-      "file": "build.gradle",
+      "file": ".github/workflows/gradle.yml",
       "language": "Java/Kotlin/Scala/Groovy",
       "matched_patterns": [
-        "jacoco"
+        "jacoco",
+        "jacocoTestReport"
       ]
     }
   },

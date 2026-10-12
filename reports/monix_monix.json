@@ -1,6 +1,6 @@
 {
   "repository": "monix/monix",
-  "verified_at": "2026-08-26T14:52:15.549016+00:00",
+  "verified_at": "2026-10-12T12:06:25.464019+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 85.0% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": false,
     "measured_at": "2024-01-25T00:48:07.722286Z",
-    "age_days": 944,
+    "age_days": 991,
     "source": "https://codecov.io/gh/monix/monix"
   },
   "mutation_score": null,
@@ -35,19 +35,20 @@
     "description": "Asynchronous, Reactive Programming for Scala and Scala.js.",
     "language": "Scala",
     "license": "Apache-2.0",
-    "stars": 1928,
-    "forks": 243,
+    "stars": 1930,
+    "forks": 244,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-25T06:14:09Z",
-    "days_since_push": 1,
+    "last_push": "2026-10-12T09:28:30Z",
+    "days_since_push": 0,
     "default_branch": "main"
   },
   "ci": {
     "github_actions": [
+      "agent.lock.yml",
+      "agent.md",
       "build.yml",
       "manual-publish.yml",
-      "opencode.yml",
       "renovate.yaml"
     ]
   },

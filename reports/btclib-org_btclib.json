@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-08-31T10:53:24.396870+00:00",
+  "verified_at": "2026-10-12T12:04:32.372414+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "dev",
     "is_default_branch": false,
     "measured_at": "2026-07-29T22:30:57Z",
-    "age_days": 32,
+    "age_days": 74,
     "source": "https://coveralls.io/github/btclib-org/btclib"
   },
   "mutation_score": null,
@@ -40,10 +40,10 @@
     "language": "Python",
     "license": "MIT",
     "stars": 113,
-    "forks": 47,
+    "forks": 48,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-30T18:36:34Z",
+    "last_push": "2026-10-12T11:04:54Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -52,10 +52,11 @@
       "claude-review.yml",
       "codeql.yml",
       "deps-latest.yml",
+      "deps-oldest.yml",
       "docs.yml",
       "fuzz.yml",
       "integration-bitcoind.yml",
-      "integration-hwi.yml",
+      "kernel-differential.yml",
       "links.yml",
       "lint.yml",
       "mutation.yml",
@@ -66,13 +67,14 @@
       "pypi-install.yml",
       "release.yml",
       "scorecard.yml",
+      "sdist-rebuild.yml",
       "test.yml",
       "vendored-vectors.yml"
     ]
   },
   "coverage_tools": {
     "pytest-cov": {
-      "file": ".github/workflows/os-ubuntu.yml",
+      "file": ".github/workflows/deps-latest.yml",
       "language": "Python",
       "matched_patterns": [
         "--cov\\b"
@@ -88,13 +90,6 @@
   },
   "primary_coverage_tool": "pytest-cov",
   "mutation_tools": {
-    "cosmic-ray": {
-      "file": "pyproject.toml",
-      "language": "Python",
-      "matched_patterns": [
-        "[\\\"']cosmic[-_]ray[\\\"']"
-      ]
-    },
     "mutant": {
       "file": ".github/workflows/mutation.yml",
       "language": "Ruby",
