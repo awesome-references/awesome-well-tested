@@ -1,15 +1,15 @@
 {
   "repository": "elixir-mint/mint",
-  "verified_at": "2026-09-07T09:24:18.387164+00:00",
+  "verified_at": "2026-09-14T09:59:48.673996+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 88.1% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 88.35% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Coveralls",
-    "coverage": 88.1,
+    "coverage": 88.35,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-09-06T16:53:37Z",
-    "age_days": 0,
+    "measured_at": "2026-09-07T11:21:48Z",
+    "age_days": 6,
     "source": "https://coveralls.io/github/elixir-mint/mint"
   },
   "mutation_score": null,
@@ -35,12 +35,12 @@
     "description": "Functional HTTP client for Elixir with support for HTTP/1 and HTTP/2 \ud83c\udf31",
     "language": "Elixir",
     "license": "Apache-2.0",
-    "stars": 1418,
+    "stars": 1419,
     "forks": 127,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-06T16:52:30Z",
-    "days_since_push": 0,
+    "last_push": "2026-09-07T11:20:34Z",
+    "days_since_push": 6,
     "default_branch": "main"
   },
   "ci": {

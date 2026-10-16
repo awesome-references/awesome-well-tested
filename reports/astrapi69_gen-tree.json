@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/gen-tree",
-  "verified_at": "2026-08-26T13:01:16.241389+00:00",
+  "verified_at": "2026-09-14T09:53:06.552071+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 98.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -9,20 +9,14 @@
     "branch": "develop",
     "is_default_branch": true,
     "measured_at": "2026-08-24T16:10:36.496980Z",
-    "age_days": 1,
+    "age_days": 20,
     "source": "https://codecov.io/gh/astrapi69/gen-tree"
   },
   "mutation_score": 98.0,
   "mutation_score_source": "readme-badge",
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
-  "parameterized_tests": {
-    "frameworks": [],
-    "detected": false,
-    "language": "Java",
-    "terms_tried": 4,
-    "terms_available": 5
-  },
+  "parameterized_tests": null,
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/gen-tree",
@@ -34,7 +28,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-24T16:09:28Z",
-    "days_since_push": 1,
+    "days_since_push": 20,
     "default_branch": "develop"
   },
   "ci": {

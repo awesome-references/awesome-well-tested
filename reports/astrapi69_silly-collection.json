@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T13:01:29.797596+00:00",
+  "verified_at": "2026-09-14T09:55:20.304043+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,20 +9,14 @@
     "branch": "develop",
     "is_default_branch": true,
     "measured_at": "2026-08-12T17:12:46.286940Z",
-    "age_days": 13,
+    "age_days": 32,
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
-  "parameterized_tests": {
-    "frameworks": [],
-    "detected": false,
-    "language": "Java",
-    "terms_tried": 4,
-    "terms_available": 5
-  },
+  "parameterized_tests": null,
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/silly-collection",
@@ -30,11 +24,11 @@
     "language": "Java",
     "license": "MIT",
     "stars": 9,
-    "forks": 4,
+    "forks": 3,
     "archived": false,
     "fork": false,
     "last_push": "2026-08-12T17:11:23Z",
-    "days_since_push": 13,
+    "days_since_push": 32,
     "default_branch": "develop"
   },
   "ci": {
