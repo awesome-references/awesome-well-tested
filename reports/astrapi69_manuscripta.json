@@ -1,8 +1,8 @@
 {
   "repository": "astrapi69/manuscripta",
-  "verified_at": "2026-10-16T10:31:55.648074+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation score 99.9% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
+  "verified_at": "2026-10-16T11:09:44.724807+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 95.58% and mutation score 85.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
     "coverage": 95.58,
@@ -12,17 +12,44 @@
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/manuscripta"
   },
-  "mutation_score": 99.9,
-  "mutation_score_source": "readme-badge",
+  "mutation_score": 85.0,
+  "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
-  "mutation_ci_enforced": null,
+  "mutation_ci_enforced": {
+    "tool": "mutmut",
+    "threshold": 85.0,
+    "threshold_from": "pyproject.toml",
+    "workflow": ".github/workflows/mutation.yml",
+    "run": {
+      "run_id": 38869457825,
+      "head_sha": "c4af46adf2c707c978543ffaf7147f457f34f35f",
+      "created_at": "2026-10-16T07:47:36Z",
+      "conclusion": "success",
+      "event": "schedule",
+      "passing": true,
+      "jobs": {
+        "mutation testing (nightly)": "success"
+      }
+    },
+    "passing": true
+  },
   "parameterized_tests": {
-    "frameworks": [],
-    "detected": false,
+    "frameworks": [
+      {
+        "framework": "pytest.mark.parametrize",
+        "matches": 76
+      },
+      {
+        "framework": "Hypothesis (property-based)",
+        "matches": 1
+      }
+    ],
+    "detected": true,
     "language": "Python",
     "terms_tried": 4,
     "terms_available": 4,
-    "complete": true
+    "complete": true,
+    "source": "tree-scan"
   },
   "issues": null,
   "metadata": {
@@ -34,7 +61,7 @@
     "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T10:29:20Z",
+    "last_push": "2026-10-16T11:08:15Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -62,13 +89,6 @@
       "matched_patterns": [
         "mutmut",
         "\\[tool\\.mutmut\\]"
-      ]
-    },
-    "mutant": {
-      "file": ".github/workflows/mutation.yml",
-      "language": "Ruby",
-      "matched_patterns": [
-        "\\bmutant\\b"
       ]
     }
   },

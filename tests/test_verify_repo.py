@@ -455,6 +455,21 @@ class MutationThresholds(unittest.TestCase):
             self.assertIsNone(re.search(pattern, self.PYPROJECT_FLOOR, re.IGNORECASE))
 
 
+class MutantDetection(unittest.TestCase):
+    def _matches(self, text):
+        import re
+        return any(re.search(p, text, re.IGNORECASE) for p in vr.MUTATION_TOOLS["mutant"]["patterns"])
+
+    def test_prose_about_a_mutant_is_not_the_mutant_gem(self):
+        # mutmut's nightly workflow says "a mutant that no test killed"; that
+        # is not Ruby's mutant.
+        self.assertFalse(self._matches("# each mutant that no test killed counts against the score\n"))
+
+    def test_an_invocation_is(self):
+        self.assertTrue(self._matches("      - run: bundle exec mutant run --include lib\n"))
+        self.assertTrue(self._matches("gem 'mutant-rspec'\n"))
+
+
 class CoverageProvenance(unittest.TestCase):
     def test_an_unreadable_timestamp_is_not_an_age(self):
         self.assertIsNone(vr._age_in_days("not a date"))

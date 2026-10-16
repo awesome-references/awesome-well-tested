@@ -426,7 +426,10 @@ MUTATION_TOOLS = {
     "mutant": {
         # A Gemfile-only list missed projects that only invoke mutant from CI.
         "files": ["Gemfile", "mutant.yml", ".github/workflows"],
-        "patterns": [r"\bmutant\b", r"mutant[/-]rspec", r"mutant[/-]minitest",
+        # The bare word appears in prose about other tools ("a mutant that
+        # survives"); only an invocation or the gem names count.
+        "patterns": [r"gem\s+[\"']mutant[\"']", r"(?:bundle\s+exec\s+|bin/|\n\s*)mutant\s+(?:run|--)",
+                     r"mutant[/-]rspec", r"mutant[/-]minitest",
                      r"mutant-license"],
         "language": "Ruby",
     },
