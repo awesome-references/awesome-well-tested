@@ -53,13 +53,14 @@ projects publish none. It is not worth mistaking for a Gold one.
 
 ## Python
 
-| Repository                                                                       | Tier                         | Coverage              | Mutation Score | Param. Tests       | Coverage Tool | Mutation Tool |
-| -------------------------------------------------------------------------------- | ---------------------------- | --------------------- | -------------- | ------------------ | ------------- | ------------- |
-| [btclib](https://github.com/btclib-org/btclib)                                   | ![Silver](badges/silver.svg) | 99.93% (dev)          | n/a            | pytest, Hypothesis | pytest-cov    | mutant        |
-| [vera](https://github.com/aallan/vera)                                           | ![Silver](badges/silver.svg) | 95.42%                | n/a            | pytest, Hypothesis | pytest-cov    | mutmut        |
-| [mutmut](https://github.com/boxed/mutmut)                                        | ![Silver](badges/silver.svg) | 81.44% (master, 2024) | n/a            | no                 | Codecov       | mutmut        |
-| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.79%                | n/a            | pytest             | pytest-cov    | mutmut        |
-| [awesome-well-tested](https://github.com/awesome-references/awesome-well-tested) | ![Silver](badges/silver.svg) | 93.54%                | n/a            | no                 | coverage.py   | mutmut        |
+| Repository                                                                       | Tier                         | Coverage              | Mutation Score        | Param. Tests       | Coverage Tool | Mutation Tool |
+| -------------------------------------------------------------------------------- | ---------------------------- | --------------------- | --------------------- | ------------------ | ------------- | ------------- |
+| [btclib](https://github.com/btclib-org/btclib)                                   | ![Silver](badges/silver.svg) | 99.93% (dev)          | n/a                   | pytest, Hypothesis | pytest-cov    | mutant        |
+| [vera](https://github.com/aallan/vera)                                           | ![Silver](badges/silver.svg) | 95.42%                | n/a                   | pytest, Hypothesis | pytest-cov    | mutmut        |
+| [mutmut](https://github.com/boxed/mutmut)                                        | ![Silver](badges/silver.svg) | 81.44% (master, 2024) | n/a                   | no                 | Codecov       | mutmut        |
+| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.79%                | n/a                   | pytest             | pytest-cov    | mutmut        |
+| [awesome-well-tested](https://github.com/awesome-references/awesome-well-tested) | ![Silver](badges/silver.svg) | 93.54%                | n/a                   | no                 | coverage.py   | mutmut        |
+| [manuscripta](https://github.com/astrapi69/manuscripta)                          | ![Silver](badges/silver.svg) | 95.58%                | 99.9% (self-reported) | pytest, Hypothesis | pytest-cov    | mutmut        |
 
 ## JavaScript / TypeScript
 
