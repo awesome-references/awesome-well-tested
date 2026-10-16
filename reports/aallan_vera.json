@@ -1,15 +1,15 @@
 {
   "repository": "aallan/vera",
-  "verified_at": "2026-08-26T14:50:22.691687+00:00",
+  "verified_at": "2026-09-07T09:22:02.711739+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
-    "coverage": 94.78,
+    "coverage": 94.74,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-08-25T07:08:48.925467Z",
-    "age_days": 1,
+    "measured_at": "2026-09-07T07:32:12.102913Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/aallan/vera"
   },
   "mutation_score": null,
@@ -39,12 +39,12 @@
     "description": "Vera: a programming language designed for LLMs to write",
     "language": "Python",
     "license": "MIT",
-    "stars": 411,
-    "forks": 26,
+    "stars": 413,
+    "forks": 27,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-25T07:07:23Z",
-    "days_since_push": 1,
+    "last_push": "2026-09-07T07:35:54Z",
+    "days_since_push": 0,
     "default_branch": "main"
   },
   "ci": {
