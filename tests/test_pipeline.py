@@ -25,6 +25,28 @@ BUILD_JACOCO = "plugins { id 'jacoco' }\njacocoTestReport { }\n"
 BUILD_PIT_THRESHOLD = (
     "plugins { id 'info.solidsoft.pitest' }\npitest { mutationThreshold = 85 }\n"
 )
+WORKFLOW_MUTMUT_NIGHTLY = (
+    "name: mutation\non:\n  schedule:\n    - cron: '0 3 * * *'\n"
+    "  workflow_dispatch: {}\njobs:\n  mutation:\n    steps:\n"
+    "      - run: poetry run mutmut run\n"
+    "      - run: poetry run python scripts/check_mutation_thresholds.py\n"
+)
+PYPROJECT_MUTMUT_FLOOR = (
+    "[tool.pytest.ini_options]\naddopts = \"--cov=widget\"\n\n"
+    "[tool.mutmut]\npaths_to_mutate = [\"src/widget/core.py\"]\n\n"
+    "[tool.widget.mutation_thresholds]\ndefault = 85\n"
+    "\"src/widget/core.py\" = 95\n"
+)
+
+
+class ScheduledRunsAPI(FakeAPI):
+    """A repository whose mutation workflow has scheduled runs but no push runs."""
+
+    def get(self, url):
+        if "/actions/workflows/" in url and "event=push" in url:
+            self._record(url)
+            return {"workflow_runs": []}
+        return super().get(url)
 
 
 class Verifying(unittest.TestCase):
@@ -128,10 +150,73 @@ class Verifying(unittest.TestCase):
         self.assertEqual(report["tier"], "silver")
         self.assertIn("days old", report["mutation_ci_enforced"]["run"]["why"])
 
-    def test_the_run_is_requested_for_pushes_only(self):
+    def test_a_scheduled_mutmut_run_behind_a_pyproject_floor_reaches_gold(self):
+        # mutmut has no threshold flag; the floor is the `default` of the
+        # thresholds table the project's own check reads, and a nightly that
+        # fails below it has no push runs, only scheduled ones.
+        from datetime import datetime, timedelta, timezone
+
+        created_at = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+        api = ScheduledRunsAPI(
+            metadata=repo_metadata(),
+            tree=[".github/workflows/mutation.yml", "pyproject.toml"],
+            workflows={"mutation.yml": WORKFLOW_MUTMUT_NIGHTLY},
+            files={"pyproject.toml": PYPROJECT_MUTMUT_FLOOR},
+            coverage={"codecov": codecov(95.0)},
+            runs={"workflow_runs": [
+                {"id": 9, "conclusion": "success", "created_at": created_at,
+                 "event": "schedule"}
+            ]},
+            jobs={"jobs": [{"name": "mutation", "conclusion": "success"}]},
+        )
+        report = self.verify(api)
+        self.assertEqual(report["tier"], "gold")
+        self.assertEqual(report["mutation_score"], 85.0)
+        self.assertEqual(report["mutation_score_source"], "ci-threshold")
+        self.assertEqual(report["mutation_ci_enforced"]["tool"], "mutmut")
+        self.assertEqual(report["mutation_ci_enforced"]["threshold_from"], "pyproject.toml")
+        events = [u.split("event=", 1)[1].split("&", 1)[0]
+                  for u in api.asked if "/actions/workflows/" in u]
+        self.assertEqual(events, ["push", "schedule"])
+
+    def test_a_scheduled_run_that_failed_proves_nothing(self):
+        from datetime import datetime, timedelta, timezone
+
+        created_at = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+        api = ScheduledRunsAPI(
+            metadata=repo_metadata(),
+            tree=[".github/workflows/mutation.yml", "pyproject.toml"],
+            workflows={"mutation.yml": WORKFLOW_MUTMUT_NIGHTLY},
+            files={"pyproject.toml": PYPROJECT_MUTMUT_FLOOR},
+            coverage={"codecov": codecov(95.0)},
+            runs={"workflow_runs": [
+                {"id": 9, "conclusion": "failure", "created_at": created_at,
+                 "event": "schedule"}
+            ]},
+            jobs={"jobs": [{"name": "mutation", "conclusion": "failure"}]},
+        )
+        report = self.verify(api)
+        self.assertEqual(report["tier"], "silver")
+        self.assertIsNone(report["mutation_score"])
+
+    def test_a_mutmut_project_without_a_declared_floor_stays_silver(self):
+        api = self.api(
+            tree=[".github/workflows/mutation.yml", "pyproject.toml"],
+            workflows={"mutation.yml": WORKFLOW_MUTMUT_NIGHTLY},
+            files={"pyproject.toml": "[tool.mutmut]\npaths_to_mutate = [\"src\"]\n"},
+            coverage={"codecov": codecov(95.0)},
+            runs={"workflow_runs": [{"id": 9, "conclusion": "success"}]},
+            jobs={"jobs": [{"name": "mutation", "conclusion": "success"}]},
+        )
+        report = self.verify(api)
+        self.assertEqual(report["tier"], "silver")
+        self.assertIsNone(report["mutation_ci_enforced"])
+
+    def test_the_run_is_requested_for_pushes_first(self):
         # "branch" matches a run's head branch, so a fork's pull_request run on
         # a branch also called main would otherwise count as a run of this
-        # repository's default branch.
+        # repository's default branch. Scheduled and dispatched runs are asked
+        # for only when there is no push run.
         api = self.enforced()
         self.verify(api)
         runs_urls = [u for u in api.asked if "/actions/workflows/" in u]

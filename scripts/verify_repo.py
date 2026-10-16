@@ -96,6 +96,15 @@ MUTATION_THRESHOLDS = {
     "stryker": STRYKER_THRESHOLDS,
     "stryker-net": STRYKER_THRESHOLDS,
     "stryker4s": STRYKER_THRESHOLDS,
+    # mutmut has no threshold of its own; a project enforces one with a check
+    # of its own in the workflow that runs mutmut. Two documented ways to say
+    # what that check fails below (CONTRIBUTING): a `default` under a
+    # `mutation_thresholds` table in pyproject.toml (the table the check
+    # reads), or MUTATION_THRESHOLD in the invoking workflow.
+    "mutmut": [
+        r"mutation_thresholds\]\s*\n\s*default\s*=\s*(\d+(?:\.\d+)?)",
+        r"MUTATION_THRESHOLD\s*[:=]\s*[\"']?(\d+(?:\.\d+)?)",
+    ],
 }
 
 # Bounds on the parameterized-test check: enough evidence, or enough spent
@@ -1318,19 +1327,25 @@ def workflow_run_is_wholly_green(
     success - conservative, and wrong in the direction that withholds a tier
     rather than granting one that was not earned.
     """
-    # event=push matters: "branch" matches a run's HEAD branch, so a
+    # The event matters: "branch" matches a run's HEAD branch, so a
     # pull_request run from a fork whose branch is also called main would
     # otherwise be read as a run of this repository's default branch - having
-    # executed the fork's code and the fork's threshold.
-    runs = api.get(
-        f"{API_BASE}/repos/{owner}/{repo}/actions/workflows/"
-        f"{urllib.parse.quote(workflow_file)}/runs"
-        f"?branch={urllib.parse.quote(branch)}&event=push&per_page=1&status=completed"
-    )
-    if not isinstance(runs, dict) or not runs.get("workflow_runs"):
+    # executed the fork's code and the fork's threshold. Pushes first; a
+    # mutation workflow that only runs on a schedule or by hand never has a
+    # push run, and both of those events execute only this repository's own
+    # default branch, so they are as good as a push.
+    run = None
+    for event in ("push", "schedule", "workflow_dispatch"):
+        runs = api.get(
+            f"{API_BASE}/repos/{owner}/{repo}/actions/workflows/"
+            f"{urllib.parse.quote(workflow_file)}/runs"
+            f"?branch={urllib.parse.quote(branch)}&event={event}&per_page=1&status=completed"
+        )
+        if isinstance(runs, dict) and runs.get("workflow_runs"):
+            run = runs["workflow_runs"][0]
+            break
+    if run is None:
         return None
-
-    run = runs["workflow_runs"][0]
     detail = {
         "run_id": run.get("id"),
         "head_sha": run.get("head_sha"),

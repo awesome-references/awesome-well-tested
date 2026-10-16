@@ -418,6 +418,42 @@ class MutationThresholds(unittest.TestCase):
         for pattern in vr.MUTATION_THRESHOLDS["pit"]:
             self.assertIsNone(re.search(pattern, '  "minMsi": 92,', re.IGNORECASE))
 
+    PYPROJECT_FLOOR = (
+        "[tool.mutmut]\npaths_to_mutate = [\"src/x.py\"]\n\n"
+        "[tool.acme.mutation_thresholds]\n# the floor the nightly fails below\n"
+        "default = 85\n\"src/x.py\" = 95\n"
+    )
+
+    def _mutmut_floor(self, text):
+        import re
+        for pattern in vr.MUTATION_THRESHOLDS["mutmut"]:
+            match = re.search(pattern, vr.strip_comments(text), re.IGNORECASE)
+            if match:
+                return match.group(1)
+        return None
+
+    def test_mutmut_reads_the_default_of_a_thresholds_table(self):
+        # mutmut has no threshold flag; the convention is the `default` of the
+        # table the project's own check reads (CONTRIBUTING).
+        self.assertEqual(self._mutmut_floor(self.PYPROJECT_FLOOR), "85")
+
+    def test_mutmut_reads_a_floor_declared_in_the_workflow(self):
+        self.assertEqual(self._mutmut_floor("env:\n  MUTATION_THRESHOLD: 80\n"), "80")
+
+    def test_a_per_module_entry_is_not_the_floor(self):
+        # Only `default` is the floor; a single module's 95 says nothing about
+        # the others.
+        table = "[tool.acme.mutation_thresholds]\n\"src/x.py\" = 95\n"
+        self.assertIsNone(self._mutmut_floor(table))
+
+    def test_a_mutmut_pattern_does_not_read_a_pit_setting(self):
+        self.assertIsNone(self._mutmut_floor("pitest { mutationThreshold = 85 }"))
+
+    def test_a_pit_pattern_does_not_read_a_mutmut_table(self):
+        import re
+        for pattern in vr.MUTATION_THRESHOLDS["pit"]:
+            self.assertIsNone(re.search(pattern, self.PYPROJECT_FLOOR, re.IGNORECASE))
+
 
 class CoverageProvenance(unittest.TestCase):
     def test_an_unreadable_timestamp_is_not_an_age(self):
