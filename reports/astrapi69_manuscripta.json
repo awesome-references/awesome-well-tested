@@ -1,0 +1,81 @@
+{
+  "repository": "astrapi69/manuscripta",
+  "verified_at": "2026-10-16T10:31:55.648074+00:00",
+  "tier": "silver",
+  "tier_reason": "Mutation score 99.9% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
+  "coverage": {
+    "service": "Codecov",
+    "coverage": 95.58,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-10-16T10:11:43.972497Z",
+    "age_days": 0,
+    "source": "https://codecov.io/gh/astrapi69/manuscripta"
+  },
+  "mutation_score": 99.9,
+  "mutation_score_source": "readme-badge",
+  "mutation_dashboard": null,
+  "mutation_ci_enforced": null,
+  "parameterized_tests": {
+    "frameworks": [],
+    "detected": false,
+    "language": "Python",
+    "terms_tried": 4,
+    "terms_available": 4,
+    "complete": true
+  },
+  "issues": null,
+  "metadata": {
+    "full_name": "astrapi69/manuscripta",
+    "description": "Book production pipeline for authors and self-publishers",
+    "language": "Python",
+    "license": "MIT",
+    "stars": 1,
+    "forks": 0,
+    "archived": false,
+    "fork": false,
+    "last_push": "2026-10-16T10:29:20Z",
+    "days_since_push": 0,
+    "default_branch": "main"
+  },
+  "ci": {
+    "github_actions": [
+      "mutation.yml",
+      "tests.yml"
+    ]
+  },
+  "coverage_tools": {
+    "pytest-cov": {
+      "file": ".github/workflows/tests.yml",
+      "language": "Python",
+      "matched_patterns": [
+        "--cov\\b",
+        "--cov="
+      ]
+    }
+  },
+  "primary_coverage_tool": "pytest-cov",
+  "mutation_tools": {
+    "mutmut": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "mutmut",
+        "\\[tool\\.mutmut\\]"
+      ]
+    },
+    "mutant": {
+      "file": ".github/workflows/mutation.yml",
+      "language": "Ruby",
+      "matched_patterns": [
+        "\\bmutant\\b"
+      ]
+    }
+  },
+  "badges": [
+    {
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/manuscripta"
+    }
+  ]
+}
