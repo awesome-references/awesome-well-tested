@@ -1,6 +1,6 @@
 {
   "repository": "iommirocks/iommi",
-  "verified_at": "2026-09-21T09:57:05.532319+00:00",
+  "verified_at": "2026-09-28T11:06:47.452288+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 97.76,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-09-20T23:14:13.204067Z",
+    "measured_at": "2026-09-28T08:32:40.702946Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/iommirocks/iommi"
   },
@@ -39,7 +39,7 @@
     "forks": 67,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-20T23:13:20Z",
+    "last_push": "2026-09-28T08:31:46Z",
     "days_since_push": 0,
     "default_branch": "master"
   },

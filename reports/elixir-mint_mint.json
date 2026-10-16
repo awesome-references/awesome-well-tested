@@ -1,14 +1,14 @@
 {
   "repository": "elixir-mint/mint",
-  "verified_at": "2026-09-21T09:58:33.147215+00:00",
+  "verified_at": "2026-09-28T11:08:33.601460+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 88.47% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 90.51% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Coveralls",
-    "coverage": 88.47,
-    "branch": "use-hpax-protocol-resize",
-    "is_default_branch": false,
-    "measured_at": "2026-09-21T08:47:43Z",
+    "coverage": 90.51,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-09-28T09:58:20Z",
     "age_days": 0,
     "source": "https://coveralls.io/github/elixir-mint/mint"
   },
@@ -36,10 +36,10 @@
     "language": "Elixir",
     "license": "Apache-2.0",
     "stars": 1419,
-    "forks": 127,
+    "forks": 128,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-21T08:46:14Z",
+    "last_push": "2026-09-28T09:56:53Z",
     "days_since_push": 0,
     "default_branch": "main"
   },

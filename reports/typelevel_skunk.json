@@ -1,6 +1,6 @@
 {
   "repository": "typelevel/skunk",
-  "verified_at": "2026-09-21T09:58:52.801336+00:00",
+  "verified_at": "2026-09-28T11:08:53.265745+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 85.16% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 85.16,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-09-08T13:20:14.815725Z",
-    "age_days": 12,
+    "measured_at": "2026-09-27T09:27:01.608977Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/typelevel/skunk"
   },
   "mutation_score": null,
@@ -39,7 +39,7 @@
     "forks": 175,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-19T08:21:54Z",
+    "last_push": "2026-09-25T12:25:49Z",
     "days_since_push": 2,
     "default_branch": "main"
   },

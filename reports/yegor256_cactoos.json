@@ -1,15 +1,15 @@
 {
   "repository": "yegor256/cactoos",
-  "verified_at": "2026-09-21T09:56:47.351439+00:00",
+  "verified_at": "2026-09-28T11:06:24.953211+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
-    "coverage": 89.76,
+    "coverage": 89.79,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-09-21T09:32:36.668901Z",
-    "age_days": 0,
+    "measured_at": "2026-09-27T06:32:55.417375Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/yegor256/cactoos"
   },
   "mutation_score": null,
@@ -36,11 +36,11 @@
     "language": "Java",
     "license": "MIT",
     "stars": 782,
-    "forks": 176,
+    "forks": 177,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-21T09:26:20Z",
-    "days_since_push": 0,
+    "last_push": "2026-09-27T06:25:34Z",
+    "days_since_push": 1,
     "default_branch": "master"
   },
   "ci": {

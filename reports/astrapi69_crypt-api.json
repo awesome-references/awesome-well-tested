@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-09-21T09:55:05.932823+00:00",
+  "verified_at": "2026-09-28T10:53:02.092158+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 100.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": false,
     "measured_at": "2026-09-07T07:27:06.470632Z",
-    "age_days": 14,
+    "age_days": 21,
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
   "mutation_score": 100.0,
@@ -35,7 +35,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-09-07T07:30:00Z",
-    "days_since_push": 14,
+    "days_since_push": 21,
     "default_branch": "develop"
   },
   "ci": {
