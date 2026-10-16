@@ -1,8 +1,8 @@
 {
   "repository": "astrapi69/crypt-api",
-  "verified_at": "2026-10-16T11:41:36.963683+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation score 100.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
+  "verified_at": "2026-10-16T12:01:36.455251+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 99.39% and mutation score 95.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
     "coverage": 99.39,
@@ -12,8 +12,8 @@
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/crypt-api"
   },
-  "mutation_score": 100.0,
-  "mutation_score_source": "readme-badge",
+  "mutation_score": 95.0,
+  "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
   "mutation_ci_enforced": {
     "tool": "pit",
@@ -21,15 +21,17 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 38894153189,
-      "head_sha": "f2066e38dd32f78f8824d7f69194e8dce32c6e2e",
-      "created_at": "2026-10-16T11:29:51Z",
-      "conclusion": "failure",
+      "run_id": 38896446621,
+      "head_sha": "319b4aefeafa9da49921e98c9a4598c5f5341c60",
+      "created_at": "2026-10-16T11:50:31Z",
+      "conclusion": "success",
       "event": "push",
-      "passing": false,
-      "why": "run concluded failure"
+      "passing": true,
+      "jobs": {
+        "build": "success"
+      }
     },
-    "passing": false
+    "passing": true
   },
   "parameterized_tests": {
     "frameworks": [
@@ -55,7 +57,7 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T11:29:50Z",
+    "last_push": "2026-10-16T11:50:31Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
