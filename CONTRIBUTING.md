@@ -45,7 +45,11 @@ their own README, and the list would have no way to tell the difference.
 Parameterized and property-based tests are detected and shown in their own
 column, but they do not change the tier. They are recorded because coverage
 cannot express them: a function exercised across many inputs is tested harder
-than one exercised once.
+than one exercised once. Code search finds them; when it answers zero for
+every marker, which it does for a repository it has not indexed, the script
+reads the test files from the tree instead (at most 150, chosen by directory
+name and the language's source extension) and counts the files that carry a
+marker.
 
 ### What does NOT qualify?
 

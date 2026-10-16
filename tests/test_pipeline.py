@@ -340,6 +340,86 @@ class Verifying(unittest.TestCase):
         frameworks = self.verify(api)["parameterized_tests"]["frameworks"]
         self.assertEqual([f["framework"] for f in frameworks], ["JUnit 5 @ParameterizedTest"])
 
+    def test_a_repository_the_search_has_not_indexed_is_read_from_its_tree(self):
+        # Code search answers zero for every marker when it has not indexed the
+        # repository; the test files in the tree carry the markers all the same.
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml", "pyproject.toml",
+                  "tests/unit/test_a.py", "tests/unit/test_b.py", "src/pkg/core.py"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={
+                "pyproject.toml": "[tool.pytest.ini_options]\naddopts = \"--cov=pkg\"\n",
+                "tests/unit/test_a.py": "@pytest.mark.parametrize('x', [1])\ndef test_a(x): pass\n",
+                "tests/unit/test_b.py": "from hypothesis import given\n",
+                "src/pkg/core.py": "parametrize = None  # not a test file\n",
+            },
+            coverage={"codecov": codecov(91.0)},
+            searches={},
+        )
+        report = self.verify(api)
+        found = report["parameterized_tests"]
+        self.assertTrue(found["detected"])
+        self.assertEqual(found["source"], "tree-scan")
+        self.assertEqual(
+            [(f["framework"], f["matches"]) for f in found["frameworks"]],
+            [("pytest.mark.parametrize", 1), ("Hypothesis (property-based)", 1)],
+        )
+        fetched = [u for u in api.asked if "/contents/" in u and "tests%2Funit" in u
+                   or "/contents/tests/unit" in u]
+        self.assertEqual(len(fetched), 2)
+        self.assertFalse(any("src%2Fpkg" in u or "/contents/src/pkg" in u for u in api.asked))
+
+    def test_a_search_hit_skips_the_tree(self):
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml", "pyproject.toml", "tests/test_a.py"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"pyproject.toml": "[tool.pytest.ini_options]\naddopts = \"--cov=pkg\"\n",
+                   "tests/test_a.py": "@pytest.mark.parametrize\n"},
+            coverage={"codecov": codecov(91.0)},
+            searches={"parametrize": 14},
+        )
+        report = self.verify(api)
+        self.assertEqual(report["parameterized_tests"]["source"], "code-search")
+        self.assertFalse(any("tests" in u and "/contents/" in u for u in api.asked))
+
+    def test_the_tree_scan_is_bounded(self):
+        original = vr.MAX_TREE_SCAN_FILES
+        vr.MAX_TREE_SCAN_FILES = 2
+        self.addCleanup(setattr, vr, "MAX_TREE_SCAN_FILES", original)
+        files = {f"tests/test_{i}.py": "nothing here\n" for i in range(5)}
+        api = self.api(
+            metadata=repo_metadata(language="Python"),
+            tree=[".github/workflows/ci.yml", "pyproject.toml", *files],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"pyproject.toml": "[tool.pytest.ini_options]\naddopts = \"--cov=pkg\"\n", **files},
+            coverage={"codecov": codecov(91.0)},
+            searches={},
+        )
+        report = self.verify(api)
+        self.assertFalse(report["parameterized_tests"]["detected"])
+        fetched = [u for u in api.asked if "/contents/tests" in u or "contents/tests%2F" in u]
+        self.assertEqual(len(fetched), 2)
+
+    def test_only_the_language_s_own_test_files_are_read(self):
+        api = self.api(
+            metadata=repo_metadata(language="Java"),
+            tree=[".github/workflows/ci.yml", "build.gradle",
+                  "src/test/java/pkg/CoreTest.java", "tests/helper.py"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"build.gradle": BUILD_JACOCO,
+                   "src/test/java/pkg/CoreTest.java": "@ParameterizedTest\nvoid t() {}\n",
+                   "tests/helper.py": "ParameterizedTest = 1\n"},
+            coverage={"codecov": codecov(91.0)},
+            searches={},
+        )
+        report = self.verify(api)
+        found = report["parameterized_tests"]
+        self.assertEqual([f["framework"] for f in found["frameworks"]],
+                         ["JUnit 5 @ParameterizedTest"])
+        self.assertFalse(any("helper.py" in u for u in api.asked))
+
     def test_the_search_is_bounded(self):
         # Two hits is enough; four queries is all it will spend looking.
         api = self.api(
