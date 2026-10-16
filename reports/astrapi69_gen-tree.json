@@ -1,27 +1,46 @@
 {
   "repository": "astrapi69/gen-tree",
-  "verified_at": "2026-08-26T13:01:16.241389+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation score 98.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
+  "verified_at": "2026-10-16T11:40:44.514392+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 98.01% and mutation score 95.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
     "coverage": 98.01,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-08-24T16:10:36.496980Z",
-    "age_days": 1,
+    "measured_at": "2026-10-16T11:15:07.799666Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/gen-tree"
   },
-  "mutation_score": 98.0,
-  "mutation_score_source": "readme-badge",
+  "mutation_score": 95.0,
+  "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
-  "mutation_ci_enforced": null,
+  "mutation_ci_enforced": {
+    "tool": "pit",
+    "threshold": 95.0,
+    "threshold_from": "build.gradle",
+    "workflow": ".github/workflows/gradle.yml",
+    "run": {
+      "run_id": 38894210576,
+      "head_sha": "e919de2f4ee9b4079b3d5063ae4b26e8a374ed89",
+      "created_at": "2026-10-16T11:30:19Z",
+      "conclusion": "success",
+      "event": "push",
+      "passing": true,
+      "jobs": {
+        "build": "success"
+      }
+    },
+    "passing": true
+  },
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
     "language": "Java",
     "terms_tried": 4,
-    "terms_available": 5
+    "terms_available": 5,
+    "complete": true,
+    "source": "tree-scan"
   },
   "issues": null,
   "metadata": {
@@ -33,8 +52,8 @@
     "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-24T16:09:28Z",
-    "days_since_push": 1,
+    "last_push": "2026-10-16T11:30:19Z",
+    "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
