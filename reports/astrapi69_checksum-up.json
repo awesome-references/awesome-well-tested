@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/checksum-up",
-  "verified_at": "2026-08-26T13:01:43.392934+00:00",
+  "verified_at": "2026-10-12T12:04:03.122791+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 96.42% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,21 +8,15 @@
     "coverage": 96.42,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2024-08-13T15:08:55.053073Z",
-    "age_days": 742,
+    "measured_at": "2026-10-12T11:01:49.663276Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/checksum-up"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
-  "parameterized_tests": {
-    "frameworks": [],
-    "detected": false,
-    "language": "Java",
-    "terms_tried": 4,
-    "terms_available": 5
-  },
+  "parameterized_tests": null,
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/checksum-up",
@@ -33,13 +27,17 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-19T11:17:33Z",
-    "days_since_push": 7,
+    "last_push": "2026-10-12T11:03:23Z",
+    "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
-      "gradle.yml"
+      "closing-references.yml",
+      "commit-provenance.yml",
+      "gradle.yml",
+      "publish.yml",
+      "release-freeze.yml"
     ]
   },
   "coverage_tools": {

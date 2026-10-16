@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-10-05T11:27:15.820741+00:00",
+  "verified_at": "2026-10-12T11:56:53.037864+00:00",
   "tier": "silver",
   "tier_reason": "Mutation score 99.0% is self-reported; Gold needs either a score hosted by a service the repository does not control, or a mutation run that CI performs and fails below a threshold",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 99.83,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-04T16:16:46.742126Z",
+    "measured_at": "2026-10-12T11:01:30.369910Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
@@ -39,16 +39,18 @@
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-04T16:40:51Z",
+    "last_push": "2026-10-12T11:02:48Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
+      "closing-references.yml",
       "codeql.yml",
       "commit-provenance.yml",
       "gradle.yml",
       "publish.yml",
+      "release-freeze.yml",
       "test-badge.yml"
     ]
   },

@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-10-05T11:31:02.430762+00:00",
+  "verified_at": "2026-10-12T12:04:32.372414+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "dev",
     "is_default_branch": false,
     "measured_at": "2026-07-29T22:30:57Z",
-    "age_days": 67,
+    "age_days": 74,
     "source": "https://coveralls.io/github/btclib-org/btclib"
   },
   "mutation_score": null,
@@ -43,7 +43,7 @@
     "forks": 48,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-04T22:15:35Z",
+    "last_push": "2026-10-12T11:04:54Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -56,6 +56,7 @@
       "docs.yml",
       "fuzz.yml",
       "integration-bitcoind.yml",
+      "kernel-differential.yml",
       "links.yml",
       "lint.yml",
       "mutation.yml",
