@@ -1,6 +1,6 @@
 {
   "repository": "awesome-references/awesome-well-tested",
-  "verified_at": "2026-09-14T09:58:27.439478+00:00",
+  "verified_at": "2026-09-21T09:57:08.320903+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "main",
     "is_default_branch": true,
     "measured_at": "2026-09-05T07:53:24Z",
-    "age_days": 9,
+    "age_days": 16,
     "source": "https://coveralls.io/github/awesome-references/awesome-well-tested"
   },
   "mutation_score": null,
@@ -30,12 +30,12 @@
     "description": "A curated list of open-source repositories with outstanding test quality, verified by coverage metrics and mutation testing.",
     "language": "Python",
     "license": "CC0-1.0",
-    "stars": 0,
+    "stars": 1,
     "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-07T09:24:51Z",
-    "days_since_push": 7,
+    "last_push": "2026-09-14T10:00:12Z",
+    "days_since_push": 6,
     "default_branch": "main"
   },
   "ci": {

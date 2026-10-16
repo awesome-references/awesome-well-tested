@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-09-14T09:58:12.869853+00:00",
+  "verified_at": "2026-09-21T09:56:54.737055+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "dev",
     "is_default_branch": false,
     "measured_at": "2026-07-29T22:30:57Z",
-    "age_days": 46,
+    "age_days": 53,
     "source": "https://coveralls.io/github/btclib-org/btclib"
   },
   "mutation_score": null,
@@ -40,10 +40,10 @@
     "language": "Python",
     "license": "MIT",
     "stars": 113,
-    "forks": 47,
+    "forks": 46,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-14T09:33:35Z",
+    "last_push": "2026-09-21T07:35:56Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -75,7 +75,7 @@
   },
   "coverage_tools": {
     "pytest-cov": {
-      "file": ".github/workflows/deps-oldest.yml",
+      "file": ".github/workflows/deps-latest.yml",
       "language": "Python",
       "matched_patterns": [
         "--cov\\b"
