@@ -1,6 +1,6 @@
 {
   "repository": "checkstyle/checkstyle",
-  "verified_at": "2026-09-28T11:06:19.245243+00:00",
+  "verified_at": "2026-10-05T11:30:43.095199+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.42% and mutation score 99.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2024-01-29T18:16:38.731575Z",
-    "age_days": 972,
+    "age_days": 979,
     "source": "https://codecov.io/gh/checkstyle/checkstyle"
   },
   "mutation_score": 99.0,
@@ -80,11 +80,11 @@
     "description": "Checkstyle is a development tool to help programmers write Java code that adheres to a coding standard. By default it supports the Google Java Style Guide and Sun Code Conventions, but is highly configurable. It can be invoked with an ANT task and a command line program.",
     "language": "Java",
     "license": "LGPL-2.1",
-    "stars": 9577,
-    "forks": 4255,
+    "stars": 9589,
+    "forks": 4265,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-28T10:58:13Z",
+    "last_push": "2026-10-05T11:19:14Z",
     "days_since_push": 0,
     "default_branch": "master"
   },

@@ -1,6 +1,6 @@
 {
   "repository": "nicmart/Tree",
-  "verified_at": "2026-09-28T11:07:46.028301+00:00",
+  "verified_at": "2026-10-05T11:32:18.790203+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 100.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2025-11-25T08:41:53.652707Z",
-    "age_days": 307,
+    "age_days": 314,
     "source": "https://codecov.io/gh/nicmart/Tree"
   },
   "mutation_score": 100.0,
@@ -62,7 +62,7 @@
     "forks": 61,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-21T11:53:25Z",
+    "last_push": "2026-09-28T11:56:02Z",
     "days_since_push": 6,
     "default_branch": "master"
   },

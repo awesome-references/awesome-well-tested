@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-09-28T10:59:48.906990+00:00",
+  "verified_at": "2026-10-05T11:29:54.529525+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "develop",
     "is_default_branch": true,
     "measured_at": "2026-08-12T17:12:46.286940Z",
-    "age_days": 46,
+    "age_days": 53,
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
   "mutation_score": null,
@@ -28,7 +28,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-08-12T17:11:23Z",
-    "days_since_push": 46,
+    "days_since_push": 53,
     "default_branch": "develop"
   },
   "ci": {

@@ -1,14 +1,14 @@
 {
   "repository": "yegor256/cactoos",
-  "verified_at": "2026-09-28T11:06:24.953211+00:00",
+  "verified_at": "2026-10-05T11:30:50.303325+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
-    "coverage": 89.79,
+    "coverage": 89.81,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-09-27T06:32:55.417375Z",
+    "measured_at": "2026-10-04T10:58:53.398740Z",
     "age_days": 1,
     "source": "https://codecov.io/gh/yegor256/cactoos"
   },
@@ -39,7 +39,7 @@
     "forks": 177,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-27T06:25:34Z",
+    "last_push": "2026-10-04T10:52:53Z",
     "days_since_push": 1,
     "default_branch": "master"
   },

@@ -1,6 +1,6 @@
 {
   "repository": "rrousselGit/riverpod",
-  "verified_at": "2026-08-26T14:52:18.585738+00:00",
+  "verified_at": "2026-10-05T11:33:44.195267+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 95.45% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2024-12-09T21:28:04.833393Z",
-    "age_days": 624,
+    "age_days": 664,
     "source": "https://codecov.io/gh/rrousselGit/riverpod"
   },
   "mutation_score": null,
@@ -30,12 +30,12 @@
     "description": "A reactive caching and data-binding framework.   Riverpod makes working with asynchronous code a breeze.",
     "language": "Dart",
     "license": "MIT",
-    "stars": 7372,
-    "forks": 1111,
+    "stars": 7395,
+    "forks": 1116,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-24T21:54:31Z",
-    "days_since_push": 1,
+    "last_push": "2026-10-05T09:07:21Z",
+    "days_since_push": 0,
     "default_branch": "master"
   },
   "ci": {
@@ -43,6 +43,7 @@
       "build.yml",
       "changelog.yml",
       "check_generation.yml",
+      "question.yml",
       "riverpod_lint.yml"
     ]
   },

@@ -42,14 +42,14 @@ projects publish none. It is not worth mistaking for a Gold one.
 | ----------------------------------------------------------------- | ---------------------------- | --------------------- | -------------------- | ------------ | ------------- | ------------- |
 | [crypt-data](https://github.com/astrapi69/crypt-data)             | ![Silver](badges/silver.svg) | 100%                  | 100% (self-reported) | JUnit 5      | JaCoCo        | PIT           |
 | [crypt-api](https://github.com/astrapi69/crypt-api)               | ![Silver](badges/silver.svg) | 99.39% (master)       | 100% (self-reported) | no           | JaCoCo        | PIT           |
-| [mystic-crypt](https://github.com/astrapi69/mystic-crypt)         | ![Silver](badges/silver.svg) | 99.94%                | 99% (self-reported)  | JUnit 5      | JaCoCo        | PIT           |
+| [mystic-crypt](https://github.com/astrapi69/mystic-crypt)         | ![Silver](badges/silver.svg) | 99.83%                | 99% (self-reported)  | JUnit 5      | JaCoCo        | PIT           |
 | [gen-tree](https://github.com/astrapi69/gen-tree)                 | ![Silver](badges/silver.svg) | 98.01%                | 98% (self-reported)  | n/a          | JaCoCo        | PIT           |
 | [silly-collection](https://github.com/astrapi69/silly-collection) | ![Bronze](badges/bronze.svg) | 98.08%                | n/a                  | n/a          | JaCoCo        | n/a           |
-| [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.42% (master, 2024) | n/a                  | n/a          | JaCoCo        | n/a           |
+| [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.42% (master, 2024) | n/a                  | no           | JaCoCo        | n/a           |
 | [randomizer](https://github.com/astrapi69/randomizer)             | ![Bronze](badges/bronze.svg) | 88.44%                | n/a                  | no           | JaCoCo        | n/a           |
 | [iextrading4j](https://github.com/WojciechZankowski/iextrading4j) | ![Silver](badges/silver.svg) | 96.25% (2024)         | n/a                  | no           | JaCoCo        | PIT           |
 | [checkstyle](https://github.com/checkstyle/checkstyle)            | ![Gold](badges/gold.svg)     | 99.42% (2024)         | >= 99%               | JUnit 5      | JaCoCo        | PIT           |
-| [cactoos](https://github.com/yegor256/cactoos)                    | ![Silver](badges/silver.svg) | 89.79%                | n/a                  | JUnit 5      | JaCoCo        | PIT           |
+| [cactoos](https://github.com/yegor256/cactoos)                    | ![Silver](badges/silver.svg) | 89.81%                | n/a                  | JUnit 5      | JaCoCo        | PIT           |
 
 ## Python
 
@@ -58,7 +58,7 @@ projects publish none. It is not worth mistaking for a Gold one.
 | [btclib](https://github.com/btclib-org/btclib)                                   | ![Silver](badges/silver.svg) | 99.93% (dev)          | n/a            | pytest, Hypothesis | pytest-cov    | mutant        |
 | [vera](https://github.com/aallan/vera)                                           | ![Silver](badges/silver.svg) | 95.34%                | n/a            | pytest, Hypothesis | pytest-cov    | mutmut        |
 | [mutmut](https://github.com/boxed/mutmut)                                        | ![Silver](badges/silver.svg) | 81.44% (master, 2024) | n/a            | no                 | Codecov       | mutmut        |
-| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.76%                | n/a            | pytest             | pytest-cov    | mutmut        |
+| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.78%                | n/a            | pytest             | pytest-cov    | mutmut        |
 | [awesome-well-tested](https://github.com/awesome-references/awesome-well-tested) | ![Silver](badges/silver.svg) | 93.54%                | n/a            | no                 | coverage.py   | mutmut        |
 
 ## JavaScript / TypeScript
@@ -100,7 +100,7 @@ projects publish none. It is not worth mistaking for a Gold one.
 | Repository                                                                           | Tier                         | Coverage                          | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
 | ------------------------------------------------------------------------------------ | ---------------------------- | --------------------------------- | -------------- | ------------ | ------------- | ------------- |
 | [Porter](https://github.com/ScriptFUSION/Porter)                                     | ![Gold](badges/gold.svg)     | 100%                              | 97.91%         | PHPUnit      | PHPUnit       | Infection     |
-| [doctrine-mysql-come-back](https://github.com/facile-it/doctrine-mysql-come-back)    | ![Gold](badges/gold.svg)     | 100% (master)                     | >= 90%         | PHPUnit      | PHPUnit       | Infection     |
+| [doctrine-mysql-come-back](https://github.com/facile-it/doctrine-mysql-come-back)    | ![Silver](badges/silver.svg) | 100% (master)                     | n/a            | PHPUnit      | PHPUnit       | Infection     |
 | [Locale](https://github.com/giggsey/Locale)                                          | ![Silver](badges/silver.svg) | 100% (1.9, 2020)                  | n/a            | PHPUnit      | PHPUnit       | Infection     |
 | [Tree](https://github.com/nicmart/Tree)                                              | ![Gold](badges/gold.svg)     | 100%                              | >= 100%        | no           | PHPUnit       | Infection     |
 | [CalendR](https://github.com/yohang/CalendR)                                         | ![Gold](badges/gold.svg)     | 100%                              | 100%           | PHPUnit      | Coveralls     | Infection     |
@@ -118,7 +118,7 @@ projects publish none. It is not worth mistaking for a Gold one.
 | [Auth0.swift](https://github.com/auth0/Auth0.swift)                   | Swift       | ![Bronze](badges/bronze.svg) | 94.59%                         | n/a            | no                          | slather          | n/a           |
 | [benchee](https://github.com/bencheeorg/benchee)                      | Elixir      | ![Bronze](badges/bronze.svg) | 93.95% (fix/491-tag-increaser) | n/a            | no                          | excoveralls      | n/a           |
 | [NuRaft](https://github.com/eBay/NuRaft)                              | C++         | ![Bronze](badges/bronze.svg) | 88.11% (2025)                  | n/a            | no                          | Codecov          | n/a           |
-| [mint](https://github.com/elixir-mint/mint)                           | Elixir      | ![Bronze](badges/bronze.svg) | 90.51%                         | n/a            | StreamData property testing | excoveralls      | n/a           |
+| [mint](https://github.com/elixir-mint/mint)                           | Elixir      | ![Bronze](badges/bronze.svg) | 90.66% (http2-followups)       | n/a            | StreamData property testing | excoveralls      | n/a           |
 | [rapidcheck](https://github.com/emil-e/rapidcheck)                    | C++         | ![Bronze](badges/bronze.svg) | 89.79% (dev, 2016)             | n/a            | RapidCheck (property-based) | Coveralls        | n/a           |
 | [flutter_rust_bridge](https://github.com/fzyzcjy/flutter_rust_bridge) | Dart        | ![Bronze](badges/bronze.svg) | 99.22%                         | n/a            | no                          | cargo-llvm-cov   | n/a           |
 | [kotlin-jdsl](https://github.com/line/kotlin-jdsl)                    | Kotlin      | ![Bronze](badges/bronze.svg) | 91.38%                         | n/a            | JUnit 5                     | Kover            | n/a           |

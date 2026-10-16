@@ -1,6 +1,6 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-09-28T11:06:33.627190+00:00",
+  "verified_at": "2026-10-05T11:31:02.430762+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "dev",
     "is_default_branch": false,
     "measured_at": "2026-07-29T22:30:57Z",
-    "age_days": 60,
+    "age_days": 67,
     "source": "https://coveralls.io/github/btclib-org/btclib"
   },
   "mutation_score": null,
@@ -40,10 +40,10 @@
     "language": "Python",
     "license": "MIT",
     "stars": 113,
-    "forks": 45,
+    "forks": 48,
     "archived": false,
     "fork": false,
-    "last_push": "2026-09-27T22:32:43Z",
+    "last_push": "2026-10-04T22:15:35Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
