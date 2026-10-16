@@ -31,7 +31,12 @@ count:
 - a mutation run your CI performs behind a threshold that fails the build -
   `mutationThreshold` for PIT, `minMsi` for Infection, `break` for Stryker. If
   the build is green, the score is at least that, and somebody else's machine
-  checked it.
+  checked it. mutmut has no threshold of its own: say what your own check
+  fails below either as `default = N` under a `mutation_thresholds` table in
+  `pyproject.toml` (the table that check reads) or as `MUTATION_THRESHOLD: N`
+  in the workflow that runs mutmut, and make that workflow fail below it. A
+  workflow that runs only on a schedule or by hand counts like one that runs
+  on push: its latest completed run on the default branch is the one read.
 
 A score read off a Shields.io badge is recorded and shown, marked
 `self-reported`, but it does not reach Gold. Anyone can type a percentage into
