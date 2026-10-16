@@ -545,6 +545,25 @@ MUTATION_BADGE_PATTERN = (
 # Keys are the language GitHub reports for the repository. Go is deliberately
 # absent: table-driven tests are idiomatic there but use no keyword of their
 # own, so any marker would be guesswork.
+# Code search is the cheap way to find the markers below, but GitHub only
+# indexes repositories it has decided to index, and a small or freshly pushed
+# one answers zero hits for everything. When the search finds nothing, the
+# test files are read from the tree instead: at most this many, chosen by
+# directory name and the language's source extension.
+MAX_TREE_SCAN_FILES = 150
+TEST_DIR_NAMES = {"test", "tests", "spec", "specs", "__tests__", "testing"}
+TEST_FILE_EXTENSIONS = {
+    "Python": (".py",),
+    "Java": (".java",),
+    "Kotlin": (".kt", ".kts"),
+    "Scala": (".scala",),
+    "Groovy": (".groovy",),
+    "JavaScript": (".js", ".jsx", ".mjs", ".cjs"),
+    "TypeScript": (".ts", ".tsx"),
+    "Rust": (".rs",),
+    "Go": (".go",),
+}
+
 PARAMETERIZED_MARKERS = {
     "Java": [
         ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
@@ -1070,19 +1089,75 @@ def check_badges(readme_content: str | None) -> list[dict]:
     return found
 
 
+def _test_files_in_tree(tree: set, language: str | None) -> list[str]:
+    """The paths in ``tree`` that look like test sources of ``language``."""
+    extensions = TEST_FILE_EXTENSIONS.get(language or "")
+    chosen = []
+    for path in sorted(tree):
+        parts = path.lower().split("/")
+        if not any(part in TEST_DIR_NAMES for part in parts[:-1]):
+            continue
+        if extensions and not path.lower().endswith(extensions):
+            continue
+        chosen.append(path)
+    return chosen[:MAX_TREE_SCAN_FILES]
+
+
+def scan_tree_for_parameterized_tests(
+    api: GitHubAPI,
+    owner: str,
+    repo: str,
+    branch: str,
+    tree: set,
+    markers: list[tuple[str, str]],
+    language: str | None,
+) -> list[dict]:
+    """Read the test files and count, per marker, the files that carry it.
+
+    The fallback for a repository the code search has not indexed. Each file is
+    one contents request, so the number of files is capped; the count is
+    files, not occurrences, which is the same unit code search reports.
+    """
+    counts: dict[str, int] = {}
+    for path in _test_files_in_tree(tree, language):
+        text = api.get_text(
+            f"{API_BASE}/repos/{owner}/{repo}/contents/"
+            f"{urllib.parse.quote(path)}?ref={urllib.parse.quote(branch)}"
+        )
+        if not text:
+            continue
+        for term, label in markers:
+            if term in text:
+                counts[label] = counts.get(label, 0) + 1
+    seen: set[str] = set()
+    found = []
+    for _term, label in markers:
+        if label in counts and label not in seen:
+            seen.add(label)
+            found.append({"framework": label, "matches": counts[label]})
+    return found
+
+
 def check_parameterized_tests(
     api: GitHubAPI,
     owner: str,
     repo: str,
     language: str | None,
     throttle: float = 2.5,
+    *,
+    tree: set | None = None,
+    branch: str | None = None,
 ) -> dict | None:
     """Detect parameterized or property-based tests in a repository.
 
     Uses repository-scoped code search, which needs an authenticated token and
     is rate limited far more tightly than the rest of the API, hence the
     throttle between queries. Returns None when the check could not run, which
-    is not the same as finding nothing.
+    is not the same as finding nothing. When every search answers zero and the
+    tree is known, the test files are read from the tree instead (see
+    scan_tree_for_parameterized_tests): code search only answers for
+    repositories it has indexed, and "none found" for an unindexed one would
+    be a lie as well.
     """
     if not api.authenticated:
         return None
@@ -1121,6 +1196,13 @@ def check_parameterized_tests(
         # Nothing was learned, and "none found" would be a lie.
         return None
 
+    source = "code-search"
+    if complete and not frameworks and tree and branch:
+        frameworks = scan_tree_for_parameterized_tests(
+            api, owner, repo, branch, tree, markers, language
+        )
+        source = "tree-scan"
+
     return {
         "frameworks": frameworks,
         "detected": bool(frameworks),
@@ -1128,6 +1210,7 @@ def check_parameterized_tests(
         "terms_tried": queries,
         "terms_available": len(markers),
         "complete": complete,
+        "source": source,
     }
 
 
@@ -1779,7 +1862,9 @@ def verify_repository(
         say("  Parameterized tests: carried forward from the last verification.")
     else:
         say("  Checking for parameterized tests...")
-        parameterized = check_parameterized_tests(api, owner, repo, metadata.get("language"))
+        parameterized = check_parameterized_tests(
+            api, owner, repo, metadata.get("language"), tree=tree, branch=branch
+        )
         if parameterized is None:
             say("  Skipped: needs a token, a language with known markers, and search quota.")
 
