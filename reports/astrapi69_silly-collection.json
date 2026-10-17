@@ -1,27 +1,89 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-08-26T13:01:29.797596+00:00",
-  "tier": "bronze",
-  "tier_reason": "Coverage 98.08% with CI reporting, no mutation testing configured",
+  "verified_at": "2026-10-17T11:09:45.339495+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 98.08% and mutation score 85.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
     "coverage": 98.08,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-08-12T17:12:46.286940Z",
-    "age_days": 13,
+    "measured_at": "2026-10-17T10:36:58.297103Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
-  "mutation_score": null,
-  "mutation_score_source": null,
+  "mutation_score": 85.0,
+  "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
-  "mutation_ci_enforced": null,
+  "mutation_ci_enforced": {
+    "tool": "pit",
+    "threshold": 85.0,
+    "threshold_from": "build.gradle",
+    "workflow": ".github/workflows/gradle.yml",
+    "run": {
+      "run_id": 39025692633,
+      "head_sha": "6774dbb4d006b88a0f1c4b15ed18a93dec3c3310",
+      "created_at": "2026-10-17T10:38:53Z",
+      "conclusion": "success",
+      "event": "push",
+      "passing": true,
+      "jobs": {
+        "build": "success"
+      }
+    },
+    "passing": true
+  },
+  "mutation_context": {
+    "run_id": 39025692633,
+    "artifact_id": 12098990072,
+    "expires_at": "2027-01-15T10:38:53Z",
+    "valid": true,
+    "context": {
+      "schema_version": "1.0",
+      "repository": "astrapi69/silly-collection",
+      "commit": "6774dbb4d006b88a0f1c4b15ed18a93dec3c3310",
+      "measured_at": "2026-10-17T10:40:18Z",
+      "run_type": "full",
+      "tool": {
+        "name": "pitest",
+        "version": "1.30.0"
+      },
+      "mutators": [
+        "DEFAULTS"
+      ],
+      "scope": {
+        "targets": [
+          "io.github.astrapi69.collection.*"
+        ],
+        "excludes": []
+      },
+      "results": {
+        "total": 721,
+        "killed": 625,
+        "survived": 94,
+        "no_coverage": 2,
+        "timed_out": 0,
+        "errors": 0,
+        "skipped": 0,
+        "equivalent": 0
+      },
+      "metrics": {
+        "tool_score": 0.8669,
+        "strict_score": 0.8669,
+        "test_strength": 0.8693,
+        "timeout_ratio": 0.0,
+        "error_ratio": 0.0
+      }
+    }
+  },
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
     "language": "Java",
     "terms_tried": 4,
-    "terms_available": 5
+    "terms_available": 8,
+    "complete": true,
+    "source": "tree-scan"
   },
   "issues": null,
   "metadata": {
@@ -29,17 +91,18 @@
     "description": "Utility library for collections, comparators and iterator classes",
     "language": "Java",
     "license": "MIT",
-    "stars": 9,
-    "forks": 4,
+    "stars": 10,
+    "forks": 3,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-12T17:11:23Z",
-    "days_since_push": 13,
+    "last_push": "2026-10-17T10:38:53Z",
+    "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
-      "gradle.yml"
+      "gradle.yml",
+      "publish.yml"
     ]
   },
   "coverage_tools": {
@@ -52,7 +115,15 @@
     }
   },
   "primary_coverage_tool": "jacoco",
-  "mutation_tools": null,
+  "mutation_tools": {
+    "pit": {
+      "file": "build.gradle",
+      "language": "Java/Kotlin/Scala/Groovy",
+      "matched_patterns": [
+        "pitest"
+      ]
+    }
+  },
   "badges": [
     {
       "service": "Codecov",
