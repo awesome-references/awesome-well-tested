@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Write a mutation-context.json from a mutation tool's own report.
+"""Write a mutation-context.json from a mutation tool's own report, and check one.
 
 A mutation score without its context is not comparable (docs/mutation-context.md).
 This script reads what the tool wrote, PIT's ``mutations.xml`` or mutmut's
 ``mutmut-cicd-stats.json``, and writes the context file the schema in
 ``docs/mutation-context.schema.json`` describes: the result breakdown in one
-vocabulary for both tools, and the derived metrics.
+vocabulary for both tools, and the derived metrics. ``validate`` is the other
+direction: verify_repo.py uses it on a context file it has downloaded from a
+repository's CI run before showing anything the file says.
 
 The two scores it derives answer different questions:
 
@@ -23,11 +25,13 @@ import argparse
 import datetime as _dt
 import json
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 SCHEMA_VERSION = "1.0"
+SCHEMA_PATH = Path(__file__).resolve().parent.parent / "docs" / "mutation-context.schema.json"
 
 # PIT counts these four as "detected"; the score it prints is their share.
 PIT_DETECTED = ("KILLED", "TIMED_OUT", "MEMORY_ERROR", "RUN_ERROR")
@@ -146,6 +150,73 @@ def build_context(*, tool, tool_version, results, mutators, repository, commit,
         "results": dict(results),
         "metrics": metrics(results, tool),
     }
+
+
+def load_schema():
+    with open(SCHEMA_PATH, encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def _has_type(value, name):
+    """JSON Schema's types on Python's values: a bool is not a number, an int is."""
+    if name == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if name == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if name == "boolean":
+        return isinstance(value, bool)
+    return isinstance(value, {"object": dict, "array": list, "string": str,
+                              "null": type(None)}[name])
+
+
+def validate(instance, schema=None, path="$"):
+    """The ways ``instance`` fails ``schema``, one message each; empty means valid.
+
+    A context file reaches the verifier as a download from somebody else's CI
+    run, so everything it says is checked before any of it is shown. This
+    reads the keywords the context schema uses - type, required, properties,
+    additionalProperties: false, items, const, enum, minimum, maximum,
+    minLength, pattern - and no others: ``format`` is not checked. Every
+    problem is reported, not only the first, so a rejected file can be fixed
+    in one go. A jsonschema dependency for one small file is not worth the
+    install step in scripts that are otherwise standard library only.
+    """
+    if schema is None:
+        schema = load_schema()
+    problems = []
+    if "const" in schema and instance != schema["const"]:
+        problems.append(f"{path} must be {schema['const']!r}, is {instance!r}")
+    if "enum" in schema and instance not in schema["enum"]:
+        problems.append(f"{path} must be one of {schema['enum']}, is {instance!r}")
+    expected = schema.get("type")
+    if expected is not None and not _has_type(instance, expected):
+        problems.append(f"{path} must be {expected}, is {type(instance).__name__}")
+        return problems
+    if isinstance(instance, dict):
+        for key in schema.get("required", ()):
+            if key not in instance:
+                problems.append(f"{path} lacks {key!r}")
+        properties = schema.get("properties", {})
+        for key, value in instance.items():
+            if key in properties:
+                problems.extend(validate(value, properties[key], f"{path}.{key}"))
+            elif schema.get("additionalProperties") is False:
+                problems.append(f"{path} has an unknown key {key!r}")
+    elif isinstance(instance, list):
+        if "items" in schema:
+            for index, item in enumerate(instance):
+                problems.extend(validate(item, schema["items"], f"{path}[{index}]"))
+    elif isinstance(instance, str):
+        if len(instance) < schema.get("minLength", 0):
+            problems.append(f"{path} is shorter than {schema['minLength']} characters")
+        if "pattern" in schema and not re.search(schema["pattern"], instance):
+            problems.append(f"{path} does not match {schema['pattern']}")
+    elif isinstance(instance, (int, float)) and not isinstance(instance, bool):
+        if "minimum" in schema and instance < schema["minimum"]:
+            problems.append(f"{path} is below {schema['minimum']}")
+        if "maximum" in schema and instance > schema["maximum"]:
+            problems.append(f"{path} is above {schema['maximum']}")
+    return problems
 
 
 def now_utc():

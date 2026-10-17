@@ -7,8 +7,10 @@ permanent. Everything here guards that boundary.
 
 import io
 import json
+import types
 import unittest
 import urllib.error
+import urllib.request
 
 from _support import verify_repo as vr
 
@@ -17,7 +19,9 @@ class FakeResponse:
     def __init__(self, payload):
         self.payload = payload
 
-    def read(self):
+    def read(self, limit=-1):
+        if isinstance(self.payload, bytes):
+            return self.payload[:limit] if limit >= 0 else self.payload
         return json.dumps(self.payload).encode()
 
     def __enter__(self):
@@ -128,6 +132,59 @@ class CoverageServiceStatuses(Retrying):
         api = self.client([http_error(503)] * 4)
         with self.assertRaises(vr.VerificationIncomplete):
             api.get_public_json("https://api.codecov.io/x")
+
+
+class ArtifactDownloads(Retrying):
+    """An artifact zip is served through a 302 to a blob store, which answers
+    403 when the GitHub token travels along (seen live on 2026-10-17)."""
+
+    def redirected(self, from_url, to_url):
+        handler = vr._TokenlessRedirect()
+        req = urllib.request.Request(
+            from_url, headers={"Authorization": "token t", "User-Agent": "awesome-well-tested"}
+        )
+        return handler.redirect_request(req, None, 302, "Found", {}, to_url)
+
+    def test_the_token_does_not_follow_a_redirect_to_another_host(self):
+        new = self.redirected(
+            "https://api.github.com/repos/a/b/actions/artifacts/1/zip",
+            "https://productionresultssa7.blob.core.windows.net/x/y.zip?sig=abc",
+        )
+        self.assertIsNone(new.get_header("Authorization"))
+        self.assertEqual(new.get_header("User-agent"), "awesome-well-tested")
+        self.assertEqual(new.full_url, "https://productionresultssa7.blob.core.windows.net/x/y.zip?sig=abc")
+
+    def test_the_token_stays_with_github(self):
+        # A renamed repository redirects within api.github.com, and that hop
+        # still needs the token.
+        new = self.redirected(
+            "https://api.github.com/repos/a/b/actions/artifacts/1/zip",
+            "https://api.github.com/repos/a/c/actions/artifacts/1/zip",
+        )
+        self.assertEqual(new.get_header("Authorization"), "token t")
+
+    def download_client(self, responses):
+        api = self.client(responses)
+        # The download goes through an opener of its own; point it at the
+        # same fake the other requests use.
+        self._patch(vr.urllib.request, "build_opener",
+                    lambda *handlers: types.SimpleNamespace(open=vr.urllib.request.urlopen))
+        return api
+
+    def test_a_download_is_retried_like_any_other_request(self):
+        api = self.download_client([http_error(502), b"PK\x03\x04"])
+        self.assertEqual(api.download("https://example.invalid/zip"), b"PK\x03\x04")
+        self.assertEqual(len(self.calls), 2)
+
+    def test_an_expired_artifact_s_404_is_an_answer(self):
+        api = self.download_client([http_error(404)])
+        self.assertIsNone(api.download("https://example.invalid/zip"))
+
+    def test_a_download_reads_one_byte_past_the_bound(self):
+        # So the caller can tell "too large" from "exactly the limit".
+        api = self.download_client([b"x" * (vr.MAX_ARTIFACT_BYTES + 50)])
+        self.assertEqual(len(api.download("https://example.invalid/zip")),
+                         vr.MAX_ARTIFACT_BYTES + 1)
 
 
 class TreeLookups(unittest.TestCase):

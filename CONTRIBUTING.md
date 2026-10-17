@@ -47,8 +47,16 @@ excludes, how the tool counted timeouts and errors, and how many survivors the
 repository argues to be equivalent. [docs/mutation-context.md](docs/mutation-context.md)
 lists those fields, shows how to get them out of PIT and mutmut, and defines a
 `mutation-context.json` that CI can write from the run that enforced the floor
-(`scripts/mutation_context.py` converts either tool's report). The verifier does
-not read that file yet; the list shows the floor.
+(`scripts/mutation_context.py` converts either tool's report). Upload it from
+that run as an artifact named `mutation-context` and the verifier reads it
+from there: the row then shows the measured strict score and the mutator set
+next to the floor, `>= 95% (99.3% strict, DEFAULTS)`, and the report carries
+the whole file under `mutation_context`. The file has to match the schema and
+name the repository, the run's commit and a full run, or it is not used. It
+never decides the tier, which rests on the floor and the green run; without
+it, or once the artifact has expired, the row shows the floor. A
+`mutation-context.json` committed to the repository is ignored: that is
+self-reported again.
 
 Parameterized and property-based tests are detected and shown in their own
 column, but they do not change the tier. They are recorded because coverage

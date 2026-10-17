@@ -18,6 +18,36 @@ from _support import mutation_context as mc
 
 HERE = Path(__file__).resolve().parent
 SCHEMA = HERE.parent / "docs" / "mutation-context.schema.json"
+DOCS = HERE.parent / "docs" / "mutation-context.md"
+
+
+def docs_example():
+    """The crypt-data file the page quotes, so the documentation is a tested fixture."""
+    text = DOCS.read_text(encoding="utf-8")
+    return json.loads(text.split("```json\n", 1)[1].split("```", 1)[0])
+
+
+def _set(path, value):
+    """A builder that puts ``value`` at a dotted ``path`` of the example."""
+    def build(context):
+        target = context
+        keys = path.split(".")
+        for key in keys[:-1]:
+            target = target[key]
+        target[keys[-1]] = value
+        return context
+    return build
+
+
+def _drop(path):
+    def build(context):
+        target = context
+        keys = path.split(".")
+        for key in keys[:-1]:
+            target = target[key]
+        del target[keys[-1]]
+        return context
+    return build
 
 
 def pit_xml(statuses, mutator="org.pitest.mutationtest.engine.gregor.mutators.MathMutator"):
@@ -94,6 +124,57 @@ EQUIVALENT_CASES = [
     ("more-than-survived", 3, 4, "exceeds the survivors"),
     ("negative", 3, -1, "must not be negative"),
 ]
+
+
+# (id, how the docs example is changed, a fragment of the expected problem or None)
+VALIDATION_CASES = [
+    ("the-worked-example", lambda context: context, None),
+    ("an-integer-where-a-number-is-allowed", _set("metrics.error_ratio", 0), None),
+    ("optional-blocks-are-allowed", _set("coverage", {"line": 0.98, "branch": 0.91}), None),
+    ("not-an-object", lambda context: [context], "$ must be object, is list"),
+    ("another-schema-version", _set("schema_version", "2.0"), "$.schema_version must be '1.0'"),
+    ("a-missing-key", _drop("results"), "$ lacks 'results'"),
+    ("a-missing-nested-key", _drop("metrics.strict_score"), "$.metrics lacks 'strict_score'"),
+    ("an-unknown-key", _set("comment", "nice run"), "$ has an unknown key 'comment'"),
+    ("an-unknown-nested-key", _set("results.mutated", 3), "$.results has an unknown key 'mutated'"),
+    ("a-run-type-outside-the-enum", _set("run_type", "partial"), "$.run_type must be one of"),
+    ("a-tool-outside-the-enum", _set("tool.name", "pit"), "$.tool.name must be one of"),
+    ("a-negative-count", _set("results.killed", -1), "$.results.killed is below 0"),
+    ("a-fractional-count", _set("results.killed", 1.5), "$.results.killed must be integer, is float"),
+    ("a-boolean-is-not-a-count", _set("results.killed", True), "$.results.killed must be integer, is bool"),
+    ("a-score-above-one", _set("metrics.strict_score", 99.3), "$.metrics.strict_score is above 1"),
+    ("a-score-as-text", _set("metrics.tool_score", "0.99"), "$.metrics.tool_score must be number, is str"),
+    ("a-short-commit", _set("commit", "e16b9"), "$.commit is shorter than 7 characters"),
+    ("a-repository-without-an-owner", _set("repository", "crypt-data"), "$.repository does not match"),
+    ("mutators-as-text", _set("mutators", "DEFAULTS"), "$.mutators must be array, is str"),
+    ("a-mutator-that-is-not-text", _set("mutators", ["DEFAULTS", 7]), "$.mutators[1] must be string, is int"),
+    ("an-optional-block-is-checked-too", _set("coverage", {"line": 1.5}), "$.coverage.line is above 1"),
+    ("an-optional-block-with-an-unknown-key", _set("size", {"files": 3}), "$.size has an unknown key 'files'"),
+]
+
+
+class Validation(unittest.TestCase):
+    """verify_repo shows what a downloaded context file says, so the file is
+    checked first. The schema's own keywords, not a reimplementation of them."""
+
+    def test_the_schema_s_keywords_are_enforced(self):
+        for case_id, build, expected in VALIDATION_CASES:
+            with self.subTest(case_id):
+                problems = mc.validate(build(docs_example()))
+                if expected is None:
+                    self.assertEqual(problems, [])
+                else:
+                    self.assertTrue(any(expected in p for p in problems), problems)
+
+    def test_every_problem_is_reported_not_only_the_first(self):
+        # A rejected file should be fixable in one go.
+        context = _set("run_type", "partial")(_set("results.killed", -1)(docs_example()))
+        problems = mc.validate(context)
+        self.assertEqual(len(problems), 2, problems)
+
+    def test_the_schema_on_disk_is_the_default(self):
+        self.assertEqual(mc.load_schema()["properties"]["schema_version"]["const"],
+                         mc.SCHEMA_VERSION)
 
 
 class ReadingPit(unittest.TestCase):
@@ -210,6 +291,23 @@ class TheContextFile(unittest.TestCase):
         self.assertEqual(context["metrics"]["strict_score"], 0.5)
         self.assertEqual(context["measured_at"], "2026-10-16T11:52:00Z")
         self.assertEqual(context["run_type"], "full")
+
+    def test_the_converter_s_output_validates(self):
+        # The writer and the reader of the file have to agree, or every
+        # artifact written by the documented CI step would be rejected.
+        for case_id, argv in (
+            ("pit", ["--pit", str(self.pit), "--tool-version", "1.30.0",
+                     "--mutators", "DEFAULTS"]),
+            ("mutmut-with-equivalents", ["--mutmut", str(self.root / "stats.json"),
+                                         "--tool-version", "3.5.0", "--equivalent", "1"]),
+        ):
+            with self.subTest(case_id):
+                (self.root / "stats.json").write_text(
+                    json.dumps({"killed": 4, "survived": 2, "total": 6}), encoding="utf-8")
+                code, out, _ = self.run_main(*argv, "--repo", "acme/widget",
+                                             "--commit", "0123456abc")
+                self.assertEqual(code, 0)
+                self.assertEqual(mc.validate(json.loads(out)), [])
 
     def test_mutators_default_to_the_ones_found(self):
         code, out, _ = self.run_main("--pit", str(self.pit), "--tool-version", "1.30.0",

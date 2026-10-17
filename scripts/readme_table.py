@@ -51,6 +51,9 @@ STALE_AFTER_DAYS = 365
 
 # Long enough to identify a branch, short enough not to set the table width.
 BRANCH_NAME_LIMIT = 24
+# How many mutator names fit next to a floor before they would set the table
+# width instead; past that the count stands in for the names.
+MUTATOR_NAMES_LIMIT = 2
 
 PARAMETERIZED_SHORT = {
     "JUnit 5 @ParameterizedTest": "JUnit 5",
@@ -167,6 +170,31 @@ def row_full_name(row: list[str]) -> str | None:
     return f"{match.group(1)}/{match.group(2)}" if match else None
 
 
+def measured_behind_the_floor(record: dict | None) -> str | None:
+    """What the enforcing run's own context file adds to a floor, for the cell.
+
+    The floor is the evidence and the tier rests on it. The file comes from
+    the same run - verify_repo reads it from the run's artifact, never from
+    the tree - and says what was measured: the strict score, which counts
+    timeouts and errors against the suite, and the mutator set, without which
+    two 95s are not the same number. mutmut has no mutator set to name, so
+    its cell carries the score alone.
+    """
+    if not (isinstance(record, dict) and record.get("valid")):
+        return None
+    context = record.get("context") or {}
+    strict = (context.get("metrics") or {}).get("strict_score")
+    if not isinstance(strict, (int, float)) or isinstance(strict, bool):
+        return None
+    parts = [f"{round(100 * strict, 1):g}% strict"]
+    mutators = [m for m in context.get("mutators") or [] if isinstance(m, str)]
+    if len(mutators) > MUTATOR_NAMES_LIMIT:
+        parts.append(f"{len(mutators)} mutators")
+    elif mutators:
+        parts.append(", ".join(mutators))
+    return ", ".join(parts)
+
+
 def cells_from_report(report: dict, header: list[str]) -> dict:
     """The cell values a report implies, keyed by column heading."""
     tier = report["tier"]
@@ -207,6 +235,9 @@ def cells_from_report(report: dict, header: list[str]) -> dict:
         score_text = f"{score:g}% (self-reported)"
     elif report.get("mutation_score_source") == "ci-threshold":
         score_text = f">= {score:g}%"
+        measured = measured_behind_the_floor(report.get("mutation_context"))
+        if measured:
+            score_text += f" ({measured})"
     else:
         score_text = f"{score:g}%"
 

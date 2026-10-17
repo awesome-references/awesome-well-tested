@@ -276,7 +276,8 @@ count, parameterized test count) complete the picture when a repository has them
   cache are for the developer's loop.
 - **Archive the artefacts.** `mutations.xml` or `mutmut-cicd-stats.json` plus
   `mutation-context.json`, uploaded with `actions/upload-artifact` from the run that enforced
-  the threshold:
+  the threshold. The context file goes in an artifact of its own, named `mutation-context`,
+  because that name is what the list looks for and the tool's report can be large:
 
   ```yaml
   - name: Mutation context
@@ -291,11 +292,17 @@ count, parameterized test count) complete the picture when a repository has them
       path: build/reports/pitest/mutation-context.json
   ```
 
-- **What the list reads today and tomorrow.** Today the verifier reads the floor the build
-  enforces and shows `>= N%`. A context file committed to the repository would be self-reported
-  again, the thing Silver is for. A context file that is an artefact of a green run on the
-  default branch is evidence of the same grade as the threshold, and the verifier can show the
-  measured score, the mutator set and the test strength next to the floor. That is #24.
+- **What the list reads.** The verifier reads the floor the build enforces and shows `>= N%`.
+  When the green run on the default branch that enforced it carries an artifact named
+  `mutation-context`, the verifier downloads it from that run, checks the one JSON file in it
+  against the schema and against the run - it has to name this repository, the commit the run
+  built and a full run - and then records the file in the report under `mutation_context` and
+  shows the strict score and the mutator set next to the floor:
+  `>= 95% (99.3% strict, DEFAULTS)` (a mutmut row has no mutator set to name). The tier rests
+  on the floor and the green run alone; the file adds what was measured behind them and
+  nothing else. An artifact that is missing, has expired (90 days by default) or does not
+  validate changes nothing: the row shows the floor. A context file committed to the
+  repository is self-reported again, the thing Silver is for, and is ignored on purpose.
 
 ## Summary
 

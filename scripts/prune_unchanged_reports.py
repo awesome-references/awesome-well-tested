@@ -58,6 +58,13 @@ def strip_volatile(report: dict) -> dict:
         for key in VOLATILE_COVERAGE:
             coverage.pop(key, None)
 
+    # A report written before the verifier read context artifacts has no
+    # mutation_context key; one written after has it, null for most entries.
+    # "Nothing found" is the same answer either way. A context that appears,
+    # changes or expires is a real change and is kept.
+    if stripped.get("mutation_context") is None:
+        stripped.pop("mutation_context", None)
+
     parameterized = stripped.get("parameterized_tests")
     if isinstance(parameterized, dict):
         # These describe the run that looked, not the repository it looked at.

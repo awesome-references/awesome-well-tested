@@ -7,6 +7,7 @@ the list claims to hold and would otherwise be trusting to luck.
 import unittest
 
 from _support import prune_unchanged_reports as prune, verify_repo as vr
+from _support.fakes import HEAD_SHA, mutation_context_file
 
 
 class MutationBadge(unittest.TestCase):
@@ -398,6 +399,43 @@ class GoldNeedsEvidence(unittest.TestCase):
         self.assertIn("self-reported", reason)
 
 
+# (id, what the file says differently, the run it came from, a fragment of why
+#  it is not evidence about that run, or None when it is)
+CONTEXT_PROVENANCE_CASES = [
+    ("the-run-s-own-file", {}, {"head_sha": HEAD_SHA}, None),
+    ("a-short-commit", {"commit": HEAD_SHA[:7]}, {"head_sha": HEAD_SHA}, None),
+    ("the-name-in-another-case", {"repository": "ACME/Widget"}, {"head_sha": HEAD_SHA}, None),
+    ("a-run-without-a-sha-cannot-be-checked-against", {"commit": "0" * 40}, {}, None),
+    ("another-commit", {"commit": "0" * 40}, {"head_sha": HEAD_SHA}, "measured commit 0000000"),
+    ("another-repository", {"repository": "acme/other"}, {"head_sha": HEAD_SHA},
+     "names acme/other, not acme/widget"),
+    ("an-incremental-run", {"run_type": "incremental"}, {"head_sha": HEAD_SHA},
+     "incremental run"),
+    ("the-schema-comes-first", {"run_type": "incremental", "repository": "acme/other",
+                                "metrics": {}}, {"head_sha": HEAD_SHA},
+     "does not match the schema: $.metrics lacks"),
+    ("more-than-three-problems-are-counted",
+     {"metrics": {}, "results": {}, "scope": {}, "tool": {}}, {"head_sha": HEAD_SHA},
+     "(and "),
+]
+
+
+class ContextProvenance(unittest.TestCase):
+    """A context file is only worth showing because it comes from the run whose
+    green result backs the floor; so it has to describe that run."""
+
+    def test_the_file_has_to_describe_the_run(self):
+        for case_id, overrides, run, expected in CONTEXT_PROVENANCE_CASES:
+            with self.subTest(case_id):
+                why = vr.context_matches_run(
+                    mutation_context_file(**overrides), "acme", "widget", run
+                )
+                if expected is None:
+                    self.assertIsNone(why)
+                else:
+                    self.assertIn(expected, why)
+
+
 class MutationThresholds(unittest.TestCase):
     def test_thresholds_are_bound_to_the_tool_that_defines_them(self):
         # Reading Stryker's "break" as PIT's mutationThreshold would award a
@@ -584,6 +622,23 @@ class StripVolatile(unittest.TestCase):
         prune.strip_volatile(a)
         self.assertIn("verified_at", a)
         self.assertIn("stars", a["metadata"])
+
+    def test_a_context_key_that_says_nothing_is_not_a_change(self):
+        # Every report gains the key when the verifier starts reading context
+        # artifacts; without this the first weekly run rewrites all of them.
+        for case_id, before, after, changed in (
+            ("the-key-appears-as-null", {}, {"mutation_context": None}, False),
+            ("a-context-appears", {}, {"mutation_context": {"valid": True}}, True),
+            ("a-context-expires", {"mutation_context": {"valid": True}},
+             {"mutation_context": None}, True),
+            ("a-context-is-rejected", {"mutation_context": {"valid": True}},
+             {"mutation_context": {"valid": False, "why": "expired"}}, True),
+        ):
+            with self.subTest(case_id):
+                a, b = {**self.base(), **before}, {**self.base(), **after}
+                self.assertEqual(
+                    prune.strip_volatile(a) != prune.strip_volatile(b), changed
+                )
 
 
 if __name__ == "__main__":
