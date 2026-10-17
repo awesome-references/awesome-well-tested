@@ -233,6 +233,80 @@ class CoverageQualifiers(unittest.TestCase):
         self.assertEqual(cells["Mutation Score"], ">= 92%")
 
 
+def context_record(strict=0.9931, mutators=("DEFAULTS",), valid=True):
+    return {"run_id": 7, "artifact_id": 4242, "valid": valid,
+            "context": {"metrics": {"strict_score": strict}, "mutators": list(mutators)}}
+
+
+# (id, the report's mutation_context record, the Mutation Score cell)
+CONTEXT_CELL_CASES = [
+    ("no-artifact", None, ">= 92%"),
+    ("a-pit-run", context_record(), ">= 92% (99.3% strict, DEFAULTS)"),
+    ("a-mutmut-run-has-no-mutator-set", context_record(0.9658, ()), ">= 92% (96.6% strict)"),
+    ("every-mutant-killed", context_record(1.0), ">= 92% (100% strict, DEFAULTS)"),
+    ("two-groups-are-named", context_record(mutators=("DEFAULTS", "EXPERIMENTAL_ALL")),
+     ">= 92% (99.3% strict, DEFAULTS, EXPERIMENTAL_ALL)"),
+    ("many-mutators-are-counted-not-named",
+     context_record(mutators=tuple(f"Mutator{n}" for n in range(11))),
+     ">= 92% (99.3% strict, 11 mutators)"),
+    ("a-rejected-artifact", {"run_id": 7, "valid": False, "why": "the artifact has expired"},
+     ">= 92%"),
+    ("a-file-without-a-strict-score", {"run_id": 7, "valid": True, "context": {"metrics": {}}},
+     ">= 92%"),
+    ("a-strict-score-that-is-not-a-number",
+     {"run_id": 7, "valid": True, "context": {"metrics": {"strict_score": "high"}}}, ">= 92%"),
+]
+
+
+class MeasuredBehindTheFloor(unittest.TestCase):
+    """A floor says what the build fails below; the enforcing run's own context
+    file says what was measured. The cell shows both, the tier rests on one."""
+
+    HEADER = [
+        "Repository", "Tier", "Coverage", "Mutation Score",
+        "Param. Tests", "Coverage Tool", "Mutation Tool",
+    ]
+
+    def cell(self, record, source="ci-threshold", score=92.0):
+        return rt.cells_from_report(
+            report("acme/x", tier="gold", mutation_score=score,
+                   mutation_score_source=source, mutation_context=record),
+            self.HEADER,
+        )["Mutation Score"]
+
+    def test_the_cell_shows_what_the_run_measured(self):
+        for case_id, record, expected in CONTEXT_CELL_CASES:
+            with self.subTest(case_id):
+                self.assertEqual(self.cell(record), expected)
+
+    def test_a_figure_that_is_not_a_floor_is_not_annotated(self):
+        # A dashboard score is a measurement already; the parenthesis would
+        # say the same number twice.
+        self.assertEqual(self.cell(context_record(), source="dashboard", score=94.0), "94%")
+
+    def test_an_annotated_floor_survives_a_rewrite(self):
+        # The parenthesis and the comma live inside one cell. awesome-lint
+        # rejects ragged tables, and parse_entries has to find the row again.
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            readme = Path(directory) / "README.md"
+            readme.write_text(FIXTURE)
+            reports = Path(directory) / "reports"
+            reports.mkdir()
+            rl.apply_changes(
+                readme,
+                {"acme/alpha": report("acme/alpha", tier="gold", mutation_score=92.0,
+                                      mutation_score_source="ci-threshold",
+                                      mutation_context=context_record())},
+                set(), reports,
+            )
+            text = readme.read_text()
+        rows = [l for l in text.split("\n") if l.startswith("| [alpha]") or l.startswith("| [beta]")]
+        self.assertIn("| >= 92% (99.3% strict, DEFAULTS) |", rows[0])
+        self.assertEqual(len({len(l) for l in rows}), 1)
+        self.assertIn("acme/alpha", [e["full_name"] for e in rt.parse_entries(text)])
+
+
 class ApplyChanges(unittest.TestCase):
     def setUp(self):
         import tempfile
