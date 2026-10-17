@@ -36,6 +36,7 @@ jobs:
           python scripts/discover_candidates.py --help
           python scripts/recheck_listed.py --help
           python scripts/prune_unchanged_reports.py --help
+          python scripts/mutation_context.py --help
       - name: Check that every listed entry parses
         run: python scripts/recheck_listed.py --dry-run
 
