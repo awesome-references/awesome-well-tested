@@ -42,6 +42,14 @@ A score read off a Shields.io badge is recorded and shown, marked
 `self-reported`, but it does not reach Gold. Anyone can type a percentage into
 their own README, and the list would have no way to tell the difference.
 
+A score is only comparable with its context: the mutator set, the scope and
+excludes, how the tool counted timeouts and errors, and how many survivors the
+repository argues to be equivalent. [docs/mutation-context.md](docs/mutation-context.md)
+lists those fields, shows how to get them out of PIT and mutmut, and defines a
+`mutation-context.json` that CI can write from the run that enforced the floor
+(`scripts/mutation_context.py` converts either tool's report). The verifier does
+not read that file yet; the list shows the floor.
+
 Parameterized and property-based tests are detected and shown in their own
 column, but they do not change the tier. They are recorded because coverage
 cannot express them: a function exercised across many inputs is tested harder

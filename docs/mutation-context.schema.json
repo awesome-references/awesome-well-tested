@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/awesome-references/awesome-well-tested/main/docs/mutation-context.schema.json",
+  "title": "Mutation score context",
+  "description": "The context that makes a mutation score comparable: tool, mutator set, scope, the full result breakdown and the derived metrics. One file per full run, written by CI. See docs/mutation-context.md.",
+  "type": "object",
+  "required": ["schema_version", "repository", "commit", "measured_at", "run_type", "tool", "mutators", "scope", "results", "metrics"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$", "description": "owner/name on GitHub"},
+    "commit": {"type": "string", "minLength": 7, "description": "the commit the run measured"},
+    "measured_at": {"type": "string", "format": "date-time"},
+    "run_type": {"enum": ["full", "incremental"], "description": "a published number comes from a full run"},
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"enum": ["pitest", "mutmut", "stryker", "infection", "mutant", "cosmic-ray", "other"]},
+        "version": {"type": "string"}
+      }
+    },
+    "mutators": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "the mutator group(s) or the individual mutators in effect, e.g. [\"DEFAULTS\"] or [\"STRONGER\"] for PIT; [] when the tool has no selectable set"
+    },
+    "scope": {
+      "type": "object",
+      "required": ["targets", "excludes"],
+      "additionalProperties": false,
+      "properties": {
+        "targets": {"type": "array", "items": {"type": "string"}},
+        "excludes": {"type": "array", "items": {"type": "string"}},
+        "excluded_loc_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "results": {
+      "type": "object",
+      "required": ["total", "killed", "survived", "no_coverage", "timed_out", "errors", "skipped", "equivalent"],
+      "additionalProperties": false,
+      "properties": {
+        "total": {"type": "integer", "minimum": 0},
+        "killed": {"type": "integer", "minimum": 0, "description": "killed by an assertion; PIT KILLED, mutmut killed"},
+        "survived": {"type": "integer", "minimum": 0, "description": "live survivors after the equivalent ones are taken out"},
+        "no_coverage": {"type": "integer", "minimum": 0, "description": "PIT NO_COVERAGE, mutmut no_tests"},
+        "timed_out": {"type": "integer", "minimum": 0},
+        "errors": {"type": "integer", "minimum": 0, "description": "PIT MEMORY_ERROR + RUN_ERROR, mutmut suspicious + segfault"},
+        "skipped": {"type": "integer", "minimum": 0, "description": "never checked: mutmut skipped and interrupted"},
+        "equivalent": {"type": "integer", "minimum": 0, "description": "survivors the repository has argued to be equivalent; the argument lives in the repository"}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["tool_score", "strict_score", "test_strength", "timeout_ratio", "error_ratio"],
+      "additionalProperties": false,
+      "properties": {
+        "tool_score": {"type": "number", "minimum": 0, "maximum": 1, "description": "what the tool reports: PIT detected / total (detected = killed + timed out + errors), mutmut killed / total"},
+        "strict_score": {"type": "number", "minimum": 0, "maximum": 1, "description": "killed / (total - equivalent - skipped); timeouts and errors count against it"},
+        "test_strength": {"type": "number", "minimum": 0, "maximum": 1, "description": "detected / (total - no_coverage - skipped)"},
+        "timeout_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+        "error_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "line": {"type": "number", "minimum": 0, "maximum": 1},
+        "branch": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "size": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prod_loc": {"type": "integer", "minimum": 0},
+        "test_loc": {"type": "integer", "minimum": 0},
+        "test_count": {"type": "integer", "minimum": 0},
+        "parameterized_test_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
