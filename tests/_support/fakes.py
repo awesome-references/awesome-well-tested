@@ -6,8 +6,10 @@ or a rate limit. Anything the fake is not told about answers the way the real
 services answer for something that is not there: None.
 """
 
+import io
 import json
 import urllib.parse
+import zipfile
 
 
 class FakeAPI:
@@ -25,6 +27,8 @@ class FakeAPI:
         searches=None,
         runs=None,
         jobs=None,
+        artifacts=None,
+        downloads=None,
         authenticated=True,
         raise_on=None,
     ):
@@ -37,6 +41,8 @@ class FakeAPI:
         self.searches = searches or {}
         self.runs = runs
         self.jobs = jobs
+        self.artifacts = artifacts
+        self.downloads = downloads or {}
         self.authenticated = authenticated
         self.raise_on = raise_on or ()
         self.requests = 0
@@ -57,7 +63,7 @@ class FakeAPI:
         path = url.split("/contents/", 1)[1].split("?", 1)[0]
         return urllib.parse.unquote(path)
 
-    # -- the three methods verify_repo actually calls -------------------------
+    # -- the four methods verify_repo actually calls --------------------------
 
     def get(self, url):
         self._record(url)
@@ -81,6 +87,9 @@ class FakeAPI:
         if "/actions/runs/" in url and "/jobs" in url:
             return self.jobs
 
+        if "/actions/runs/" in url and "/artifacts" in url:
+            return self.artifacts
+
         if "/contents/" in url and self._path_of(url) == ".github/workflows":
             return [{"name": n} for n in self.workflows]
 
@@ -98,6 +107,10 @@ class FakeAPI:
         if path.startswith(".github/workflows/"):
             return self.workflows.get(path.split("/", 2)[2])
         return self.files.get(path)
+
+    def download(self, url):
+        self._record(url)
+        return self.downloads.get(url)
 
     def get_public_json(self, url):
         self._record(url)
@@ -173,3 +186,57 @@ def elements_report(killed=90, survived=10, ignored=0, no_coverage=0):
         + [{"status": "NoCoverage"}] * no_coverage
     )
     return {"schemaVersion": "1.0", "files": {"src/Thing.php": {"mutants": mutants}}}
+
+
+ARTIFACT_ZIP_URL = "https://api.github.com/repos/acme/widget/actions/artifacts/4242/zip"
+HEAD_SHA = "e919de2f4ee9b4079b3d5063ae4b26e8a374ed89"
+
+
+def artifact_listing(name="mutation-context", artifact_id=4242, expired=False, size=543,
+                     url=ARTIFACT_ZIP_URL):
+    """What a run's artifacts endpoint answers for one artifact."""
+    return {
+        "total_count": 1,
+        "artifacts": [{
+            "id": artifact_id,
+            "name": name,
+            "expired": expired,
+            "expires_at": "2027-01-15T10:26:08Z",
+            "size_in_bytes": size,
+            "archive_download_url": url,
+        }],
+    }
+
+
+def zipped(members):
+    """A zip archive as actions/upload-artifact produces one: {name: text}."""
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        for name, text in members.items():
+            archive.writestr(name, text)
+    return buffer.getvalue()
+
+
+def mutation_context_file(**overrides):
+    """A valid context file for acme/widget at HEAD_SHA, as the converter writes it."""
+    context = {
+        "schema_version": "1.0",
+        "repository": "acme/widget",
+        "commit": HEAD_SHA,
+        "measured_at": "2026-10-16T11:52:00Z",
+        "run_type": "full",
+        "tool": {"name": "pitest", "version": "1.30.0"},
+        "mutators": ["DEFAULTS"],
+        "scope": {"targets": ["acme.widget.*"], "excludes": []},
+        "results": {"total": 866, "killed": 860, "survived": 4, "no_coverage": 0,
+                    "timed_out": 2, "errors": 0, "skipped": 0, "equivalent": 0},
+        "metrics": {"tool_score": 0.9954, "strict_score": 0.9931, "test_strength": 0.9954,
+                    "timeout_ratio": 0.0023, "error_ratio": 0.0},
+    }
+    context.update(overrides)
+    return context
+
+
+def context_zip(**overrides):
+    """The artifact zip holding one mutation-context.json."""
+    return zipped({"mutation-context.json": json.dumps(mutation_context_file(**overrides))})

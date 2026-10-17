@@ -5,15 +5,22 @@ whether a real project is listed, promoted or dropped. These drive it through
 the fake services so the whole path runs without a token.
 """
 
+import json
 import unittest
 
-from _support import verify_repo as vr
+from _support import readme_table as rt, verify_repo as vr
 from _support.fakes import (
+    ARTIFACT_ZIP_URL,
+    HEAD_SHA,
     FakeAPI,
+    artifact_listing,
     codecov,
+    context_zip,
     coveralls,
     elements_report,
+    mutation_context_file,
     repo_metadata,
+    zipped,
 )
 
 WORKFLOW_CI = "name: ci\non: push\njobs:\n  test:\n    steps:\n      - run: ./gradlew test\n"
@@ -37,6 +44,28 @@ PYPROJECT_MUTMUT_FLOOR = (
     "[tool.widget.mutation_thresholds]\ndefault = 85\n"
     "\"src/widget/core.py\" = 95\n"
 )
+
+
+def enforced_api(*, conclusion="success", jobs=None, created_at=None, **kw):
+    """A PIT repository behind mutationThreshold = 85 with a recent run."""
+    from datetime import datetime, timedelta, timezone
+
+    if created_at is None:
+        created_at = (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
+    kw.setdefault("metadata", repo_metadata())
+    return FakeAPI(
+        tree=[".github/workflows/mutation.yml", "build.gradle"],
+        workflows={"mutation.yml": WORKFLOW_PIT},
+        files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
+        coverage={"codecov": codecov(91.0)},
+        runs={"workflow_runs": [
+            {"id": 7, "conclusion": conclusion, "created_at": created_at,
+             "head_sha": HEAD_SHA}
+        ]},
+        jobs={"jobs": jobs if jobs is not None
+              else [{"name": "pit", "conclusion": "success"}]},
+        **kw,
+    )
 
 
 class ScheduledRunsAPI(FakeAPI):
@@ -101,23 +130,8 @@ class Verifying(unittest.TestCase):
         self.assertEqual(report["mutation_score"], 94.0)
         self.assertEqual(report["mutation_score_source"], "dashboard")
 
-    def enforced(self, *, conclusion="success", jobs=None, created_at=None, **kw):
-        from datetime import datetime, timedelta, timezone
-
-        if created_at is None:
-            created_at = (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
-        return self.api(
-            tree=[".github/workflows/mutation.yml", "build.gradle"],
-            workflows={"mutation.yml": WORKFLOW_PIT},
-            files={"build.gradle": BUILD_JACOCO + BUILD_PIT_THRESHOLD},
-            coverage={"codecov": codecov(91.0)},
-            runs={"workflow_runs": [
-                {"id": 7, "conclusion": conclusion, "created_at": created_at}
-            ]},
-            jobs={"jobs": jobs if jobs is not None
-                  else [{"name": "pit", "conclusion": "success"}]},
-            **kw,
-        )
+    def enforced(self, **kw):
+        return enforced_api(**kw)
 
     def test_a_green_build_behind_a_threshold_reaches_gold(self):
         report = self.verify(self.enforced())
@@ -536,6 +550,192 @@ class Verifying(unittest.TestCase):
             coverage={"codecov": codecov(91.0)},
         )
         self.assertEqual(self.verify(api)["tier"], "bronze")
+
+
+HEADER = ["Repository", "Tier", "Coverage", "Mutation Score",
+          "Param. Tests", "Coverage Tool", "Mutation Tool"]
+FLOOR = ">= 85%"
+ANNOTATED = ">= 85% (99.3% strict, DEFAULTS)"
+ONE_FILE = json.dumps(mutation_context_file())
+
+# (id, what the run's artifacts endpoint answers, what the download answers,
+#  "valid" / a fragment of why not / None for no record, the Mutation Score cell)
+ARTIFACT_CASES = [
+    ("no-artifact-on-the-run", {"total_count": 0, "artifacts": []}, None, None, FLOOR),
+    ("a-listing-that-answers-404", None, None, None, FLOOR),
+    ("a-listing-without-the-artifacts-key", {}, None, None, FLOOR),
+    ("an-artifact-under-another-name", artifact_listing(name="pitest-report"),
+     context_zip(), None, FLOOR),
+    ("a-valid-context", artifact_listing(), context_zip(), "valid", ANNOTATED),
+    ("mutmut-names-no-mutator-set", artifact_listing(),
+     context_zip(tool={"name": "mutmut", "version": "3.5.0"}, mutators=[]),
+     "valid", ">= 85% (99.3% strict)"),
+    ("a-short-commit-matches-by-prefix", artifact_listing(),
+     context_zip(commit=HEAD_SHA[:7]), "valid", ANNOTATED),
+    ("the-named-member-wins-over-a-sibling", artifact_listing(),
+     zipped({"mutation-context.json": ONE_FILE, "mutmut-cicd-stats.json": "{}"}),
+     "valid", ANNOTATED),
+    ("a-member-in-a-subdirectory", artifact_listing(),
+     zipped({"build/reports/pitest/mutation-context.json": ONE_FILE}), "valid", ANNOTATED),
+    ("a-lone-json-member-under-another-name", artifact_listing(),
+     zipped({"context.json": ONE_FILE}), "valid", ANNOTATED),
+    ("an-expired-artifact", artifact_listing(expired=True), context_zip(),
+     "has expired", FLOOR),
+    ("an-artifact-too-large-to-be-a-context-file", artifact_listing(size=50_000_000),
+     context_zip(), "larger than a context file", FLOOR),
+    ("a-download-that-answers-404", artifact_listing(), None,
+     "could not be downloaded", FLOOR),
+    ("a-download-larger-than-announced", artifact_listing(),
+     b"P" * (vr.MAX_ARTIFACT_BYTES + 1), "larger than a context file", FLOOR),
+    ("not-a-zip", artifact_listing(), b"not a zip", "not a zip archive", FLOOR),
+    ("a-zip-without-json", artifact_listing(), zipped({"mutations.xml": "<mutations/>"}),
+     "0 JSON files", FLOOR),
+    ("two-unnamed-json-members-are-a-guess", artifact_listing(),
+     zipped({"a.json": ONE_FILE, "b.json": ONE_FILE}), "2 JSON files", FLOOR),
+    ("two-named-members-are-a-guess-too", artifact_listing(),
+     zipped({"a/mutation-context.json": ONE_FILE, "b/mutation-context.json": ONE_FILE}),
+     "more than one mutation-context.json", FLOOR),
+    ("a-member-that-is-not-json", artifact_listing(),
+     zipped({"mutation-context.json": "{"}), "is not JSON", FLOOR),
+    ("a-member-that-is-not-text", artifact_listing(),
+     zipped({"mutation-context.json": b"\xff\xfe"}), "is not JSON", FLOOR),
+    ("a-file-failing-the-schema", artifact_listing(), context_zip(run_type="nightly"),
+     "does not match the schema: $.run_type", FLOOR),
+    ("a-file-naming-another-repository", artifact_listing(),
+     context_zip(repository="acme/other"), "names acme/other, not acme/widget", FLOOR),
+    ("a-file-measuring-another-commit", artifact_listing(),
+     context_zip(commit="0123456789abcdef0123456789abcdef01234567"),
+     "measured commit 0123456, the run built e919de2", FLOOR),
+    ("a-file-from-an-incremental-run", artifact_listing(),
+     context_zip(run_type="incremental"), "incremental run", FLOOR),
+]
+
+
+class MutationContextArtifact(unittest.TestCase):
+    """The enforcing run can say what was measured behind the floor, and the
+    list shows it - from that run's artifact only, and never as the tier."""
+
+    def setUp(self):
+        original = vr.time.sleep
+        vr.time.sleep = lambda _s: None
+        self.addCleanup(setattr, vr.time, "sleep", original)
+
+    def verify(self, api):
+        return vr.verify_repository(api, "acme", "widget", verbose=False)
+
+    def test_what_the_run_s_artifact_adds_to_the_row(self):
+        for case_id, listing, download, expected, cell in ARTIFACT_CASES:
+            with self.subTest(case_id):
+                api = enforced_api(artifacts=listing, downloads={ARTIFACT_ZIP_URL: download})
+                report = self.verify(api)
+                # Whatever the file says, the tier and the score are the floor's.
+                self.assertEqual(report["tier"], "gold")
+                self.assertEqual(report["mutation_score"], 85.0)
+                self.assertEqual(report["mutation_score_source"], "ci-threshold")
+                record = report["mutation_context"]
+                if expected is None:
+                    self.assertIsNone(record)
+                elif expected == "valid":
+                    self.assertTrue(record["valid"], record)
+                    self.assertEqual(record["run_id"], 7)
+                    self.assertEqual(record["artifact_id"], 4242)
+                    self.assertEqual(record["context"]["metrics"]["strict_score"], 0.9931)
+                else:
+                    self.assertFalse(record["valid"])
+                    self.assertEqual(record["run_id"], 7)
+                    self.assertIn(expected, record["why"])
+                    self.assertNotIn("context", record)
+                self.assertEqual(rt.cells_from_report(report, HEADER)["Mutation Score"], cell)
+
+    def test_the_tier_rests_on_the_floor_not_on_the_file(self):
+        # A file saying 50 % is still shown; the green run behind the 85 %
+        # floor is what the tier rests on, and the row says both.
+        api = enforced_api(
+            artifacts=artifact_listing(),
+            downloads={ARTIFACT_ZIP_URL: context_zip(
+                metrics={"tool_score": 0.5, "strict_score": 0.5, "test_strength": 0.5,
+                         "timeout_ratio": 0.0, "error_ratio": 0.0})},
+        )
+        report = self.verify(api)
+        self.assertEqual(report["tier"], "gold")
+        self.assertEqual(report["mutation_score"], 85.0)
+        self.assertEqual(rt.cells_from_report(report, HEADER)["Mutation Score"],
+                         ">= 85% (50% strict, DEFAULTS)")
+
+    def test_a_context_file_in_the_tree_is_ignored(self):
+        # Committed to the repository it is self-reported, the thing Silver
+        # is for. It is not even fetched.
+        api = enforced_api(artifacts={"total_count": 0, "artifacts": []})
+        api.tree.append("mutation-context.json")
+        api.files["mutation-context.json"] = ONE_FILE
+        report = self.verify(api)
+        self.assertIsNone(report["mutation_context"])
+        self.assertEqual(rt.cells_from_report(report, HEADER)["Mutation Score"], FLOOR)
+        self.assertFalse(any("mutation-context.json" in u for u in api.asked))
+
+    def test_only_the_run_that_graded_the_score_is_asked(self):
+        from datetime import datetime, timedelta, timezone
+
+        dashboard_api = FakeAPI(
+            metadata=repo_metadata(),
+            tree=[".github/workflows/ci.yml", "build.gradle"],
+            workflows={"ci.yml": WORKFLOW_CI},
+            files={"build.gradle": BUILD_JACOCO + "id 'info.solidsoft.pitest'"},
+            coverage={"codecov": codecov(91.0)},
+            dashboard={"main": elements_report(killed=94, survived=6)},
+            artifacts=artifact_listing(),
+            downloads={ARTIFACT_ZIP_URL: context_zip()},
+        )
+        for case_id, api, kw in (
+            ("a-dashboard-score", dashboard_api, {}),
+            ("a-failing-run", enforced_api(conclusion="failure", artifacts=artifact_listing(),
+                                           downloads={ARTIFACT_ZIP_URL: context_zip()}), {}),
+            ("a-hand-supplied-score", enforced_api(artifacts=artifact_listing(),
+                                                   downloads={ARTIFACT_ZIP_URL: context_zip()}),
+             {"mutation_score_override": 90.0}),
+        ):
+            with self.subTest(case_id):
+                report = vr.verify_repository(api, "acme", "widget", verbose=False, **kw)
+                self.assertIsNone(report["mutation_context"])
+                self.assertFalse(any("/artifacts" in u for u in api.asked))
+
+    def test_a_store_outage_does_not_cost_the_entry(self):
+        # The file fills a column. Under --apply an entry that cannot be
+        # verified is one the list never refreshes, so this must not raise.
+        for case_id, fragment in (("the-listing", "/artifacts"), ("the-download", "/zip")):
+            with self.subTest(case_id):
+                api = enforced_api(
+                    artifacts=artifact_listing(),
+                    downloads={ARTIFACT_ZIP_URL: context_zip()},
+                    raise_on=[(fragment, vr.VerificationIncomplete("HTTP 503"))],
+                )
+                report = self.verify(api)
+                self.assertEqual(report["tier"], "gold")
+                record = report["mutation_context"]
+                self.assertFalse(record["valid"])
+                self.assertIn("could not be read: HTTP 503", record["why"])
+                self.assertEqual(rt.cells_from_report(report, HEADER)["Mutation Score"], FLOOR)
+
+    def test_the_summary_names_what_was_measured(self):
+        import io
+
+        api = enforced_api(artifacts=artifact_listing(),
+                           downloads={ARTIFACT_ZIP_URL: context_zip()})
+        report = self.verify(api)
+        for case_id, record, expected in (
+            ("a-valid-file", report["mutation_context"], "99.3% strict"),
+            ("a-rejected-file", {"run_id": 7, "valid": False, "why": "the artifact has expired"},
+             "not used, the artifact has expired"),
+        ):
+            with self.subTest(case_id):
+                out = io.StringIO()
+                original = vr.sys.stdout
+                vr.sys.stdout = out
+                try:
+                    vr.print_summary({**report, "mutation_context": record})
+                finally:
+                    vr.sys.stdout = original
+                self.assertIn(expected, out.getvalue())
 
 
 class RealServiceShapes(unittest.TestCase):

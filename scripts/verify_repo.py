@@ -16,6 +16,8 @@ Checks:
     5. Coverage badges and linked reports (Codecov, Coveralls)
     6. Actual coverage percentage, read from the Codecov or Coveralls API
     7. Mutation score, read from a Shields.io badge in the README
+    8. The mutation-context.json a green, threshold-enforcing run uploaded as
+       an artifact: the measured score and the mutator set behind the floor
 
 The tier is only awarded when the numbers are known: a configured coverage tool
 alone proves nothing about the coverage level. Pass --coverage or
@@ -26,6 +28,7 @@ Output:
 """
 
 import argparse
+import io
 import json
 import os
 import re
@@ -34,8 +37,16 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
+
+# The scripts are executables, not a package; the converter module next to
+# this one holds the context schema's reader.
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from mutation_context import validate as validate_mutation_context  # noqa: E402
 
 API_BASE = "https://api.github.com"
 CODECOV_API = "https://api.codecov.io/api/v2/github"
@@ -114,6 +125,14 @@ MAX_PARAMETERIZED_QUERIES = 4
 
 # How stale a green run may be and still stand as evidence for a threshold.
 MAX_ENFORCING_RUN_AGE_DAYS = 180
+
+# The artifact a repository's CI can upload from the run that enforced the
+# threshold (docs/mutation-context.md, section 6). It is read from that run and
+# never from the tree: a file in the tree is the repository's own word again.
+MUTATION_CONTEXT_ARTIFACT = "mutation-context"
+# A context file is about a kilobyte. Anything much larger under that name is
+# not one, and nothing it could say is worth downloading a gigabyte to hear.
+MAX_ARTIFACT_BYTES = 1_000_000
 
 # Minimum line/branch coverage required for any tier
 MIN_COVERAGE = 80.0
@@ -717,6 +736,27 @@ class RepositoryMissing(Exception):
     """
 
 
+def _host(url: str) -> str:
+    return urllib.parse.urlsplit(url).netloc.lower()
+
+
+class _TokenlessRedirect(urllib.request.HTTPRedirectHandler):
+    """Follow a redirect to another host, but not with the token.
+
+    An artifact's archive_download_url answers 302 with a short-lived signed
+    URL on a blob store. urllib copies every header onto the redirected
+    request, token included, and the store answers 403 to a request that
+    carries a credential it does not understand next to the one in the URL
+    (seen live on 2026-10-17). The token is for api.github.com and stays there.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None and _host(newurl) != _host(req.full_url):
+            new.remove_header("Authorization")
+        return new
+
+
 class GitHubAPI:
     """Minimal GitHub API client using urllib."""
 
@@ -753,18 +793,22 @@ class GitHubAPI:
                 pass
         return min(2 ** attempt, 60)
 
-    def _request(self, url: str, headers: dict, decode, absent_codes=(404, 422)):
+    def _request(
+        self, url: str, headers: dict, decode, absent_codes=(404, 422), opener=None
+    ):
         """Issue a request, retrying what is worth retrying.
 
         Returns None for 404 and 422 - the resource genuinely is not there, or
         the query was rejected - and raises VerificationIncomplete for anything
-        that means "ask again later".
+        that means "ask again later". An opener replaces urlopen for the one
+        request that must follow a redirect differently.
         """
+        open_url = urllib.request.urlopen if opener is None else opener.open
         for attempt in range(1, self.attempts + 1):
             req = urllib.request.Request(url, headers=headers)
             try:
                 self.requests += 1
-                with urllib.request.urlopen(req, timeout=20) as resp:
+                with open_url(req, timeout=20) as resp:
                     return decode(resp)
             except urllib.error.HTTPError as e:
                 if e.code in absent_codes:
@@ -814,6 +858,20 @@ class GitHubAPI:
         headers = {**self.headers, "Accept": "application/vnd.github.v3.raw"}
         return self._request(
             url, headers, lambda resp: resp.read().decode(errors="replace")
+        )
+
+    def download(self, url: str) -> bytes | None:
+        """GET a file GitHub serves through a redirect, such as an artifact zip.
+
+        Needs the token even for a public repository (the endpoint answers 401
+        without one). At most MAX_ARTIFACT_BYTES + 1 bytes are read, so the
+        caller can tell a file that is too large from one that just fits.
+        """
+        return self._request(
+            url,
+            self.headers,
+            lambda resp: resp.read(MAX_ARTIFACT_BYTES + 1),
+            opener=urllib.request.build_opener(_TokenlessRedirect),
         )
 
 
@@ -1561,6 +1619,132 @@ def check_ci_enforced_mutation(
 
 
 
+def read_context_from_zip(data: bytes) -> tuple[dict | list | None, str | None]:
+    """The JSON document inside an artifact archive, or why there is none.
+
+    actions/upload-artifact wraps whatever was uploaded in a zip. The context
+    file is the member called mutation-context.json; failing that, a lone
+    JSON member will do, since the artifact's name already said what it
+    holds. Two unnamed JSON files would be a guess, and the verifier does not
+    guess. The member is read with a bound rather than trusted for its
+    declared size.
+    """
+    try:
+        archive = zipfile.ZipFile(io.BytesIO(data))
+        members = [m for m in archive.infolist() if not m.is_dir()]
+    except zipfile.BadZipFile:
+        return None, "the artifact is not a zip archive"
+    named = [m for m in members if m.filename.rsplit("/", 1)[-1] == "mutation-context.json"]
+    json_files = [m for m in members if m.filename.lower().endswith(".json")]
+    if len(named) > 1:
+        return None, "the artifact holds more than one mutation-context.json"
+    if not named and len(json_files) != 1:
+        return None, (
+            f"the artifact holds {len(json_files)} JSON files and none is called "
+            "mutation-context.json"
+        )
+    member = named[0] if named else json_files[0]
+    try:
+        with archive.open(member) as handle:
+            raw = handle.read(MAX_ARTIFACT_BYTES + 1)
+    except zipfile.BadZipFile as error:
+        return None, f"{member.filename} could not be extracted: {error}"
+    if len(raw) > MAX_ARTIFACT_BYTES:
+        return None, f"{member.filename} is larger than a context file"
+    try:
+        return json.loads(raw.decode("utf-8")), None
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        return None, f"{member.filename} is not JSON: {error}"
+
+
+def context_matches_run(context, owner: str, repo: str, run: dict) -> str | None:
+    """Why a context file is not evidence about this run, or None when it is.
+
+    The file is only worth showing because it comes from the run whose green
+    result backs the floor. So it has to match the schema, name this
+    repository and the commit the run built, and come from a full run: the
+    converter defaults to GITHUB_REPOSITORY and GITHUB_SHA, which are exactly
+    those for a push or scheduled run, and a published number comes from a
+    full run (docs/mutation-context.md, section 6).
+    """
+    problems = validate_mutation_context(context)
+    if problems:
+        shown = "; ".join(problems[:3])
+        more = f" (and {len(problems) - 3} more)" if len(problems) > 3 else ""
+        return f"the file does not match the schema: {shown}{more}"
+    if context["repository"].casefold() != f"{owner}/{repo}".casefold():
+        return f"the file names {context['repository']}, not {owner}/{repo}"
+    head = (run.get("head_sha") or "").lower()
+    commit = context["commit"].lower()
+    if head and not head.startswith(commit):
+        return f"the file measured commit {commit[:7]}, the run built {head[:7]}"
+    if context["run_type"] != "full":
+        return "the file is from an incremental run; a published figure comes from a full one"
+    return None
+
+
+def fetch_mutation_context(api: GitHubAPI, owner: str, repo: str, run: dict) -> dict | None:
+    """The mutation-context.json the enforcing run uploaded, if it uploaded one.
+
+    The floor and the green run decide the tier. This adds what the run
+    measured behind the floor - the strict score, the mutator set, the whole
+    breakdown - and takes it only from an artifact of that run. A context
+    file committed to the repository is the repository's own word, the thing
+    Silver is for, and is never read.
+
+    Returns None when the run has no such artifact, which is the normal case:
+    most repositories upload none, and artifacts expire after ninety days by
+    default. One that is there but unusable comes back with "why", so the
+    report says what was seen; the row shows the floor either way.
+    """
+    run_id = run.get("run_id")
+    record = {"run_id": run_id}
+    try:
+        listing = api.get(
+            f"{API_BASE}/repos/{owner}/{repo}/actions/runs/{run_id}/artifacts"
+            f"?name={urllib.parse.quote(MUTATION_CONTEXT_ARTIFACT)}&per_page=100"
+        )
+        artifacts = listing.get("artifacts") if isinstance(listing, dict) else None
+        # The name is what makes it "the context" rather than "an artifact",
+        # so it is checked here as well as asked of the API.
+        found = [
+            a for a in artifacts or []
+            if isinstance(a, dict) and a.get("name") == MUTATION_CONTEXT_ARTIFACT
+        ]
+        if not found:
+            return None
+        artifact = found[0]
+        record["artifact_id"] = artifact.get("id")
+        record["expires_at"] = artifact.get("expires_at")
+        if artifact.get("expired"):
+            return {**record, "valid": False, "why": "the artifact has expired"}
+        size = artifact.get("size_in_bytes") or 0
+        if size > MAX_ARTIFACT_BYTES:
+            return {
+                **record,
+                "valid": False,
+                "why": f"the artifact is {size} bytes, larger than a context file",
+            }
+        url = artifact.get("archive_download_url")
+        data = api.download(url) if url else None
+    except VerificationIncomplete as error:
+        # This fills a figure in next to the floor and decides nothing. A blob
+        # store having a bad afternoon must not cost the entry its whole
+        # verification: under --apply an entry that cannot be verified is one
+        # the list never refreshes.
+        return {**record, "valid": False, "why": f"the artifact could not be read: {error}"}
+    if data is None:
+        return {**record, "valid": False, "why": "the artifact could not be downloaded"}
+    if len(data) > MAX_ARTIFACT_BYTES:
+        return {**record, "valid": False, "why": "the artifact is larger than a context file"}
+    context, why = read_context_from_zip(data)
+    if why is None:
+        why = context_matches_run(context, owner, repo, run)
+    if why is not None:
+        return {**record, "valid": False, "why": why}
+    return {**record, "valid": True, "context": context}
+
+
 # A mutation score only earns Gold when something other than the repository's
 # own prose stands behind it.
 GOLD_EVIDENCE = ("dashboard", "ci-threshold")
@@ -1674,6 +1858,7 @@ def generate_report(
     mutation_score_source: str | None = None,
     dashboard: dict | None = None,
     ci_enforced: dict | None = None,
+    mutation_context: dict | None = None,
 ) -> dict:
     """Generate the full verification report."""
     tier, tier_reason = determine_tier(
@@ -1706,6 +1891,7 @@ def generate_report(
         "mutation_score_source": mutation_score_source,
         "mutation_dashboard": dashboard,
         "mutation_ci_enforced": ci_enforced,
+        "mutation_context": mutation_context,
         "parameterized_tests": parameterized,
         "issues": issues if issues else None,
         "metadata": metadata,
@@ -1754,6 +1940,17 @@ def print_summary(report: dict) -> None:
     if report.get("mutation_score") is not None:
         source = report.get("mutation_score_source") or "unknown"
         print(f"  Mut. score:  {report['mutation_score']}% ({source})")
+
+    context = report.get("mutation_context")
+    if context and context.get("valid"):
+        metrics = context["context"]["metrics"]
+        print(
+            f"  Mut. context: {100 * metrics['strict_score']:.1f}% strict, "
+            f"{100 * metrics['test_strength']:.1f}% test strength "
+            f"(artifact of run {context['run_id']})"
+        )
+    elif context:
+        print(f"  Mut. context: not used, {context.get('why')}")
 
     param = report.get("parameterized_tests")
     if param is not None:
@@ -1856,6 +2053,20 @@ def verify_repository(
             mutation_score_source = "readme-badge"
             say(f"  Mutation score {mutation_score}% read from README badge (self-reported).")
 
+    # Only the run whose green result backs the floor can say what was
+    # measured behind it; nothing else is asked, and nothing in the tree is.
+    mutation_context = None
+    if mutation_score_source == "ci-threshold":
+        say("  Looking for a mutation-context artifact on the enforcing run...")
+        mutation_context = fetch_mutation_context(api, owner, repo, ci_enforced["run"])
+        if mutation_context is None:
+            say("  None uploaded; the list shows the floor.")
+        elif mutation_context["valid"]:
+            strict = mutation_context["context"]["metrics"]["strict_score"]
+            say(f"  Measured {100 * strict:.1f}% strict on run {mutation_context['run_id']}.")
+        else:
+            say(f"  Found one but not used: {mutation_context['why']}.")
+
     if parameterized_override is not None:
         # A weekly recheck of the whole list would spend four code-search
         # requests per entry re-establishing a column that changes about as
@@ -1895,6 +2106,7 @@ def verify_repository(
         mutation_score_source,
         dashboard,
         ci_enforced,
+        mutation_context,
     )
 
 
