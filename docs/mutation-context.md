@@ -20,7 +20,7 @@ when the context travels with the score.
 | Field | Why it matters |
 |---|---|
 | Tool and version | Mutators and counting rules change between versions |
-| Mutator set | PIT `DEFAULTS` versus `STRONGER` versus `ALL` moves the score by tens of points. Every PIT repository of this list's maintainer runs `DEFAULTS` (ten mutators) today, none says so explicitly |
+| Mutator set | PIT's sets move the score by tens of points, and the set PIT takes when none is named is not the group `DEFAULTS` (section 2). Every PIT repository of this list's maintainer runs that unnamed set today, and none says so |
 | Scope (targets) | Which packages or modules are mutated at all |
 | Excludes | Classes, methods or files left out. The main way a score gets polished |
 | Result breakdown | killed, survived, no coverage, timed out, errors, skipped, equivalent |
@@ -82,7 +82,11 @@ pitest {
     excludedClasses = ['*.generated.*']
     excludedMethods = ['toString', 'hashCode']
 
-    mutators = ['STRONGER']            // say which set; the default is DEFAULTS, and silence hides it
+    // say which set: these eleven are what PIT 1.30.0 takes when none is named, so naming them
+    // keeps the numbers - naming DEFAULTS does not (see below)
+    mutators = ['INVERT_NEGS', 'MATH', 'VOID_METHOD_CALLS', 'NEGATE_CONDITIONALS',
+                'CONDITIONALS_BOUNDARY', 'INCREMENTS', 'TRUE_RETURNS', 'FALSE_RETURNS',
+                'PRIMITIVE_RETURNS', 'EMPTY_RETURNS', 'NULL_RETURNS']
     threads = 4
 
     outputFormats = ['HTML', 'XML']
@@ -104,7 +108,9 @@ pitest {
     junit5PluginVersion.set("1.2.3")
     targetClasses.set(listOf("io.github.astrapi69.*"))
     excludedClasses.set(listOf("*.generated.*"))
-    mutators.set(listOf("STRONGER"))
+    mutators.set(listOf("INVERT_NEGS", "MATH", "VOID_METHOD_CALLS", "NEGATE_CONDITIONALS",
+        "CONDITIONALS_BOUNDARY", "INCREMENTS", "TRUE_RETURNS", "FALSE_RETURNS",
+        "PRIMITIVE_RETURNS", "EMPTY_RETURNS", "NULL_RETURNS"))
     outputFormats.set(listOf("XML", "HTML"))
     timestampedReports.set(false)
     mutationThreshold.set(95)
@@ -127,7 +133,19 @@ pitest {
   </dependencies>
   <configuration>
     <targetClasses><param>io.github.astrapi69.*</param></targetClasses>
-    <mutators><mutator>STRONGER</mutator></mutators>
+    <mutators>
+      <mutator>INVERT_NEGS</mutator>
+      <mutator>MATH</mutator>
+      <mutator>VOID_METHOD_CALLS</mutator>
+      <mutator>NEGATE_CONDITIONALS</mutator>
+      <mutator>CONDITIONALS_BOUNDARY</mutator>
+      <mutator>INCREMENTS</mutator>
+      <mutator>TRUE_RETURNS</mutator>
+      <mutator>FALSE_RETURNS</mutator>
+      <mutator>PRIMITIVE_RETURNS</mutator>
+      <mutator>EMPTY_RETURNS</mutator>
+      <mutator>NULL_RETURNS</mutator>
+    </mutators>
     <outputFormats><param>XML</param><param>HTML</param></outputFormats>
     <timestampedReports>false</timestampedReports>
     <mutationThreshold>95</mutationThreshold>
@@ -139,8 +157,24 @@ Run: `./gradlew pitest` or `mvn test-compile org.pitest:pitest-maven:mutationCov
 Report: `build/reports/pitest/mutations.xml` or `target/pit-reports/mutations.xml`. The versions
 above are the ones in use on 2026-10-16; check Maven Central before copying them.
 
-Switching `DEFAULTS` to `STRONGER` lowers the score. Measure first, then set the floor; a floor
-set under `DEFAULTS` and kept under `STRONGER` turns the build red for the wrong reason.
+### The unnamed set is not `DEFAULTS`
+
+With no mutators configured, PIT 1.30.0 uses `Mutator.newDefaults()`: `INVERT_NEGS`, `MATH`,
+`VOID_METHOD_CALLS`, `NEGATE_CONDITIONALS`, `CONDITIONALS_BOUNDARY`, `INCREMENTS` and the five
+returns mutators. The group `DEFAULTS` (`StandardMutatorGroups`) has `REMOVE_CONDITIONALS_ORDER_ELSE`
+and `REMOVE_CONDITIONALS_EQUAL_ELSE` where that set has `NEGATE_CONDITIONALS`; both read from the
+classes of `pitest-1.30.0.jar`. Naming `DEFAULTS` in a repository that named nothing therefore changes
+what it measures. Measured on mystic-crypt-ui's scope, the same code run three times
+(astrapi69/mystic-crypt-ui#589):
+
+| | nothing named | `DEFAULTS` named | the eleven named |
+|---|---|---|---|
+| mutants | 319 | 319 | 319, the same ones |
+| killed / survived / not covered | 252 / 39 / 28 | 237 / 54 / 28 | 252 / 39 / 28 |
+
+To say what a run measured without moving its numbers, name the eleven, as in the examples above.
+Moving to `DEFAULTS`, `STRONGER` or `ALL` is a change of what is measured: measure first, then set the
+floor; a floor set under one set and kept under another turns the build red for the wrong reason.
 
 ### Reading mutations.xml
 
@@ -189,7 +223,7 @@ schema is [`mutation-context.schema.json`](mutation-context.schema.json); the co
 
 ```bash
 python scripts/mutation_context.py --pit build/reports/pitest/mutations.xml \
-    --tool-version 1.30.0 --mutators DEFAULTS --target 'io.github.astrapi69.crypt.data.*' \
+    --tool-version 1.30.0 --target 'io.github.astrapi69.crypt.data.*' \
     --out build/reports/pitest/mutation-context.json
 
 python scripts/mutation_context.py --mutmut mutants/mutmut-cicd-stats.json \
@@ -198,7 +232,9 @@ python scripts/mutation_context.py --mutmut mutants/mutmut-cicd-stats.json \
 ```
 
 `--repo` and `--commit` default to `GITHUB_REPOSITORY` and `GITHUB_SHA`, so a CI step needs
-neither. crypt-data's run of 2026-10-16, as the converter writes it:
+neither. `--mutators` takes the names the build sets, one per flag; crypt-data names none, so the
+call names none either and the converter lists the mutators the report contains. crypt-data's run of
+2026-10-16, as the converter writes it (run again at `e16b90f` on 2026-10-17: the same 866 mutants):
 
 ```json
 {
@@ -208,7 +244,10 @@ neither. crypt-data's run of 2026-10-16, as the converter writes it:
   "measured_at": "2026-10-16T11:52:00Z",
   "run_type": "full",
   "tool": {"name": "pitest", "version": "1.30.0"},
-  "mutators": ["DEFAULTS"],
+  "mutators": ["BooleanFalseReturnValsMutator", "BooleanTrueReturnValsMutator",
+    "ConditionalsBoundaryMutator", "EmptyObjectReturnValsMutator", "IncrementsMutator",
+    "MathMutator", "NegateConditionalsMutator", "NullReturnValsMutator",
+    "PrimitiveReturnsMutator", "VoidMethodCallMutator"],
   "scope": {"targets": ["io.github.astrapi69.crypt.data.*"], "excludes": []},
   "results": {
     "total": 866, "killed": 860, "survived": 4, "no_coverage": 0,
@@ -244,7 +283,8 @@ count, parameterized test count) complete the picture when a repository has them
     if: always()
     run: |
       python scripts/mutation_context.py --pit build/reports/pitest/mutations.xml \
-          --tool-version 1.30.0 --mutators DEFAULTS --out build/reports/pitest/mutation-context.json
+          --tool-version 1.30.0 --out build/reports/pitest/mutation-context.json
+      # add one --mutators per name the build sets; with none, the converter lists the report's
   - uses: actions/upload-artifact@v4
     with:
       name: mutation-context
