@@ -1,29 +1,29 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-10-17T11:10:01.796441+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation score 50.0% is below the 70% required for Gold",
+  "verified_at": "2026-10-17T13:39:09.925793+00:00",
+  "tier": "gold",
+  "tier_reason": "Coverage 95.8% and mutation score 70.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 88.44,
+    "coverage": 95.8,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-17T10:37:08.107914Z",
+    "measured_at": "2026-10-17T13:33:51.414546Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/randomizer"
   },
-  "mutation_score": 50.0,
+  "mutation_score": 70.0,
   "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
   "mutation_ci_enforced": {
     "tool": "pit",
-    "threshold": 50.0,
+    "threshold": 70.0,
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 39026379887,
-      "head_sha": "c3d30367b847e024f00c0b0f474f7a5636b6feb0",
-      "created_at": "2026-10-17T10:49:47Z",
+      "run_id": 39037234565,
+      "head_sha": "b7e6782dccdba450ba179d31a3f005dcb50d13ba",
+      "created_at": "2026-10-17T13:36:07Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -34,15 +34,15 @@
     "passing": true
   },
   "mutation_context": {
-    "run_id": 39026379887,
-    "artifact_id": 12098319213,
-    "expires_at": "2027-01-15T10:49:47Z",
+    "run_id": 39037234565,
+    "artifact_id": 12103005959,
+    "expires_at": "2027-01-15T13:36:07Z",
     "valid": true,
     "context": {
       "schema_version": "1.0",
       "repository": "astrapi69/randomizer",
-      "commit": "c3d30367b847e024f00c0b0f474f7a5636b6feb0",
-      "measured_at": "2026-10-17T10:51:23Z",
+      "commit": "b7e6782dccdba450ba179d31a3f005dcb50d13ba",
+      "measured_at": "2026-10-17T13:37:49Z",
       "run_type": "full",
       "tool": {
         "name": "pitest",
@@ -58,20 +58,20 @@
         "excludes": []
       },
       "results": {
-        "total": 362,
-        "killed": 189,
-        "survived": 150,
-        "no_coverage": 20,
+        "total": 368,
+        "killed": 346,
+        "survived": 17,
+        "no_coverage": 2,
         "timed_out": 3,
         "errors": 0,
         "skipped": 0,
         "equivalent": 0
       },
       "metrics": {
-        "tool_score": 0.5304,
-        "strict_score": 0.5221,
-        "test_strength": 0.5614,
-        "timeout_ratio": 0.0083,
+        "tool_score": 0.9484,
+        "strict_score": 0.9402,
+        "test_strength": 0.9536,
+        "timeout_ratio": 0.0082,
         "error_ratio": 0.0
       }
     }
@@ -80,7 +80,11 @@
     "frameworks": [
       {
         "framework": "JUnit 5 @ParameterizedTest",
-        "matches": 1
+        "matches": 3
+      },
+      {
+        "framework": "jqwik (property-based)",
+        "matches": 22
       }
     ],
     "detected": true,
@@ -100,7 +104,7 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-17T10:49:47Z",
+    "last_push": "2026-10-17T13:36:06Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },

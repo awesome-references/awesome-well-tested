@@ -1,14 +1,14 @@
 {
   "repository": "astrapi69/gen-tree",
-  "verified_at": "2026-10-17T10:37:56.316335+00:00",
+  "verified_at": "2026-10-17T13:38:52.981182+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 98.01% and mutation score 95.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 98.41% and mutation score 95.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 98.01,
+    "coverage": 98.41,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-17T10:27:23.324246Z",
+    "measured_at": "2026-10-17T13:28:41.510643Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/gen-tree"
   },
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 39025431551,
-      "head_sha": "84ef29b37fa855c1c017f3604826b81871f47657",
-      "created_at": "2026-10-17T10:34:45Z",
+      "run_id": 39036604191,
+      "head_sha": "3d71b4b656125bc8c83b32104457bae3fc28b15a",
+      "created_at": "2026-10-17T13:27:03Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -34,22 +34,22 @@
     "passing": true
   },
   "mutation_context": {
-    "run_id": 39025431551,
-    "artifact_id": 12098317517,
-    "expires_at": "2027-01-15T10:34:45Z",
+    "run_id": 39036604191,
+    "artifact_id": 12102880255,
+    "expires_at": "2027-01-15T13:27:04Z",
     "valid": true,
     "context": {
       "schema_version": "1.0",
       "repository": "astrapi69/gen-tree",
-      "commit": "84ef29b37fa855c1c017f3604826b81871f47657",
-      "measured_at": "2026-10-17T10:35:51Z",
+      "commit": "3d71b4b656125bc8c83b32104457bae3fc28b15a",
+      "measured_at": "2026-10-17T13:28:30Z",
       "run_type": "full",
       "tool": {
         "name": "pitest",
         "version": "1.25.9"
       },
       "mutators": [
-        "DEFAULTS"
+        "STRONGER"
       ],
       "scope": {
         "targets": [
@@ -58,20 +58,20 @@
         "excludes": []
       },
       "results": {
-        "total": 423,
-        "killed": 408,
-        "survived": 11,
-        "no_coverage": 3,
+        "total": 578,
+        "killed": 561,
+        "survived": 16,
+        "no_coverage": 0,
         "timed_out": 1,
         "errors": 0,
         "skipped": 0,
         "equivalent": 0
       },
       "metrics": {
-        "tool_score": 0.9669,
-        "strict_score": 0.9645,
-        "test_strength": 0.9738,
-        "timeout_ratio": 0.0024,
+        "tool_score": 0.9723,
+        "strict_score": 0.9706,
+        "test_strength": 0.9723,
+        "timeout_ratio": 0.0017,
         "error_ratio": 0.0
       }
     }
@@ -81,7 +81,7 @@
     "detected": false,
     "language": "Java",
     "terms_tried": 4,
-    "terms_available": 5,
+    "terms_available": 8,
     "complete": true,
     "source": "tree-scan"
   },
@@ -95,7 +95,7 @@
     "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-17T10:34:44Z",
+    "last_push": "2026-10-17T13:27:03Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
