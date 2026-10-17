@@ -38,18 +38,18 @@ projects publish none. It is not worth mistaking for a Gold one.
 
 ## Java
 
-| Repository                                                        | Tier                         | Coverage        | Mutation Score                  | Param. Tests | Coverage Tool | Mutation Tool |
-| ----------------------------------------------------------------- | ---------------------------- | --------------- | ------------------------------- | ------------ | ------------- | ------------- |
-| [crypt-data](https://github.com/astrapi69/crypt-data)             | ![Gold](badges/gold.svg)     | 100%            | >= 95%                          | JUnit 5      | JaCoCo        | PIT           |
-| [crypt-api](https://github.com/astrapi69/crypt-api)               | ![Gold](badges/gold.svg)     | 99.39% (master) | >= 95%                          | JUnit 5      | JaCoCo        | PIT           |
-| [mystic-crypt](https://github.com/astrapi69/mystic-crypt)         | ![Gold](badges/gold.svg)     | 99.83%          | >= 99%                          | JUnit 5      | JaCoCo        | PIT           |
-| [gen-tree](https://github.com/astrapi69/gen-tree)                 | ![Gold](badges/gold.svg)     | 98.01%          | >= 95% (96.5% strict, DEFAULTS) | no           | JaCoCo        | PIT           |
-| [silly-collection](https://github.com/astrapi69/silly-collection) | ![Gold](badges/gold.svg)     | 98.08%          | >= 85% (86.7% strict, DEFAULTS) | no           | JaCoCo        | PIT           |
-| [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.42% (master) | n/a                             | n/a          | JaCoCo        | n/a           |
-| [randomizer](https://github.com/astrapi69/randomizer)             | ![Silver](badges/silver.svg) | 88.44%          | >= 50% (52.2% strict, DEFAULTS) | JUnit 5      | JaCoCo        | PIT           |
-| [iextrading4j](https://github.com/WojciechZankowski/iextrading4j) | ![Silver](badges/silver.svg) | 96.25% (2024)   | n/a                             | no           | JaCoCo        | PIT           |
-| [checkstyle](https://github.com/checkstyle/checkstyle)            | ![Gold](badges/gold.svg)     | 99.42% (2024)   | >= 99%                          | JUnit 5      | JaCoCo        | PIT           |
-| [cactoos](https://github.com/yegor256/cactoos)                    | ![Silver](badges/silver.svg) | 89.81%          | n/a                             | JUnit 5      | JaCoCo        | PIT           |
+| Repository                                                        | Tier                         | Coverage        | Mutation Score                  | Param. Tests   | Coverage Tool | Mutation Tool |
+| ----------------------------------------------------------------- | ---------------------------- | --------------- | ------------------------------- | -------------- | ------------- | ------------- |
+| [crypt-data](https://github.com/astrapi69/crypt-data)             | ![Gold](badges/gold.svg)     | 100%            | >= 95%                          | JUnit 5        | JaCoCo        | PIT           |
+| [crypt-api](https://github.com/astrapi69/crypt-api)               | ![Gold](badges/gold.svg)     | 99.39% (master) | >= 95%                          | JUnit 5        | JaCoCo        | PIT           |
+| [mystic-crypt](https://github.com/astrapi69/mystic-crypt)         | ![Gold](badges/gold.svg)     | 99.83%          | >= 99%                          | JUnit 5        | JaCoCo        | PIT           |
+| [gen-tree](https://github.com/astrapi69/gen-tree)                 | ![Gold](badges/gold.svg)     | 98.41%          | >= 95% (97.1% strict, STRONGER) | no             | JaCoCo        | PIT           |
+| [silly-collection](https://github.com/astrapi69/silly-collection) | ![Gold](badges/gold.svg)     | 98.08%          | >= 85% (86.7% strict, DEFAULTS) | no             | JaCoCo        | PIT           |
+| [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.42% (master) | n/a                             | n/a            | JaCoCo        | n/a           |
+| [randomizer](https://github.com/astrapi69/randomizer)             | ![Gold](badges/gold.svg)     | 95.8%           | >= 70% (94% strict, DEFAULTS)   | JUnit 5, jqwik | JaCoCo        | PIT           |
+| [iextrading4j](https://github.com/WojciechZankowski/iextrading4j) | ![Silver](badges/silver.svg) | 96.25% (2024)   | n/a                             | no             | JaCoCo        | PIT           |
+| [checkstyle](https://github.com/checkstyle/checkstyle)            | ![Gold](badges/gold.svg)     | 99.42% (2024)   | >= 99%                          | JUnit 5        | JaCoCo        | PIT           |
+| [cactoos](https://github.com/yegor256/cactoos)                    | ![Silver](badges/silver.svg) | 89.81%          | n/a                             | JUnit 5        | JaCoCo        | PIT           |
 
 ## Python
 
