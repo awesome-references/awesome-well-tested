@@ -573,7 +573,12 @@ PARAMETERIZED_MARKERS = {
         ("RunWith(Parameterized", "JUnit 4 @Parameterized"),
         ("dataProviderClass", "TestNG @DataProvider"),
         ("jqwik", "jqwik (property-based)"),
+        # The import path, not "@Property": jqwik and junit-quickcheck both
+        # use that annotation name.
+        ("junit.quickcheck", "junit-quickcheck (property-based)"),
         ("QuickTheories", "QuickTheories (property-based)"),
+        ("jetCheck", "jetCheck (property-based)"),
+        ("io.vavr.test", "vavr-test (property-based)"),
     ],
     "Kotlin": [
         ("ParameterizedTest", "JUnit 5 @ParameterizedTest"),
