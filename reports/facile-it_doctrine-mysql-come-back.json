@@ -1,6 +1,6 @@
 {
   "repository": "facile-it/doctrine-mysql-come-back",
-  "verified_at": "2026-10-12T12:05:26.185389+00:00",
+  "verified_at": "2026-10-19T09:59:30.182103+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 90.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 100.0,
     "branch": "master",
     "is_default_branch": false,
-    "measured_at": "2026-10-12T04:04:21.856809Z",
+    "measured_at": "2026-10-19T03:54:16.607937Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/facile-it/doctrine-mysql-come-back"
   },
@@ -42,6 +42,7 @@
     },
     "passing": true
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -66,7 +67,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-09-30T07:31:21Z",
-    "days_since_push": 12,
+    "days_since_push": 19,
     "default_branch": "3.x"
   },
   "ci": {

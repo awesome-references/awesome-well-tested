@@ -1,6 +1,6 @@
 {
   "repository": "giggsey/Locale",
-  "verified_at": "2026-10-12T12:05:29.709362+00:00",
+  "verified_at": "2026-10-19T09:59:34.941650+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,7 +9,7 @@
     "branch": "1.9",
     "is_default_branch": false,
     "measured_at": "2020-07-07T11:21:17Z",
-    "age_days": 2288,
+    "age_days": 2294,
     "source": "https://coveralls.io/github/giggsey/Locale"
   },
   "mutation_score": null,
@@ -27,10 +27,11 @@
       "conclusion": "success",
       "event": "push",
       "passing": false,
-      "why": "the newest run is 229 days old"
+      "why": "the newest run is 236 days old"
     },
     "passing": false
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -55,7 +56,7 @@
     "archived": false,
     "fork": false,
     "last_push": "2026-02-24T15:32:58Z",
-    "days_since_push": 229,
+    "days_since_push": 236,
     "default_branch": "master"
   },
   "ci": {
