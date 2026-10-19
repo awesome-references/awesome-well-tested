@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-10-17T11:09:45.339495+00:00",
+  "verified_at": "2026-10-19T09:52:41.780576+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 98.08% and mutation score 85.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 98.08,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-17T10:36:58.297103Z",
-    "age_days": 0,
+    "measured_at": "2026-10-17T12:06:03.917212Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
   "mutation_score": 85.0,
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 39025692633,
-      "head_sha": "6774dbb4d006b88a0f1c4b15ed18a93dec3c3310",
-      "created_at": "2026-10-17T10:38:53Z",
+      "run_id": 39031334432,
+      "head_sha": "c4df445f3ec1f0b446148a602b94b34e6fca0fee",
+      "created_at": "2026-10-17T12:08:09Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -34,15 +34,15 @@
     "passing": true
   },
   "mutation_context": {
-    "run_id": 39025692633,
-    "artifact_id": 12098990072,
-    "expires_at": "2027-01-15T10:38:53Z",
+    "run_id": 39031334432,
+    "artifact_id": 12100542430,
+    "expires_at": "2027-01-15T12:08:09Z",
     "valid": true,
     "context": {
       "schema_version": "1.0",
       "repository": "astrapi69/silly-collection",
-      "commit": "6774dbb4d006b88a0f1c4b15ed18a93dec3c3310",
-      "measured_at": "2026-10-17T10:40:18Z",
+      "commit": "c4df445f3ec1f0b446148a602b94b34e6fca0fee",
+      "measured_at": "2026-10-17T12:09:44Z",
       "run_type": "full",
       "tool": {
         "name": "pitest",
@@ -95,8 +95,8 @@
     "forks": 3,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-17T10:38:53Z",
-    "days_since_push": 0,
+    "last_push": "2026-10-17T12:08:09Z",
+    "days_since_push": 1,
     "default_branch": "develop"
   },
   "ci": {

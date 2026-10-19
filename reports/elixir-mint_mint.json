@@ -1,21 +1,22 @@
 {
   "repository": "elixir-mint/mint",
-  "verified_at": "2026-10-12T12:06:13.916736+00:00",
+  "verified_at": "2026-10-19T10:00:35.332602+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 90.66% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 90.46% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Coveralls",
-    "coverage": 90.66,
-    "branch": "http2-followups",
+    "coverage": 90.46,
+    "branch": "fuzz-http1-transfer-codings",
     "is_default_branch": false,
-    "measured_at": "2026-10-02T22:01:56Z",
-    "age_days": 9,
+    "measured_at": "2026-10-16T13:14:11Z",
+    "age_days": 2,
     "source": "https://coveralls.io/github/elixir-mint/mint"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -39,8 +40,8 @@
     "forks": 128,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-02T22:00:34Z",
-    "days_since_push": 9,
+    "last_push": "2026-10-16T13:10:11Z",
+    "days_since_push": 2,
     "default_branch": "main"
   },
   "ci": {

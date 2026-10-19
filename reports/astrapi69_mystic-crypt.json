@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-10-16T12:03:47.333882+00:00",
+  "verified_at": "2026-10-19T09:52:30.104352+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 99.83% and mutation score 99.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 99.83,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-16T11:24:24.770467Z",
-    "age_days": 0,
+    "measured_at": "2026-10-17T11:58:01.758123Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
   "mutation_score": 99.0,
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 38897699979,
-      "head_sha": "e462a6811ad7d0ea400d1a14a9277ee702bfa3dc",
-      "created_at": "2026-10-16T12:01:45Z",
+      "run_id": 39030798499,
+      "head_sha": "f7f7970a405535d9e283462bdfbfbdae096eebfe",
+      "created_at": "2026-10-17T11:59:59Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -33,6 +33,7 @@
     },
     "passing": true
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -57,8 +58,8 @@
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T12:01:44Z",
-    "days_since_push": 0,
+    "last_push": "2026-10-17T11:59:58Z",
+    "days_since_push": 1,
     "default_branch": "develop"
   },
   "ci": {

@@ -1,6 +1,6 @@
 {
   "repository": "technicalpickles/homesick",
-  "verified_at": "2026-08-26T14:50:55.531297+00:00",
+  "verified_at": "2026-10-19T09:59:19.683840+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,13 +9,14 @@
     "branch": "master",
     "is_default_branch": true,
     "measured_at": "2020-10-19T07:55:37Z",
-    "age_days": 2137,
+    "age_days": 2191,
     "source": "https://coveralls.io/github/technicalpickles/homesick"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
@@ -32,12 +33,12 @@
     "description": "Your home directory is your castle. Don't leave your dotfiles behind.",
     "language": "Ruby",
     "license": "MIT",
-    "stars": 2452,
+    "stars": 2455,
     "forks": 128,
     "archived": false,
     "fork": false,
     "last_push": "2026-07-17T23:04:13Z",
-    "days_since_push": 39,
+    "days_since_push": 93,
     "default_branch": "master"
   },
   "ci": {
@@ -53,7 +54,7 @@
       "file": ".github/workflows/ci.yml",
       "language": "Ruby",
       "matched_patterns": [
-        "\\bmutant\\b"
+        "(?:bundle\\s+exec\\s+|bin/|\\n\\s*)mutant\\s+(?:run|--)"
       ]
     }
   },

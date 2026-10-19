@@ -1,21 +1,22 @@
 {
   "repository": "Automattic/stream-builder",
-  "verified_at": "2026-08-26T14:51:42.808671+00:00",
+  "verified_at": "2026-10-19T10:00:12.437217+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Coveralls",
     "coverage": 80.27,
-    "branch": "dependabot/github_actions/actions-major-46e1ab33c4",
-    "is_default_branch": false,
-    "measured_at": "2026-06-09T00:55:21Z",
-    "age_days": 78,
+    "branch": "main",
+    "is_default_branch": true,
+    "measured_at": "2026-10-15T13:54:44Z",
+    "age_days": 3,
     "source": "https://coveralls.io/github/Automattic/stream-builder"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -35,12 +36,12 @@
     "description": "Tumblr's custom feed building, mixing, and ranking framework.",
     "language": "PHP",
     "license": "NOASSERTION",
-    "stars": 143,
+    "stars": 142,
     "forks": 9,
     "archived": false,
     "fork": false,
-    "last_push": "2026-06-09T00:54:58Z",
-    "days_since_push": 78,
+    "last_push": "2026-10-15T13:54:23Z",
+    "days_since_push": 3,
     "default_branch": "main"
   },
   "ci": {

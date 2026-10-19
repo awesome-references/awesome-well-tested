@@ -1,6 +1,6 @@
 {
   "repository": "php-standard-library/php-standard-library",
-  "verified_at": "2026-10-12T12:05:50.355738+00:00",
+  "verified_at": "2026-10-19T10:00:00.796762+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 96.54% and mutation score 95.74%, backed by an independently hosted report",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 96.54,
     "branch": "next",
     "is_default_branch": true,
-    "measured_at": "2026-10-08T23:31:00Z",
+    "measured_at": "2026-10-15T14:39:22Z",
     "age_days": 3,
     "source": "https://coveralls.io/github/php-standard-library/php-standard-library"
   },
@@ -31,6 +31,7 @@
     "source": "https://dashboard.stryker-mutator.io/reports/github.com/php-standard-library/php-standard-library/next"
   },
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -51,10 +52,10 @@
     "language": "PHP",
     "license": "MIT",
     "stars": 1569,
-    "forks": 93,
+    "forks": 94,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-08T23:24:48Z",
+    "last_push": "2026-10-15T14:32:52Z",
     "days_since_push": 3,
     "default_branch": "next"
   },

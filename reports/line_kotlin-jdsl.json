@@ -1,6 +1,6 @@
 {
   "repository": "line/kotlin-jdsl",
-  "verified_at": "2026-10-12T12:06:22.236767+00:00",
+  "verified_at": "2026-10-19T10:00:52.132966+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 91.38% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 91.38,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-10-11T12:27:19.908050Z",
+    "measured_at": "2026-10-19T04:01:20.142937Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/line/kotlin-jdsl"
   },
@@ -16,6 +16,7 @@
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -39,7 +40,7 @@
     "forks": 103,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-11T12:25:08Z",
+    "last_push": "2026-10-19T03:54:07Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
