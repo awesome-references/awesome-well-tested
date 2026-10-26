@@ -1,6 +1,6 @@
 {
   "repository": "Instagram/IGListKit",
-  "verified_at": "2026-08-26T14:51:45.994351+00:00",
+  "verified_at": "2026-10-26T10:13:53.823149+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 98.75% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,14 +8,15 @@
     "coverage": 98.75,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-08-19T23:57:31Z",
-    "age_days": 6,
+    "measured_at": "2026-10-23T17:33:42Z",
+    "age_days": 2,
     "source": "https://coveralls.io/github/Instagram/IGListKit"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": null,
   "issues": null,
   "metadata": {
@@ -23,12 +24,12 @@
     "description": "A data-driven UICollectionView framework for building fast and flexible lists.",
     "language": "Objective-C",
     "license": "MIT",
-    "stars": 13068,
-    "forks": 1539,
+    "stars": 13080,
+    "forks": 1540,
     "archived": false,
     "fork": false,
-    "last_push": "2026-08-19T23:51:03Z",
-    "days_since_push": 6,
+    "last_push": "2026-10-23T17:25:54Z",
+    "days_since_push": 2,
     "default_branch": "main"
   },
   "ci": {

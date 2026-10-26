@@ -1,15 +1,15 @@
 {
   "repository": "astrapi69/manuscripta",
-  "verified_at": "2026-10-16T11:09:44.724807+00:00",
+  "verified_at": "2026-10-26T10:12:31.921875+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 95.58% and mutation score 85.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 95.77% and mutation score 85.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 95.58,
+    "coverage": 95.77,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-10-16T10:11:43.972497Z",
-    "age_days": 0,
+    "measured_at": "2026-10-17T10:09:12.305475Z",
+    "age_days": 9,
     "source": "https://codecov.io/gh/astrapi69/manuscripta"
   },
   "mutation_score": 85.0,
@@ -21,9 +21,9 @@
     "threshold_from": "pyproject.toml",
     "workflow": ".github/workflows/mutation.yml",
     "run": {
-      "run_id": 38869457825,
-      "head_sha": "c4af46adf2c707c978543ffaf7147f457f34f35f",
-      "created_at": "2026-10-16T07:47:36Z",
+      "run_id": 40291893497,
+      "head_sha": "398402e9a79d5094dd8d6a1778208ac7e27c8513",
+      "created_at": "2026-10-26T08:23:10Z",
       "conclusion": "success",
       "event": "schedule",
       "passing": true,
@@ -32,6 +32,67 @@
       }
     },
     "passing": true
+  },
+  "mutation_context": {
+    "run_id": 40291893497,
+    "artifact_id": 12636970631,
+    "expires_at": "2027-01-24T08:23:10Z",
+    "valid": true,
+    "context": {
+      "schema_version": "1.0",
+      "repository": "astrapi69/manuscripta",
+      "commit": "398402e9a79d5094dd8d6a1778208ac7e27c8513",
+      "measured_at": "2026-10-26T08:30:31Z",
+      "run_type": "full",
+      "tool": {
+        "name": "mutmut",
+        "version": "3.5.0"
+      },
+      "mutators": [],
+      "scope": {
+        "targets": [
+          "src/manuscripta/exceptions.py",
+          "src/manuscripta/paths/to_absolute.py",
+          "src/manuscripta/paths/to_relative.py",
+          "src/manuscripta/images/convert.py",
+          "src/manuscripta/markdown/normalize_toc.py",
+          "src/manuscripta/audiobook/tts/text_chunking.py",
+          "src/manuscripta/markdown/german_quotes.py",
+          "src/manuscripta/markdown/unbold_headers.py",
+          "src/manuscripta/paths/img_tags.py",
+          "src/manuscripta/utils/bulk_extension.py",
+          "src/manuscripta/project/reorder.py",
+          "src/manuscripta/project/init.py",
+          "src/manuscripta/project/metadata.py",
+          "src/manuscripta/utils/pandoc_batch.py",
+          "src/manuscripta/project/chapters.py",
+          "src/manuscripta/markdown/bullet_points.py",
+          "src/manuscripta/markdown/emojis.py",
+          "src/manuscripta/config/loader.py",
+          "src/manuscripta/utils/git_cache.py",
+          "src/manuscripta/markdown/links_to_plain.py",
+          "src/manuscripta/markdown/strip_links.py"
+        ],
+        "excludes": []
+      },
+      "results": {
+        "total": 5728,
+        "killed": 5121,
+        "survived": 172,
+        "no_coverage": 0,
+        "timed_out": 0,
+        "errors": 0,
+        "skipped": 0,
+        "equivalent": 435
+      },
+      "metrics": {
+        "tool_score": 0.894,
+        "strict_score": 0.9675,
+        "test_strength": 0.894,
+        "timeout_ratio": 0.0,
+        "error_ratio": 0.0
+      }
+    }
   },
   "parameterized_tests": {
     "frameworks": [
@@ -57,11 +118,11 @@
     "description": "Book production pipeline for authors and self-publishers",
     "language": "Python",
     "license": "MIT",
-    "stars": 1,
+    "stars": 2,
     "forks": 0,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T11:08:15Z",
+    "last_push": "2026-10-26T08:30:36Z",
     "days_since_push": 0,
     "default_branch": "main"
   },

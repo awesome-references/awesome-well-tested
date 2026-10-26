@@ -1,21 +1,22 @@
 {
   "repository": "btclib-org/btclib",
-  "verified_at": "2026-10-12T12:04:32.372414+00:00",
-  "tier": "silver",
-  "tier_reason": "Mutation testing is configured but no mutation score could be established",
+  "verified_at": "2026-10-26T10:12:08.911012+00:00",
+  "tier": "bronze",
+  "tier_reason": "Coverage 99.93% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Coveralls",
     "coverage": 99.93,
     "branch": "dev",
     "is_default_branch": false,
     "measured_at": "2026-07-29T22:30:57Z",
-    "age_days": 74,
+    "age_days": 88,
     "source": "https://coveralls.io/github/btclib-org/btclib"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -40,15 +41,17 @@
     "language": "Python",
     "license": "MIT",
     "stars": 113,
-    "forks": 48,
+    "forks": 51,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-12T11:04:54Z",
+    "last_push": "2026-10-26T07:19:12Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
   "ci": {
     "github_actions": [
+      "api-break.yml",
+      "btcd-oracle.yml",
       "claude-review.yml",
       "codeql.yml",
       "deps-latest.yml",
@@ -63,13 +66,15 @@
       "os-macos.yml",
       "os-ubuntu.yml",
       "os-windows.yml",
-      "py-arm-authority.yml",
       "pypi-install.yml",
+      "qa-assets.yml",
+      "release-diff.yml",
       "release.yml",
       "scorecard.yml",
       "sdist-rebuild.yml",
       "test.yml",
-      "vendored-vectors.yml"
+      "vendored-vectors.yml",
+      "verified-signatures.yml"
     ]
   },
   "coverage_tools": {
@@ -89,14 +94,6 @@
     }
   },
   "primary_coverage_tool": "pytest-cov",
-  "mutation_tools": {
-    "mutant": {
-      "file": ".github/workflows/mutation.yml",
-      "language": "Ruby",
-      "matched_patterns": [
-        "\\bmutant\\b"
-      ]
-    }
-  },
+  "mutation_tools": null,
   "badges": null
 }

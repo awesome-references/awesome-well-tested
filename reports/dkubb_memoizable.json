@@ -1,6 +1,6 @@
 {
   "repository": "dkubb/memoizable",
-  "verified_at": "2026-08-26T14:50:52.081552+00:00",
+  "verified_at": "2026-10-26T10:12:55.749535+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
@@ -9,13 +9,14 @@
     "branch": "upgrade/dependencies",
     "is_default_branch": false,
     "measured_at": "2020-10-16T13:17:16Z",
-    "age_days": 2140,
+    "age_days": 2200,
     "source": "https://coveralls.io/github/dkubb/memoizable"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
@@ -34,8 +35,8 @@
     "forks": 12,
     "archived": false,
     "fork": false,
-    "last_push": "2026-03-04T02:11:39Z",
-    "days_since_push": 175,
+    "last_push": "2026-10-26T01:38:31Z",
+    "days_since_push": 0,
     "default_branch": "main"
   },
   "ci": {
@@ -43,6 +44,7 @@
       "docs.yml",
       "lint.yml",
       "mutant.yml",
+      "perf.yml",
       "push.yml",
       "steep.yml",
       "test.yml"
@@ -61,10 +63,10 @@
   "primary_coverage_tool": "simplecov",
   "mutation_tools": {
     "mutant": {
-      "file": ".github/workflows/mutant.yml",
+      "file": "Gemfile",
       "language": "Ruby",
       "matched_patterns": [
-        "\\bmutant\\b"
+        "mutant[/-]rspec"
       ]
     }
   },

@@ -1,14 +1,14 @@
 {
   "repository": "aallan/vera",
-  "verified_at": "2026-10-12T12:04:35.464780+00:00",
+  "verified_at": "2026-10-26T10:12:14.013851+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
-    "coverage": 95.42,
+    "coverage": 95.33,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-10-12T10:58:45.906162Z",
+    "measured_at": "2026-10-26T08:13:43.410891Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/aallan/vera"
   },
@@ -16,6 +16,7 @@
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -39,11 +40,11 @@
     "description": "Vera: a programming language designed for LLMs to write",
     "language": "Python",
     "license": "MIT",
-    "stars": 418,
-    "forks": 27,
+    "stars": 419,
+    "forks": 29,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-12T10:28:05Z",
+    "last_push": "2026-10-26T04:12:51Z",
     "days_since_push": 0,
     "default_branch": "main"
   },
@@ -53,6 +54,9 @@
       "codeql.yml",
       "dependabot-uv-lock.yml",
       "limitations-sync.yml",
+      "mutation-diff.yml",
+      "mutation-nightly.yml",
+      "nightly-generator.yml",
       "nightly-stress.yml",
       "release.yml",
       "vscode-extension.yml"
@@ -65,6 +69,13 @@
       "matched_patterns": [
         "--cov\\b",
         "--cov="
+      ]
+    },
+    "coverage.py": {
+      "file": "pyproject.toml",
+      "language": "Python",
+      "matched_patterns": [
+        "\\[tool\\.coverage\\."
       ]
     },
     "c8": {

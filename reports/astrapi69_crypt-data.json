@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-10-16T12:01:18.756015+00:00",
+  "verified_at": "2026-10-26T10:05:27.944095+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 95.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -8,8 +8,8 @@
     "coverage": 100.0,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-16T11:16:33.100836Z",
-    "age_days": 0,
+    "measured_at": "2026-10-17T12:00:59.140559Z",
+    "age_days": 8,
     "source": "https://codecov.io/gh/astrapi69/crypt-data"
   },
   "mutation_score": 95.0,
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 38896413935,
-      "head_sha": "e16b90fdfb9b47bfa0baceeedb638826576845f4",
-      "created_at": "2026-10-16T11:50:14Z",
+      "run_id": 39030887032,
+      "head_sha": "ff3f9b49b7aca6eac5156c1e462f630fe20659c0",
+      "created_at": "2026-10-17T12:01:10Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -33,6 +33,7 @@
     },
     "passing": true
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -57,8 +58,8 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T11:50:14Z",
-    "days_since_push": 0,
+    "last_push": "2026-10-17T12:01:09Z",
+    "days_since_push": 8,
     "default_branch": "develop"
   },
   "ci": {

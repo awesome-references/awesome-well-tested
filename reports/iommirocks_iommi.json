@@ -1,21 +1,22 @@
 {
   "repository": "iommirocks/iommi",
-  "verified_at": "2026-10-12T12:04:42.043094+00:00",
+  "verified_at": "2026-10-26T10:12:23.212011+00:00",
   "tier": "silver",
   "tier_reason": "Mutation testing is configured but no mutation score could be established",
   "coverage": {
     "service": "Codecov",
-    "coverage": 97.79,
+    "coverage": 97.8,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-10-06T12:33:06.167147Z",
-    "age_days": 5,
+    "measured_at": "2026-10-13T11:54:59.975494Z",
+    "age_days": 12,
     "source": "https://codecov.io/gh/iommirocks/iommi"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -35,12 +36,12 @@
     "description": "Your first pick for a django power cord",
     "language": "Python",
     "license": "BSD-3-Clause",
-    "stars": 1089,
-    "forks": 68,
+    "stars": 1091,
+    "forks": 69,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-06T13:14:50Z",
-    "days_since_push": 5,
+    "last_push": "2026-10-13T11:54:02Z",
+    "days_since_push": 12,
     "default_branch": "master"
   },
   "ci": {

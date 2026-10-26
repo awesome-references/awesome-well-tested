@@ -1,6 +1,6 @@
 {
   "repository": "MobileNativeFoundation/Store",
-  "verified_at": "2026-10-12T12:06:03.954713+00:00",
+  "verified_at": "2026-10-26T10:13:57.408643+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 83.53% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,14 +8,15 @@
     "coverage": 83.53,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-10-09T00:16:33.194204Z",
-    "age_days": 3,
+    "measured_at": "2026-10-20T16:03:16.358210Z",
+    "age_days": 5,
     "source": "https://codecov.io/gh/MobileNativeFoundation/Store"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
@@ -30,12 +31,12 @@
     "description": "A library for reading and writing data that lives in network, disk, and memory.",
     "language": "Kotlin",
     "license": "Apache-2.0",
-    "stars": 3422,
-    "forks": 216,
+    "stars": 3425,
+    "forks": 215,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-09T00:08:55Z",
-    "days_since_push": 3,
+    "last_push": "2026-10-20T15:54:57Z",
+    "days_since_push": 5,
     "default_branch": "main"
   },
   "ci": {

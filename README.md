@@ -46,28 +46,28 @@ projects publish none. It is not worth mistaking for a Gold one.
 | [gen-tree](https://github.com/astrapi69/gen-tree)                 | ![Gold](badges/gold.svg)     | 98.41%          | >= 95% (97.1% strict, STRONGER) | no             | JaCoCo        | PIT           |
 | [silly-collection](https://github.com/astrapi69/silly-collection) | ![Gold](badges/gold.svg)     | 98.08%          | >= 85% (86.7% strict, DEFAULTS) | no             | JaCoCo        | PIT           |
 | [checksum-up](https://github.com/astrapi69/checksum-up)           | ![Bronze](badges/bronze.svg) | 96.42% (master) | n/a                             | n/a            | JaCoCo        | n/a           |
-| [randomizer](https://github.com/astrapi69/randomizer)             | ![Gold](badges/gold.svg)     | 95.8%           | >= 70% (94% strict, DEFAULTS)   | JUnit 5, jqwik | JaCoCo        | PIT           |
+| [randomizer](https://github.com/astrapi69/randomizer)             | ![Gold](badges/gold.svg)     | 95.78%          | >= 70% (94% strict, DEFAULTS)   | JUnit 5, jqwik | JaCoCo        | PIT           |
 | [iextrading4j](https://github.com/WojciechZankowski/iextrading4j) | ![Silver](badges/silver.svg) | 96.25% (2024)   | n/a                             | no             | JaCoCo        | PIT           |
 | [checkstyle](https://github.com/checkstyle/checkstyle)            | ![Gold](badges/gold.svg)     | 99.42% (2024)   | >= 99%                          | JUnit 5        | JaCoCo        | PIT           |
 | [cactoos](https://github.com/yegor256/cactoos)                    | ![Silver](badges/silver.svg) | 89.81%          | n/a                             | JUnit 5        | JaCoCo        | PIT           |
 
 ## Python
 
-| Repository                                                                       | Tier                         | Coverage              | Mutation Score | Param. Tests       | Coverage Tool | Mutation Tool |
-| -------------------------------------------------------------------------------- | ---------------------------- | --------------------- | -------------- | ------------------ | ------------- | ------------- |
-| [btclib](https://github.com/btclib-org/btclib)                                   | ![Silver](badges/silver.svg) | 99.93% (dev)          | n/a            | pytest, Hypothesis | pytest-cov    | mutant        |
-| [vera](https://github.com/aallan/vera)                                           | ![Silver](badges/silver.svg) | 95.42%                | n/a            | pytest, Hypothesis | pytest-cov    | mutmut        |
-| [mutmut](https://github.com/boxed/mutmut)                                        | ![Silver](badges/silver.svg) | 81.44% (master, 2024) | n/a            | no                 | Codecov       | mutmut        |
-| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.79%                | n/a            | pytest             | pytest-cov    | mutmut        |
-| [awesome-well-tested](https://github.com/awesome-references/awesome-well-tested) | ![Silver](badges/silver.svg) | 93.54%                | n/a            | no                 | coverage.py   | mutmut        |
-| [manuscripta](https://github.com/astrapi69/manuscripta)                          | ![Gold](badges/gold.svg)     | 95.58%                | >= 85%         | pytest, Hypothesis | pytest-cov    | mutmut        |
+| Repository                                                                       | Tier                         | Coverage              | Mutation Score        | Param. Tests       | Coverage Tool | Mutation Tool |
+| -------------------------------------------------------------------------------- | ---------------------------- | --------------------- | --------------------- | ------------------ | ------------- | ------------- |
+| [btclib](https://github.com/btclib-org/btclib)                                   | ![Bronze](badges/bronze.svg) | 99.93% (dev)          | n/a                   | pytest, Hypothesis | pytest-cov    | n/a           |
+| [vera](https://github.com/aallan/vera)                                           | ![Silver](badges/silver.svg) | 95.33%                | n/a                   | pytest, Hypothesis | pytest-cov    | mutmut        |
+| [mutmut](https://github.com/boxed/mutmut)                                        | ![Silver](badges/silver.svg) | 81.44% (master, 2024) | n/a                   | no                 | Codecov       | mutmut        |
+| [iommi](https://github.com/iommirocks/iommi)                                     | ![Silver](badges/silver.svg) | 97.8%                 | n/a                   | pytest             | pytest-cov    | mutmut        |
+| [awesome-well-tested](https://github.com/awesome-references/awesome-well-tested) | ![Silver](badges/silver.svg) | 95.09%                | n/a                   | no                 | coverage.py   | mutmut        |
+| [manuscripta](https://github.com/astrapi69/manuscripta)                          | ![Gold](badges/gold.svg)     | 95.77%                | >= 85% (96.8% strict) | pytest, Hypothesis | pytest-cov    | mutmut        |
 
 ## JavaScript / TypeScript
 
 | Repository                                                                         | Tier                         | Coverage                        | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
 | ---------------------------------------------------------------------------------- | ---------------------------- | ------------------------------- | -------------- | ------------ | ------------- | ------------- |
-| [eslint-plugin-boundaries](https://github.com/javierbrea/eslint-plugin-boundaries) | ![Gold](badges/gold.svg)     | 100% (renovate/npm-baseline-b…) | 94.72%         | no           | Coveralls     | Stryker       |
-| [castkodi](https://github.com/regseb/castkodi)                                     | ![Gold](badges/gold.svg)     | 100% (2022)                     | 95.89%         | no           | Coveralls     | Stryker       |
+| [eslint-plugin-boundaries](https://github.com/javierbrea/eslint-plugin-boundaries) | ![Gold](badges/gold.svg)     | 100% (renovate/patch-all-patch) | 94.74%         | no           | Coveralls     | Stryker       |
+| [castkodi](https://github.com/regseb/castkodi)                                     | ![Gold](badges/gold.svg)     | 100% (2022)                     | 95.57%         | no           | Coveralls     | Stryker       |
 | [gerador-validador-cpf](https://github.com/tiagoporto/gerador-validador-cpf)       | ![Gold](badges/gold.svg)     | 97.19%                          | 88.76%         | no           | Istanbul/nyc  | Stryker       |
 | [accesscontrol](https://github.com/onury/accesscontrol)                            | ![Silver](badges/silver.svg) | 96.87% (2021)                   | n/a            | no           | Istanbul/nyc  | Stryker       |
 
@@ -98,35 +98,35 @@ projects publish none. It is not worth mistaking for a Gold one.
 
 ## PHP
 
-| Repository                                                                           | Tier                         | Coverage                          | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
-| ------------------------------------------------------------------------------------ | ---------------------------- | --------------------------------- | -------------- | ------------ | ------------- | ------------- |
-| [Porter](https://github.com/ScriptFUSION/Porter)                                     | ![Gold](badges/gold.svg)     | 100%                              | 97.91%         | PHPUnit      | PHPUnit       | Infection     |
-| [doctrine-mysql-come-back](https://github.com/facile-it/doctrine-mysql-come-back)    | ![Gold](badges/gold.svg)     | 100% (master)                     | >= 90%         | PHPUnit      | PHPUnit       | Infection     |
-| [Locale](https://github.com/giggsey/Locale)                                          | ![Silver](badges/silver.svg) | 100% (1.9, 2020)                  | n/a            | PHPUnit      | PHPUnit       | Infection     |
-| [Tree](https://github.com/nicmart/Tree)                                              | ![Gold](badges/gold.svg)     | 100%                              | >= 100%        | no           | PHPUnit       | Infection     |
-| [CalendR](https://github.com/yohang/CalendR)                                         | ![Gold](badges/gold.svg)     | 100%                              | 100%           | PHPUnit      | Coveralls     | Infection     |
-| [easydb](https://github.com/paragonie/easydb)                                        | ![Silver](badges/silver.svg) | 97.42% (v1.3.0, 2019)             | n/a            | PHPUnit      | PHPUnit       | Infection     |
-| [php-standard-library](https://github.com/php-standard-library/php-standard-library) | ![Gold](badges/gold.svg)     | 96.54%                            | 95.74%         | PHPUnit      | PHPUnit       | Infection     |
-| [iCal](https://github.com/markuspoerschke/iCal)                                      | ![Silver](badges/silver.svg) | 93.22% (2023)                     | n/a            | PHPUnit      | PHPUnit       | Infection     |
-| [stream-builder](https://github.com/Automattic/stream-builder)                       | ![Silver](badges/silver.svg) | 80.27% (dependabot/github_actio…) | n/a            | PHPUnit      | PHPUnit       | Infection     |
+| Repository                                                                           | Tier                         | Coverage              | Mutation Score | Param. Tests | Coverage Tool | Mutation Tool |
+| ------------------------------------------------------------------------------------ | ---------------------------- | --------------------- | -------------- | ------------ | ------------- | ------------- |
+| [Porter](https://github.com/ScriptFUSION/Porter)                                     | ![Gold](badges/gold.svg)     | 100%                  | 97.91%         | PHPUnit      | PHPUnit       | Infection     |
+| [doctrine-mysql-come-back](https://github.com/facile-it/doctrine-mysql-come-back)    | ![Gold](badges/gold.svg)     | 100% (master)         | >= 90%         | PHPUnit      | PHPUnit       | Infection     |
+| [Locale](https://github.com/giggsey/Locale)                                          | ![Gold](badges/gold.svg)     | 100% (1.9, 2020)      | >= 92%         | PHPUnit      | PHPUnit       | Infection     |
+| [Tree](https://github.com/nicmart/Tree)                                              | ![Gold](badges/gold.svg)     | 100%                  | >= 100%        | no           | PHPUnit       | Infection     |
+| [CalendR](https://github.com/yohang/CalendR)                                         | ![Gold](badges/gold.svg)     | 100%                  | 100%           | PHPUnit      | Coveralls     | Infection     |
+| [easydb](https://github.com/paragonie/easydb)                                        | ![Silver](badges/silver.svg) | 97.42% (v1.3.0, 2019) | n/a            | PHPUnit      | PHPUnit       | Infection     |
+| [php-standard-library](https://github.com/php-standard-library/php-standard-library) | ![Gold](badges/gold.svg)     | 96.54%                | 95.74%         | PHPUnit      | PHPUnit       | Infection     |
+| [iCal](https://github.com/markuspoerschke/iCal)                                      | ![Silver](badges/silver.svg) | 93.22% (2023)         | n/a            | PHPUnit      | PHPUnit       | Infection     |
+| [stream-builder](https://github.com/Automattic/stream-builder)                       | ![Silver](badges/silver.svg) | 80.27%                | n/a            | PHPUnit      | PHPUnit       | Infection     |
 
 ## Other Languages
 
-| Repository                                                            | Language    | Tier                         | Coverage                 | Mutation Score | Param. Tests                | Coverage Tool    | Mutation Tool |
-| --------------------------------------------------------------------- | ----------- | ---------------------------- | ------------------------ | -------------- | --------------------------- | ---------------- | ------------- |
-| [IGListKit](https://github.com/Instagram/IGListKit)                   | Objective-C | ![Bronze](badges/bronze.svg) | 98.75%                   | n/a            | n/a                         | slather          | n/a           |
-| [Store](https://github.com/MobileNativeFoundation/Store)              | Kotlin      | ![Bronze](badges/bronze.svg) | 83.53%                   | n/a            | no                          | Kover            | n/a           |
-| [Auth0.swift](https://github.com/auth0/Auth0.swift)                   | Swift       | ![Bronze](badges/bronze.svg) | 91.26%                   | n/a            | no                          | slather          | n/a           |
-| [benchee](https://github.com/bencheeorg/benchee)                      | Elixir      | ![Bronze](badges/bronze.svg) | 94.31%                   | n/a            | no                          | excoveralls      | n/a           |
-| [NuRaft](https://github.com/eBay/NuRaft)                              | C++         | ![Bronze](badges/bronze.svg) | 88.11% (2025)            | n/a            | no                          | Codecov          | n/a           |
-| [mint](https://github.com/elixir-mint/mint)                           | Elixir      | ![Bronze](badges/bronze.svg) | 90.66% (http2-followups) | n/a            | StreamData property testing | excoveralls      | n/a           |
-| [rapidcheck](https://github.com/emil-e/rapidcheck)                    | C++         | ![Bronze](badges/bronze.svg) | 89.79% (dev, 2016)       | n/a            | RapidCheck (property-based) | Coveralls        | n/a           |
-| [flutter_rust_bridge](https://github.com/fzyzcjy/flutter_rust_bridge) | Dart        | ![Bronze](badges/bronze.svg) | 99.22%                   | n/a            | no                          | cargo-llvm-cov   | n/a           |
-| [kotlin-jdsl](https://github.com/line/kotlin-jdsl)                    | Kotlin      | ![Bronze](badges/bronze.svg) | 91.38%                   | n/a            | JUnit 5                     | Kover            | n/a           |
-| [monix](https://github.com/monix/monix)                               | Scala       | ![Bronze](badges/bronze.svg) | 85% (master, 2024)       | n/a            | ScalaCheck (property-based) | scoverage        | n/a           |
-| [riverpod](https://github.com/rrousselGit/riverpod)                   | Dart        | ![Bronze](badges/bronze.svg) | 95.45% (2024)            | n/a            | no                          | flutter-coverage | n/a           |
-| [skunk](https://github.com/typelevel/skunk)                           | Scala       | ![Bronze](badges/bronze.svg) | 85.16%                   | n/a            | ScalaCheck (property-based) | scoverage        | n/a           |
-| [zio-quill](https://github.com/zio/zio-quill)                         | Scala       | ![Bronze](badges/bronze.svg) | 82.45%                   | n/a            | no                          | scoverage        | n/a           |
+| Repository                                                            | Language    | Tier                         | Coverage           | Mutation Score | Param. Tests                | Coverage Tool  | Mutation Tool |
+| --------------------------------------------------------------------- | ----------- | ---------------------------- | ------------------ | -------------- | --------------------------- | -------------- | ------------- |
+| [IGListKit](https://github.com/Instagram/IGListKit)                   | Objective-C | ![Bronze](badges/bronze.svg) | 98.75%             | n/a            | n/a                         | slather        | n/a           |
+| [Store](https://github.com/MobileNativeFoundation/Store)              | Kotlin      | ![Bronze](badges/bronze.svg) | 83.53%             | n/a            | no                          | Kover          | n/a           |
+| [Auth0.swift](https://github.com/auth0/Auth0.swift)                   | Swift       | ![Bronze](badges/bronze.svg) | 91.26%             | n/a            | no                          | slather        | n/a           |
+| [benchee](https://github.com/bencheeorg/benchee)                      | Elixir      | ![Bronze](badges/bronze.svg) | 94.31%             | n/a            | no                          | excoveralls    | n/a           |
+| [NuRaft](https://github.com/eBay/NuRaft)                              | C++         | ![Bronze](badges/bronze.svg) | 88.11% (2025)      | n/a            | no                          | Codecov        | n/a           |
+| [mint](https://github.com/elixir-mint/mint)                           | Elixir      | ![Bronze](badges/bronze.svg) | 90.48%             | n/a            | StreamData property testing | excoveralls    | n/a           |
+| [rapidcheck](https://github.com/emil-e/rapidcheck)                    | C++         | ![Bronze](badges/bronze.svg) | 89.79% (dev, 2016) | n/a            | RapidCheck (property-based) | Coveralls      | n/a           |
+| [flutter_rust_bridge](https://github.com/fzyzcjy/flutter_rust_bridge) | Dart        | ![Bronze](badges/bronze.svg) | 99.22%             | n/a            | no                          | cargo-llvm-cov | n/a           |
+| [kotlin-jdsl](https://github.com/line/kotlin-jdsl)                    | Kotlin      | ![Bronze](badges/bronze.svg) | 91.38%             | n/a            | JUnit 5                     | Kover          | n/a           |
+| [monix](https://github.com/monix/monix)                               | Scala       | ![Bronze](badges/bronze.svg) | 85% (master, 2024) | n/a            | ScalaCheck (property-based) | scoverage      | n/a           |
+| [riverpod](https://github.com/rrousselGit/riverpod)                   | Dart        | ![Bronze](badges/bronze.svg) | 85.66%             | n/a            | no                          | Codecov        | n/a           |
+| [skunk](https://github.com/typelevel/skunk)                           | Scala       | ![Bronze](badges/bronze.svg) | 85.16%             | n/a            | ScalaCheck (property-based) | scoverage      | n/a           |
+| [zio-quill](https://github.com/zio/zio-quill)                         | Scala       | ![Bronze](badges/bronze.svg) | 83.62%             | n/a            | no                          | scoverage      | n/a           |
 
 ## How We Verify
 
