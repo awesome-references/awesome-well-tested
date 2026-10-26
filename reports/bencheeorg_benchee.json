@@ -1,6 +1,6 @@
 {
   "repository": "bencheeorg/benchee",
-  "verified_at": "2026-10-12T12:06:09.575147+00:00",
+  "verified_at": "2026-10-26T10:14:04.632698+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 94.31% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,14 +8,15 @@
     "coverage": 94.31,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-10-05T19:07:20Z",
-    "age_days": 6,
+    "measured_at": "2026-10-24T17:50:29Z",
+    "age_days": 1,
     "source": "https://coveralls.io/github/bencheeorg/benchee"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
@@ -30,12 +31,12 @@
     "description": "Easy and extensible benchmarking in Elixir providing you with lots of statistics!",
     "language": "Elixir",
     "license": "MIT",
-    "stars": 1519,
-    "forks": 70,
+    "stars": 1523,
+    "forks": 71,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-05T19:06:51Z",
-    "days_since_push": 6,
+    "last_push": "2026-10-24T17:50:02Z",
+    "days_since_push": 1,
     "default_branch": "main"
   },
   "ci": {

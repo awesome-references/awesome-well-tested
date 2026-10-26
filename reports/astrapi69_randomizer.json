@@ -1,15 +1,15 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-10-17T13:39:09.925793+00:00",
+  "verified_at": "2026-10-26T10:11:31.378853+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 95.8% and mutation score 70.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 95.78% and mutation score 70.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 95.8,
+    "coverage": 95.78,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-17T13:33:51.414546Z",
-    "age_days": 0,
+    "measured_at": "2026-10-20T15:51:12.155647Z",
+    "age_days": 5,
     "source": "https://codecov.io/gh/astrapi69/randomizer"
   },
   "mutation_score": 70.0,
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 39037234565,
-      "head_sha": "b7e6782dccdba450ba179d31a3f005dcb50d13ba",
-      "created_at": "2026-10-17T13:36:07Z",
+      "run_id": 39452021244,
+      "head_sha": "d4bc24959bc853219237dbe8bffc5ec20e19eea5",
+      "created_at": "2026-10-20T15:49:56Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -34,15 +34,15 @@
     "passing": true
   },
   "mutation_context": {
-    "run_id": 39037234565,
-    "artifact_id": 12103005959,
-    "expires_at": "2027-01-15T13:36:07Z",
+    "run_id": 39452021244,
+    "artifact_id": 12279377001,
+    "expires_at": "2027-01-18T15:49:56Z",
     "valid": true,
     "context": {
       "schema_version": "1.0",
       "repository": "astrapi69/randomizer",
-      "commit": "b7e6782dccdba450ba179d31a3f005dcb50d13ba",
-      "measured_at": "2026-10-17T13:37:49Z",
+      "commit": "d4bc24959bc853219237dbe8bffc5ec20e19eea5",
+      "measured_at": "2026-10-20T15:50:27Z",
       "run_type": "full",
       "tool": {
         "name": "pitest",
@@ -104,8 +104,8 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-17T13:36:06Z",
-    "days_since_push": 0,
+    "last_push": "2026-10-20T15:49:56Z",
+    "days_since_push": 5,
     "default_branch": "develop"
   },
   "ci": {
