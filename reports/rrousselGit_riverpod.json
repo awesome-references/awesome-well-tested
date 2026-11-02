@@ -1,21 +1,22 @@
 {
   "repository": "rrousselGit/riverpod",
-  "verified_at": "2026-10-12T12:06:28.372439+00:00",
+  "verified_at": "2026-11-02T12:31:32.957337+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 95.45% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 85.69% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Codecov",
-    "coverage": 95.45,
+    "coverage": 85.69,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2024-12-09T21:28:04.833393Z",
-    "age_days": 671,
+    "measured_at": "2026-11-02T10:05:05.313371Z",
+    "age_days": 0,
     "source": "https://codecov.io/gh/rrousselGit/riverpod"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
@@ -24,39 +25,33 @@
     "terms_available": 2,
     "complete": true
   },
-  "issues": null,
+  "issues": [
+    "No coverage tool configuration found"
+  ],
   "metadata": {
     "full_name": "rrousselGit/riverpod",
     "description": "A reactive caching and data-binding framework.   Riverpod makes working with asynchronous code a breeze.",
     "language": "Dart",
     "license": "MIT",
-    "stars": 7403,
-    "forks": 1116,
+    "stars": 7413,
+    "forks": 1118,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-07T14:52:10Z",
-    "days_since_push": 4,
+    "last_push": "2026-11-01T01:25:12Z",
+    "days_since_push": 1,
     "default_branch": "master"
   },
   "ci": {
     "github_actions": [
-      "build.yml",
       "changelog.yml",
-      "check_generation.yml",
+      "ci.yml",
       "question.yml",
-      "riverpod_lint.yml"
+      "tests_on_base.yml",
+      "tests_on_base_comment.yml"
     ]
   },
-  "coverage_tools": {
-    "flutter-coverage": {
-      "file": ".github/workflows/build.yml",
-      "language": "Dart",
-      "matched_patterns": [
-        "flutter\\s+test[^\\n]*--coverage"
-      ]
-    }
-  },
-  "primary_coverage_tool": "flutter-coverage",
+  "coverage_tools": null,
+  "primary_coverage_tool": null,
   "mutation_tools": null,
   "badges": [
     {

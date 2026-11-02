@@ -1,15 +1,15 @@
 {
   "repository": "php-standard-library/php-standard-library",
-  "verified_at": "2026-10-12T12:05:50.355738+00:00",
+  "verified_at": "2026-11-02T12:30:31.140774+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 96.54% and mutation score 95.74%, backed by an independently hosted report",
+  "tier_reason": "Coverage 96.62% and mutation score 95.74%, backed by an independently hosted report",
   "coverage": {
     "service": "Coveralls",
-    "coverage": 96.54,
-    "branch": "next",
-    "is_default_branch": true,
-    "measured_at": "2026-10-08T23:31:00Z",
-    "age_days": 3,
+    "coverage": 96.62,
+    "branch": "6.4.x",
+    "is_default_branch": false,
+    "measured_at": "2026-10-28T16:08:23Z",
+    "age_days": 4,
     "source": "https://coveralls.io/github/php-standard-library/php-standard-library"
   },
   "mutation_score": 95.74,
@@ -31,6 +31,7 @@
     "source": "https://dashboard.stryker-mutator.io/reports/github.com/php-standard-library/php-standard-library/next"
   },
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -50,12 +51,12 @@
     "description": "PHP Standard Library",
     "language": "PHP",
     "license": "MIT",
-    "stars": 1569,
-    "forks": 93,
+    "stars": 1570,
+    "forks": 94,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-08T23:24:48Z",
-    "days_since_push": 3,
+    "last_push": "2026-10-28T15:58:11Z",
+    "days_since_push": 4,
     "default_branch": "next"
   },
   "ci": {

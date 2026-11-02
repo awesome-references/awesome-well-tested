@@ -1,15 +1,15 @@
 {
   "repository": "astrapi69/randomizer",
-  "verified_at": "2026-10-17T13:39:09.925793+00:00",
+  "verified_at": "2026-11-02T12:28:05.955565+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 95.8% and mutation score 70.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 95.74% and mutation score 70.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 95.8,
+    "coverage": 95.74,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-17T13:33:51.414546Z",
-    "age_days": 0,
+    "measured_at": "2026-10-31T16:19:26.372399Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/astrapi69/randomizer"
   },
   "mutation_score": 70.0,
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 39037234565,
-      "head_sha": "b7e6782dccdba450ba179d31a3f005dcb50d13ba",
-      "created_at": "2026-10-17T13:36:07Z",
+      "run_id": 41219725821,
+      "head_sha": "70eb20cf3e49ef15279ef7880920d6b1ff5497ee",
+      "created_at": "2026-10-31T16:26:53Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -34,15 +34,15 @@
     "passing": true
   },
   "mutation_context": {
-    "run_id": 39037234565,
-    "artifact_id": 12103005959,
-    "expires_at": "2027-01-15T13:36:07Z",
+    "run_id": 41219725821,
+    "artifact_id": 13049477246,
+    "expires_at": "2027-01-29T16:26:53Z",
     "valid": true,
     "context": {
       "schema_version": "1.0",
       "repository": "astrapi69/randomizer",
-      "commit": "b7e6782dccdba450ba179d31a3f005dcb50d13ba",
-      "measured_at": "2026-10-17T13:37:49Z",
+      "commit": "70eb20cf3e49ef15279ef7880920d6b1ff5497ee",
+      "measured_at": "2026-10-31T16:27:24Z",
       "run_type": "full",
       "tool": {
         "name": "pitest",
@@ -58,9 +58,9 @@
         "excludes": []
       },
       "results": {
-        "total": 368,
-        "killed": 346,
-        "survived": 17,
+        "total": 365,
+        "killed": 344,
+        "survived": 16,
         "no_coverage": 2,
         "timed_out": 3,
         "errors": 0,
@@ -68,9 +68,9 @@
         "equivalent": 0
       },
       "metrics": {
-        "tool_score": 0.9484,
-        "strict_score": 0.9402,
-        "test_strength": 0.9536,
+        "tool_score": 0.9507,
+        "strict_score": 0.9425,
+        "test_strength": 0.9559,
         "timeout_ratio": 0.0082,
         "error_ratio": 0.0
       }
@@ -104,12 +104,13 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-17T13:36:06Z",
+    "last_push": "2026-11-02T09:41:47Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
+      "dependency-submission.yml",
       "gradle.yml",
       "publish.yml"
     ]
@@ -135,8 +136,8 @@
   },
   "badges": [
     {
-      "service": "Coveralls",
-      "match": "coveralls.io/repos/github/astrapi69/randomizer"
+      "service": "Codecov",
+      "match": "codecov.io/gh/astrapi69/randomizer"
     }
   ]
 }
