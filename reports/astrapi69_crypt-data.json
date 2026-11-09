@@ -1,6 +1,6 @@
 {
   "repository": "astrapi69/crypt-data",
-  "verified_at": "2026-10-16T12:01:18.756015+00:00",
+  "verified_at": "2026-11-09T12:50:10.329903+00:00",
   "tier": "gold",
   "tier_reason": "Coverage 100.0% and mutation score 95.0%, backed by a threshold the build enforces",
   "coverage": {
@@ -8,7 +8,7 @@
     "coverage": 100.0,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-16T11:16:33.100836Z",
+    "measured_at": "2026-11-08T16:38:12.277820Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/crypt-data"
   },
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 38896413935,
-      "head_sha": "e16b90fdfb9b47bfa0baceeedb638826576845f4",
-      "created_at": "2026-10-16T11:50:14Z",
+      "run_id": 42500366149,
+      "head_sha": "aefadd7b7f5330a0c3f322e6e1f1b5a9c26ac67a",
+      "created_at": "2026-11-08T16:32:00Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -33,6 +33,7 @@
     },
     "passing": true
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -57,7 +58,7 @@
     "forks": 1,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T11:50:14Z",
+    "last_push": "2026-11-08T16:31:59Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
@@ -66,6 +67,7 @@
       "closing-references.yml",
       "codeql.yml",
       "commit-provenance.yml",
+      "dependency-submission.yml",
       "gradle.yml",
       "publish.yml",
       "release-freeze.yml"
