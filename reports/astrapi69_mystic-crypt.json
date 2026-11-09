@@ -1,14 +1,14 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-10-16T12:03:47.333882+00:00",
+  "verified_at": "2026-11-09T12:50:20.724506+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 99.83% and mutation score 99.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 99.84% and mutation score 99.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 99.83,
+    "coverage": 99.84,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-16T11:24:24.770467Z",
+    "measured_at": "2026-11-08T16:53:07.945886Z",
     "age_days": 0,
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 38897699979,
-      "head_sha": "e462a6811ad7d0ea400d1a14a9277ee702bfa3dc",
-      "created_at": "2026-10-16T12:01:45Z",
+      "run_id": 42502220070,
+      "head_sha": "3681759417c93a7e9e86ffc96e82a01c23995eb2",
+      "created_at": "2026-11-08T16:54:06Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -33,6 +33,7 @@
     },
     "passing": true
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -50,14 +51,14 @@
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/mystic-crypt",
-    "description": "Modern Java cryptography library: encryption, password hashing, digital signatures, key agreement and post-quantum algorithms (ML-KEM, ML-DSA, SLH-DSA)",
+    "description": "Java cryptography library: AES-GCM, Ed25519, X25519, ML-KEM, ML-DSA, SLH-DSA, PEM/PKCS#8 and OpenPGP key reading, Argon2id. Requires JDK 25.",
     "language": "Java",
     "license": "MIT",
     "stars": 13,
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T12:01:44Z",
+    "last_push": "2026-11-08T16:54:05Z",
     "days_since_push": 0,
     "default_branch": "develop"
   },
@@ -66,6 +67,7 @@
       "closing-references.yml",
       "codeql.yml",
       "commit-provenance.yml",
+      "dependency-submission.yml",
       "gradle.yml",
       "publish.yml",
       "release-freeze.yml",

@@ -1,52 +1,53 @@
 {
   "repository": "astrapi69/silly-collection",
-  "verified_at": "2026-10-17T11:09:45.339495+00:00",
+  "verified_at": "2026-11-09T12:50:31.876510+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 98.08% and mutation score 85.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 99.8% and mutation score 95.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 98.08,
+    "coverage": 99.8,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-17T10:36:58.297103Z",
-    "age_days": 0,
+    "measured_at": "2026-11-08T12:28:57.471428Z",
+    "age_days": 1,
     "source": "https://codecov.io/gh/astrapi69/silly-collection"
   },
-  "mutation_score": 85.0,
+  "mutation_score": 95.0,
   "mutation_score_source": "ci-threshold",
   "mutation_dashboard": null,
   "mutation_ci_enforced": {
     "tool": "pit",
-    "threshold": 85.0,
+    "threshold": 95.0,
     "threshold_from": "build.gradle",
-    "workflow": ".github/workflows/gradle.yml",
+    "workflow": ".github/workflows/mutation-testing.yml",
     "run": {
-      "run_id": 39025692633,
-      "head_sha": "6774dbb4d006b88a0f1c4b15ed18a93dec3c3310",
-      "created_at": "2026-10-17T10:38:53Z",
+      "run_id": 42480973024,
+      "head_sha": "5ac7c75cfe31223ccf25b96e83acfa6f764bb83b",
+      "created_at": "2026-11-08T12:35:26Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
       "jobs": {
-        "build": "success"
+        "pitest": "success",
+        "publish-badges": "success"
       }
     },
     "passing": true
   },
   "mutation_context": {
-    "run_id": 39025692633,
-    "artifact_id": 12098990072,
-    "expires_at": "2027-01-15T10:38:53Z",
+    "run_id": 42480973024,
+    "artifact_id": 13617138784,
+    "expires_at": "2027-02-06T12:35:26Z",
     "valid": true,
     "context": {
       "schema_version": "1.0",
       "repository": "astrapi69/silly-collection",
-      "commit": "6774dbb4d006b88a0f1c4b15ed18a93dec3c3310",
-      "measured_at": "2026-10-17T10:40:18Z",
+      "commit": "5ac7c75cfe31223ccf25b96e83acfa6f764bb83b",
+      "measured_at": "2026-11-08T12:37:08Z",
       "run_type": "full",
       "tool": {
         "name": "pitest",
-        "version": "1.30.0"
+        "version": "1.30.1"
       },
       "mutators": [
         "DEFAULTS"
@@ -58,20 +59,20 @@
         "excludes": []
       },
       "results": {
-        "total": 721,
-        "killed": 625,
-        "survived": 94,
-        "no_coverage": 2,
-        "timed_out": 0,
+        "total": 983,
+        "killed": 970,
+        "survived": 11,
+        "no_coverage": 0,
+        "timed_out": 2,
         "errors": 0,
         "skipped": 0,
         "equivalent": 0
       },
       "metrics": {
-        "tool_score": 0.8669,
-        "strict_score": 0.8669,
-        "test_strength": 0.8693,
-        "timeout_ratio": 0.0,
+        "tool_score": 0.9888,
+        "strict_score": 0.9868,
+        "test_strength": 0.9888,
+        "timeout_ratio": 0.002,
         "error_ratio": 0.0
       }
     }
@@ -88,20 +89,22 @@
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/silly-collection",
-    "description": "Utility library for collections, comparators and iterator classes",
+    "description": "Java 25 helpers for collections: lists that stay unique or sorted, sets that keep their order or an index, factories and utilities for lists, sets, maps and arrays, sorted and indexed Properties, iterators over arrays. Coverage and mutation thresholds enforced in CI, mutation tested with PIT, reproducible builds on Maven Central.",
     "language": "Java",
     "license": "MIT",
     "stars": 10,
     "forks": 3,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-17T10:38:53Z",
-    "days_since_push": 0,
+    "last_push": "2026-11-08T12:35:25Z",
+    "days_since_push": 1,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
+      "dependency-submission.yml",
       "gradle.yml",
+      "mutation-testing.yml",
       "publish.yml"
     ]
   },
