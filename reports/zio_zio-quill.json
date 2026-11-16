@@ -1,14 +1,14 @@
 {
   "repository": "zio/zio-quill",
-  "verified_at": "2026-10-12T12:06:33.894080+00:00",
+  "verified_at": "2026-11-16T12:48:28.808221+00:00",
   "tier": "bronze",
-  "tier_reason": "Coverage 82.45% with CI reporting, no mutation testing configured",
+  "tier_reason": "Coverage 83.69% with CI reporting, no mutation testing configured",
   "coverage": {
     "service": "Codecov",
-    "coverage": 82.45,
+    "coverage": 83.69,
     "branch": "master",
     "is_default_branch": true,
-    "measured_at": "2026-10-06T11:21:30.400748Z",
+    "measured_at": "2026-11-10T00:32:04.576719Z",
     "age_days": 6,
     "source": "https://codecov.io/gh/zio/zio-quill"
   },
@@ -16,6 +16,7 @@
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [],
     "detected": false,
@@ -31,11 +32,11 @@
     "language": "Scala",
     "license": "Apache-2.0",
     "stars": 2166,
-    "forks": 352,
+    "forks": 356,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-12T06:11:36Z",
-    "days_since_push": 0,
+    "last_push": "2026-11-11T00:15:34Z",
+    "days_since_push": 5,
     "default_branch": "master"
   },
   "ci": {
