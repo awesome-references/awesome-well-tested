@@ -1,6 +1,6 @@
 {
   "repository": "typelevel/skunk",
-  "verified_at": "2026-10-12T12:06:30.749638+00:00",
+  "verified_at": "2026-11-23T14:43:26.627874+00:00",
   "tier": "bronze",
   "tier_reason": "Coverage 85.16% with CI reporting, no mutation testing configured",
   "coverage": {
@@ -8,14 +8,15 @@
     "coverage": 85.16,
     "branch": "main",
     "is_default_branch": true,
-    "measured_at": "2026-09-27T09:27:01.608977Z",
-    "age_days": 15,
+    "measured_at": "2026-11-18T00:35:03.263235Z",
+    "age_days": 5,
     "source": "https://codecov.io/gh/typelevel/skunk"
   },
   "mutation_score": null,
   "mutation_score_source": null,
   "mutation_dashboard": null,
   "mutation_ci_enforced": null,
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -36,10 +37,10 @@
     "language": "Scala",
     "license": "MIT",
     "stars": 1665,
-    "forks": 174,
+    "forks": 175,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-09T16:18:35Z",
+    "last_push": "2026-11-21T12:16:05Z",
     "days_since_push": 2,
     "default_branch": "main"
   },
