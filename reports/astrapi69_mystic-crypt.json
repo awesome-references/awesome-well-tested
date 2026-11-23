@@ -1,15 +1,15 @@
 {
   "repository": "astrapi69/mystic-crypt",
-  "verified_at": "2026-10-16T12:03:47.333882+00:00",
+  "verified_at": "2026-11-23T14:35:34.869000+00:00",
   "tier": "gold",
-  "tier_reason": "Coverage 99.83% and mutation score 99.0%, backed by a threshold the build enforces",
+  "tier_reason": "Coverage 99.85% and mutation score 99.0%, backed by a threshold the build enforces",
   "coverage": {
     "service": "Codecov",
-    "coverage": 99.83,
+    "coverage": 99.85,
     "branch": "develop",
     "is_default_branch": true,
-    "measured_at": "2026-10-16T11:24:24.770467Z",
-    "age_days": 0,
+    "measured_at": "2026-11-21T14:19:55.634676Z",
+    "age_days": 2,
     "source": "https://codecov.io/gh/astrapi69/mystic-crypt"
   },
   "mutation_score": 99.0,
@@ -21,9 +21,9 @@
     "threshold_from": "build.gradle",
     "workflow": ".github/workflows/gradle.yml",
     "run": {
-      "run_id": 38897699979,
-      "head_sha": "e462a6811ad7d0ea400d1a14a9277ee702bfa3dc",
-      "created_at": "2026-10-16T12:01:45Z",
+      "run_id": 44911071643,
+      "head_sha": "02c93df2db7c14e92f5b0706344f42c9a7279d76",
+      "created_at": "2026-11-21T13:53:02Z",
       "conclusion": "success",
       "event": "push",
       "passing": true,
@@ -33,6 +33,7 @@
     },
     "passing": true
   },
+  "mutation_context": null,
   "parameterized_tests": {
     "frameworks": [
       {
@@ -50,23 +51,24 @@
   "issues": null,
   "metadata": {
     "full_name": "astrapi69/mystic-crypt",
-    "description": "Modern Java cryptography library: encryption, password hashing, digital signatures, key agreement and post-quantum algorithms (ML-KEM, ML-DSA, SLH-DSA)",
+    "description": "Java cryptography library: AES-GCM, Ed25519, X25519, ML-KEM, ML-DSA, SLH-DSA, PEM/PKCS#8 and OpenPGP key reading, Argon2id. Requires JDK 25.",
     "language": "Java",
     "license": "MIT",
     "stars": 13,
     "forks": 6,
     "archived": false,
     "fork": false,
-    "last_push": "2026-10-16T12:01:44Z",
-    "days_since_push": 0,
+    "last_push": "2026-11-21T13:53:01Z",
+    "days_since_push": 2,
     "default_branch": "develop"
   },
   "ci": {
     "github_actions": [
       "closing-references.yml",
       "codeql.yml",
-      "commit-provenance.yml",
+      "dependency-submission.yml",
       "gradle.yml",
+      "page-check.yml",
       "publish.yml",
       "release-freeze.yml",
       "test-badge.yml"
